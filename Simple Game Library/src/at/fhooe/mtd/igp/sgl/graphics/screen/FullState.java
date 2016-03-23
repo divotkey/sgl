@@ -22,6 +22,7 @@ import java.awt.event.HierarchyListener;
 import java.awt.event.KeyListener;
 import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
+import java.awt.event.MouseWheelListener;
 import java.awt.image.BufferStrategy;
 import java.lang.reflect.InvocationTargetException;
 
@@ -83,6 +84,10 @@ class FullState extends ScreenState implements HierarchyListener {
             frame.addMouseMotionListener(l);
         }
   
+        for (MouseWheelListener l : getContext().getMouseWheelListeners()) {
+        	frame.addMouseWheelListener(l);
+        }
+        
         try {
 			SwingUtilities.invokeAndWait(new Runnable() {
 
@@ -224,6 +229,16 @@ class FullState extends ScreenState implements HierarchyListener {
     public void removeMouseMotionListener(MouseMotionListener l) {
         frame.removeMouseMotionListener(l);
     }    
+    
+	@Override
+	public void addMouseWheelListener(MouseWheelListener l) {
+		frame.addMouseWheelListener(l);
+	}
+
+	@Override
+	public void removeMouseWheelListener(MouseWheelListener l) {
+		frame.removeMouseWheelListener(l);
+	}
     
     @Override
     public void setFullScreen(boolean value) {

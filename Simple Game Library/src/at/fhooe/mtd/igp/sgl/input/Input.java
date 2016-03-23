@@ -14,7 +14,6 @@ public interface Input {
 
     public void addInputListener(InputListener l);
     public void removeInputListener(InputListener l);
-    
     public boolean isKeyPressed(int vkEscape);
-    
+    public Mouse getMouse();
 }

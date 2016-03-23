@@ -17,5 +17,6 @@ public interface InputListener {
     public boolean mouseDown(int x, int y, int button);
     public boolean mouseUp(int x, int y, int button);
     public boolean mouseMove(int x, int y);
+	public boolean scrolled(double amount, int button);
     
 }

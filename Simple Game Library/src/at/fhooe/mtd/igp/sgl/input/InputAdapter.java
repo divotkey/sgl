@@ -42,4 +42,9 @@ public abstract class InputAdapter implements InputListener {
         return false;
     }
 
+	@Override
+	public boolean scrolled(double amount, int button) {
+        return false;
+	}
+
 }

@@ -14,11 +14,13 @@ package at.fhooe.mtd.igp.sgl.input;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
+import java.awt.event.MouseWheelEvent;
+import java.awt.event.MouseWheelListener;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-public class Mouse implements MouseListener, MouseMotionListener {
+public class Mouse implements MouseListener, MouseMotionListener, MouseWheelListener {
 
     public static final int MAX_BUTTON = 10;
     private boolean[] buttons = new boolean[MAX_BUTTON];
@@ -83,6 +85,9 @@ public class Mouse implements MouseListener, MouseMotionListener {
             case MOUSE_MOVE:
                 fireMouseMove(event.x, event.y);
                 break;
+            case MOUSE_WHEEL:
+            	fireMouseWheel(event.rotation, event.button);
+                break;
                 
             default:
                 // ignore
@@ -97,8 +102,7 @@ public class Mouse implements MouseListener, MouseMotionListener {
             if (l.mouseMove(x, y) )
                 break;
         }
-    }
-    
+    }    
     
     private void fireMouseDown(int x, int y, int button) {
         for (InputListener l : listeners) {
@@ -113,6 +117,14 @@ public class Mouse implements MouseListener, MouseMotionListener {
                 break;
         }
     }
+    
+    private void fireMouseWheel(double amount, int button) {
+        for (InputListener l : listeners) {
+            if (l.scrolled(amount, button))
+                break;
+        }
+    }
+    
     
     
     /////////////////////////////////////////////////
@@ -195,4 +207,17 @@ public class Mouse implements MouseListener, MouseMotionListener {
         
         e.consume();
     }
+
+	@Override
+	public void mouseWheelMoved(MouseWheelEvent e) {
+        InputEvent event = InputEvent.obtainEvent();
+        event.type = InputEvent.Type.MOUSE_WHEEL;
+        event.button = e.getButton();
+        event.x = e.getWheelRotation();
+        event.y = 0;
+        event.rotation = e.getPreciseWheelRotation();
+        events.add(event);
+        
+        e.consume();
+	}
 }

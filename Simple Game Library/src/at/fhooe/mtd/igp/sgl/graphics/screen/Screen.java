@@ -34,6 +34,7 @@ import java.awt.Graphics2D;
 import java.awt.event.KeyListener;
 import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
+import java.awt.event.MouseWheelListener;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -50,6 +51,7 @@ public class Screen implements Graphics {
     private List<KeyListener> keyListeners = new ArrayList<>();
     private List<MouseListener> mouseListeners = new ArrayList<>();
     private List<MouseMotionListener> mouseMotionListeners = new ArrayList<>();
+    private List<MouseWheelListener> mouseWheelListeners = new ArrayList<>();
     private boolean showCursor;
     private Quality quality = Graphics.Quality.Good;
     private Graphics2D context;
@@ -62,6 +64,16 @@ public class Screen implements Graphics {
         this.title = title;
     }
     
+	public void addMouseWheelListener(MouseWheelListener l) {
+		mouseWheelListeners.add(l);
+		state.addMouseWheelListener(l);
+	}
+
+	public void removeMouseWheelListener(MouseWheelListener l) {
+		mouseWheelListeners.remove(l);
+		state.removeMouseWheelListener(l);
+	}
+	
     public void addMouseMotionListener(MouseMotionListener l) {
         mouseMotionListeners.add(l);
         state.addMouseMotionListener(l);
@@ -160,6 +172,10 @@ public class Screen implements Graphics {
     List<MouseMotionListener> getMouseMotionListeners() {
         return mouseMotionListeners;
     }
+    
+    List<MouseWheelListener> getMouseWheelListeners() {
+		return mouseWheelListeners;
+	}
 
     void closing() {
         for (GraphicsListener l : gfxListener) {

@@ -15,6 +15,7 @@ import java.awt.Graphics2D;
 import java.awt.event.KeyListener;
 import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
+import java.awt.event.MouseWheelListener;
 
 class ClosedScreen extends ScreenState {
 
@@ -86,6 +87,16 @@ class ClosedScreen extends ScreenState {
         // ignore
     }    
 
+	@Override
+	public void addMouseWheelListener(MouseWheelListener l) {
+        // ignore
+	}
+
+	@Override
+	public void removeMouseWheelListener(MouseWheelListener l) {
+        // ignore
+	}
+    
     @Override
     public void setFullScreen(boolean value) {
         fullScreen = value;
@@ -110,4 +121,5 @@ class ClosedScreen extends ScreenState {
     public void setShowCursor(boolean value) {
         // ignore
     }
+
 }

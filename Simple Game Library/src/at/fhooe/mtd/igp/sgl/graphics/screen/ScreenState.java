@@ -18,6 +18,7 @@ import java.awt.Toolkit;
 import java.awt.event.KeyListener;
 import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
+import java.awt.event.MouseWheelListener;
 import java.awt.image.BufferedImage;
 
 
@@ -65,8 +66,12 @@ abstract class ScreenState {
     public abstract void addMouseMotionListener(MouseMotionListener l);
     public abstract void removeMouseMotionListener(MouseMotionListener l);
 
+	public abstract void addMouseWheelListener(MouseWheelListener l);
+	public abstract void removeMouseWheelListener(MouseWheelListener l);
+    
     public abstract int getWidth();
     public abstract int getHeight();
 
     public abstract void setShowCursor(boolean value);
+
 }

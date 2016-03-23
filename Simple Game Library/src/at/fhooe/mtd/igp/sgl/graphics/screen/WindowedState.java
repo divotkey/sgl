@@ -22,6 +22,7 @@ import java.awt.event.ComponentEvent;
 import java.awt.event.KeyListener;
 import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
+import java.awt.event.MouseWheelListener;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.awt.image.BufferStrategy;
@@ -68,6 +69,10 @@ class WindowedState extends ScreenState {
 
         for (MouseMotionListener l : getContext().getMouseMotionListeners()) {
             canvas.addMouseMotionListener(l);
+        }
+
+        for (MouseWheelListener l : getContext().getMouseWheelListeners()) {
+            canvas.addMouseWheelListener(l);
         }
         
         try {
@@ -210,6 +215,16 @@ class WindowedState extends ScreenState {
     public void removeMouseMotionListener(MouseMotionListener l) {
         canvas.removeMouseMotionListener(l);
     }    
+    
+	@Override
+	public void addMouseWheelListener(MouseWheelListener l) {
+        canvas.addMouseWheelListener(l);
+	}
+
+	@Override
+	public void removeMouseWheelListener(MouseWheelListener l) {
+        canvas.removeMouseWheelListener(l);
+	}
     
     @Override
     public void setFullScreen(boolean value) {

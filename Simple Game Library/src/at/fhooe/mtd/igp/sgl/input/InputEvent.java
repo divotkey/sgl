@@ -15,9 +15,15 @@ import java.util.Deque;
 
 class InputEvent {
 
-    public enum Type {
-        KEY_DOWN, KEY_UP, MOUSE_DOWN, MOUSE_UP, MOUSE_MOVE, MOUSE_SCROLL
-    };
+	public enum Type {
+		KEY_DOWN, 
+		KEY_UP, 
+		MOUSE_DOWN, 
+		MOUSE_UP, 
+		MOUSE_MOVE, 
+		MOUSE_SCROLL, 
+		MOUSE_WHEEL
+	};
     
     private static Deque<InputEvent> pool = new ArrayDeque<>();
     public Type type;
@@ -26,6 +32,7 @@ class InputEvent {
     public int button;
     public int x;
     public int y;
+	public double rotation;
     
     public static InputEvent obtainEvent() {
         InputEvent result;

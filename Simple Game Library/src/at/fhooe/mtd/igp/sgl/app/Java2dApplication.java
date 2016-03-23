@@ -58,6 +58,7 @@ public class Java2dApplication implements Application, Input {
         keyboard = new Keyboard();
         screen.addKeyListener(keyboard);
         screen.addMouseListener(mouse);
+        screen.addMouseWheelListener(mouse);
         screen.addMouseMotionListener(mouse);
                 
         // initialize game loop
@@ -86,6 +87,7 @@ public class Java2dApplication implements Application, Input {
         appListener.dispose();
         screen.removeKeyListener(keyboard);
         screen.removeMouseListener(mouse);
+        screen.removeMouseWheelListener(mouse);
         screen.removeMouseMotionListener(mouse);
         screen.close();
         screen = null; keyboard = null; mouse = null; loop = null;
@@ -131,7 +133,12 @@ public class Java2dApplication implements Application, Input {
     @Override
     public double getDeltaTime() {
         return loop.getDeltaTime();
-    }    
+    }
+
+	@Override
+	public Mouse getMouse() {
+		return mouse;
+	}    
     
     /////////////////////////////////////////////////
     /////// Interface GraphicsListener
