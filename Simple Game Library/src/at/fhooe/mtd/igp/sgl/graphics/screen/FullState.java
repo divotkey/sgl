@@ -45,6 +45,7 @@ class FullState extends ScreenState implements HierarchyListener {
     @Override
     public void enter() {
         frame = new JFrame(getContext().getTitle());
+        frame.setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
         frame.setUndecorated(true);
         frame.setIgnoreRepaint(true);
         frame.setResizable(false);
@@ -96,6 +97,8 @@ class FullState extends ScreenState implements HierarchyListener {
             e.printStackTrace();
             getContext().switchState(new WindowedState(getContext(), mode));
         }
+        
+        setShowCursor(getContext().isShowCursor());
     }
     
     
