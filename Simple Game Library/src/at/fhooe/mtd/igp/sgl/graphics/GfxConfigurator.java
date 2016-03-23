@@ -15,6 +15,7 @@ import java.awt.DisplayMode;
 import java.awt.GraphicsDevice;
 import java.awt.GraphicsEnvironment;
 import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -178,7 +179,13 @@ public class GfxConfigurator {
     public void runDialog() {
         try {
             setFinished(false);
-            SwingUtilities.invokeAndWait(() -> {createAndShowGui();} );
+			SwingUtilities.invokeAndWait(new Runnable() {
+
+				@Override
+				public void run() {
+					createAndShowGui();
+				}
+			});
             waitForFinished();
         } catch (InvocationTargetException | InterruptedException e) {
             throw new RuntimeException("unable to init gfx configurator", e);
@@ -324,7 +331,12 @@ public class GfxConfigurator {
                 .addComponent(okButton)
                 );
         
-        okButton.addActionListener((ActionEvent e) -> { exit(true); });
+		okButton.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				exit(true);
+			}
+		});
         
         return pane;
     }

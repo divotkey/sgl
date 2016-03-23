@@ -13,8 +13,7 @@ package at.fhooe.mtd.igp.sgl;
 import java.awt.Color;
 import java.awt.Font;
 import java.awt.Graphics2D;
-
-import com.sun.glass.events.KeyEvent;
+import java.awt.event.KeyEvent;
 
 import at.fhooe.mtd.igp.sgl.Sgl;
 import at.fhooe.mtd.igp.sgl.app.ApplicationListener;

@@ -83,7 +83,14 @@ class FullState extends ScreenState implements HierarchyListener {
         }
   
         try {
-            SwingUtilities.invokeAndWait(() -> { initBufferStrategy(); } );
+			SwingUtilities.invokeAndWait(new Runnable() {
+
+				@Override
+				public void run() {
+					initBufferStrategy();
+				}
+			});
+            
         } catch (InvocationTargetException | InterruptedException e) {
             System.err.println("unable to initialize full-screen: " + e.getMessage());
             e.printStackTrace();

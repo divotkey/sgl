@@ -71,7 +71,14 @@ class WindowedState extends ScreenState {
         }
         
         try {
-            SwingUtilities.invokeAndWait(() -> { initialize(); });
+			SwingUtilities.invokeAndWait(new Runnable() {
+
+				@Override
+				public void run() {
+					initialize();
+				}
+			});
+            
         } catch (InvocationTargetException | InterruptedException e) {
             throw new RuntimeException("unable to open window", e);
         }

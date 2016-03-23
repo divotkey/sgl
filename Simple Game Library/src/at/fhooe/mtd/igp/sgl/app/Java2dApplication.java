@@ -27,7 +27,7 @@ public class Java2dApplication implements Application, Input {
     private Keyboard keyboard;
     private Mouse mouse;
     
-    public Java2dApplication(Java2dApplicationConfig c, ApplicationListener l) {
+    public Java2dApplication(final Java2dApplicationConfig c, ApplicationListener l) {
         appListener = l;
         
         // initialize screen
@@ -63,7 +63,13 @@ public class Java2dApplication implements Application, Input {
         // initialize game loop
         loop = new GameLoop(c.ups);
         loop.setMode(c.loopMode);
-        loop.setUpdatable((double dt) -> { update(dt); });   
+        
+        loop.setUpdatable(new GameLoop.Updatable() {
+			@Override
+			public void update(double dt) {
+				Java2dApplication.this.update(dt);
+			}
+		});
 
         // initialize Sgl global data structure
         Sgl.app = this;
