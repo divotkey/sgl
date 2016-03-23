@@ -16,4 +16,5 @@ public interface Input {
     public void removeInputListener(InputListener l);
     public boolean isKeyPressed(int vkEscape);
     public Mouse getMouse();
+    public Keyboard getKeyboard();
 }

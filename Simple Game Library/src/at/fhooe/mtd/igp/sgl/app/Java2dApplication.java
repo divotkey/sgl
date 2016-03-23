@@ -134,14 +134,15 @@ public class Java2dApplication implements Application, Input {
     public double getDeltaTime() {
         return loop.getDeltaTime();
     }
-
+    
 	@Override
 	public Mouse getMouse() {
 		return mouse;
+	}
+
+	@Override
+	public Keyboard getKeyboard() {
+		return keyboard;
 	}    
-    
-    /////////////////////////////////////////////////
-    /////// Interface GraphicsListener
-    /////////////////////////////////////////////////
-    
+        
 }
