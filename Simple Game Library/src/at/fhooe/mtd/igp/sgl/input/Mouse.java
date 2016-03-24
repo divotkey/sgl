@@ -20,12 +20,15 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-public class Mouse implements MouseListener, MouseMotionListener, MouseWheelListener {
+public class Mouse extends InputDevice implements MouseListener,
+		MouseMotionListener, MouseWheelListener {
 
     public static final int MAX_BUTTON = 10;
+    
     private boolean[] buttons = new boolean[MAX_BUTTON];
-    private List<InputListener> listeners = new ArrayList<>();
     private List<InputEvent> events = new ArrayList<>();
+    
+    
     private int posX = 0;
     private int posY = 0;
     private int lastX;
@@ -39,13 +42,6 @@ public class Mouse implements MouseListener, MouseMotionListener, MouseWheelList
         posX = posY = lastX = lastY = deltaX = deltaY = 0;
     }
 
-    public void addInputListener(InputListener l) {
-        listeners.add(l);
-    }
-    
-    public void removeInputListener(InputListener l) {
-        listeners.remove(l);
-    }
     
     public int getDeltaX() {
         return deltaX;
@@ -96,36 +92,6 @@ public class Mouse implements MouseListener, MouseMotionListener, MouseWheelList
         }
         events.clear();
     }    
-
-    private void fireMouseMove(int x, int y) {
-        for (InputListener l : listeners) {
-            if (l.mouseMove(x, y) )
-                break;
-        }
-    }    
-    
-    private void fireMouseDown(int x, int y, int button) {
-        for (InputListener l : listeners) {
-            if (l.mouseDown(x, y, button) )
-                break;
-        }
-    }
-
-    private void fireMouseUp(int x, int y, int button) {
-        for (InputListener l : listeners) {
-            if (l.mouseUp(x, y, button) )
-                break;
-        }
-    }
-    
-    private void fireMouseWheel(double amount, int button) {
-        for (InputListener l : listeners) {
-            if (l.scrolled(amount, button))
-                break;
-        }
-    }
-    
-    
     
     /////////////////////////////////////////////////
     /////// Interface MouseListener

@@ -16,44 +16,23 @@ import java.awt.event.KeyListener;
 import java.util.ArrayList;
 import java.util.List;
 
-public class Keyboard implements KeyListener {
+public class Keyboard extends InputDevice implements KeyListener {
 
-    public static int MAX_KEYCODE = 1024;
+	public static int MAX_KEYCODE = 1024;
     
     private boolean keys[] = new boolean[MAX_KEYCODE];
     private List<InputEvent> events = new ArrayList<>();
-    private List<InputListener> listeners = new ArrayList<>();
-    
+        
     public Keyboard() {
         // intentionally left empty
     }
     
-    private void fireKeyDown(int keycode) {
-        for (InputListener l : listeners) {
-            if (l.keyDown(keycode) )
-                break;
-        }
-    }
-    
-    private void fireKeyUp(int keycode) {
-        for (InputListener l : listeners) {
-            if (l.keyUp(keycode) )
-                break;
-        }
-    }
         
     public synchronized boolean isPressed(int keycode)
             throws IndexOutOfBoundsException {
         return keys[keycode];
     }
     
-    public void addInputListener(InputListener l) {
-        listeners.add(l);
-    }
-    
-    public void removeInputListener(InputListener l) {
-        listeners.remove(l);
-    }
         
     public synchronized void update() {
         for (InputEvent event : events) {

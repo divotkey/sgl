@@ -115,9 +115,15 @@ public class Java2dApplication implements Application, Input {
 
     @Override
     public void addInputListener(InputListener l) {
-        keyboard.addInputListener(l);
-        mouse.addInputListener(l);
+        keyboard.addInputListener(l, Input.DEFAULT_PRIORITY);
+        mouse.addInputListener(l, Input.DEFAULT_PRIORITY);
     }
+    
+	@Override
+	public void addInputListener(InputListener l, int priority) {
+		keyboard.addInputListener(l, priority);
+		mouse.addInputListener(l, priority);
+	}
 
     @Override
     public void removeInputListener(InputListener l) {
@@ -136,13 +142,18 @@ public class Java2dApplication implements Application, Input {
     }
     
 	@Override
-	public Mouse getMouse() {
-		return mouse;
+	public boolean isMouseButtonPressed(int button) {
+		return mouse.isPressed(button);
 	}
 
 	@Override
-	public Keyboard getKeyboard() {
-		return keyboard;
-	}    
+	public int getMouseX() {
+		return mouse.getPosX();
+	}
+
+	@Override
+	public int getMouseY() {
+		return mouse.getPosY();
+	}
         
 }
