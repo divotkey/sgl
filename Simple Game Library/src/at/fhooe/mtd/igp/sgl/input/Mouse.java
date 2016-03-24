@@ -175,7 +175,7 @@ public class Mouse extends InputDevice implements MouseListener,
     }
 
 	@Override
-	public void mouseWheelMoved(MouseWheelEvent e) {
+	public synchronized void mouseWheelMoved(MouseWheelEvent e) {
         InputEvent event = InputEvent.obtainEvent();
         event.type = InputEvent.Type.MOUSE_WHEEL;
         event.button = e.getButton();
