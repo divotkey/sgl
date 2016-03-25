@@ -10,6 +10,7 @@
  *******************************************************************************/
 package at.fhooe.mtd.igp.sgl.app;
 
+import at.fhooe.mtd.igp.sgl.Sgl;
 import at.fhooe.mtd.igp.sgl.app.ApplicationListener;
 
 public class Game implements ApplicationListener {
@@ -25,6 +26,7 @@ public class Game implements ApplicationListener {
         
         if (state != null) {
             state.enter();
+            state.resize(Sgl.graphics.getWidth(), Sgl.graphics.getHeight());
         }
     }
     
@@ -36,7 +38,9 @@ public class Game implements ApplicationListener {
     public void create() { }
 
     @Override
-    public void dispose() { }
+    public void dispose() {
+        switchState(null);
+    }
 
     @Override
     public void update(double dt) {
