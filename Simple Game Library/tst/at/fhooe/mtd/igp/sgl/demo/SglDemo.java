@@ -15,13 +15,13 @@ import java.awt.Font;
 import java.awt.Graphics2D;
 import java.awt.event.KeyEvent;
 
-import at.fhooe.mtd.igp.sgl.Sgl;
-import at.fhooe.mtd.igp.sgl.app.ApplicationListener;
-import at.fhooe.mtd.igp.sgl.app.Java2dApplication;
-import at.fhooe.mtd.igp.sgl.app.Java2dApplicationConfig;
-import at.fhooe.mtd.igp.sgl.graphics.Alignment;
-import at.fhooe.mtd.igp.sgl.graphics.GfxConfigurator;
-import at.fhooe.mtd.igp.sgl.graphics.TextRenderer;
+import at.fhooe.mtd.sgl.Sgl;
+import at.fhooe.mtd.sgl.app.ApplicationListener;
+import at.fhooe.mtd.sgl.app.Java2dApplication;
+import at.fhooe.mtd.sgl.app.Java2dApplicationConfig;
+import at.fhooe.mtd.sgl.graphics.Alignment;
+import at.fhooe.mtd.sgl.graphics.GfxConfigurator;
+import at.fhooe.mtd.sgl.graphics.TextRenderer;
 
 public class SglDemo implements ApplicationListener {
 
