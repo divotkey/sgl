@@ -15,6 +15,8 @@ import java.awt.Canvas;
 import java.awt.Cursor;
 import java.awt.Dimension;
 import java.awt.DisplayMode;
+import java.awt.Font;
+import java.awt.FontMetrics;
 import java.awt.Graphics2D;
 import java.awt.Toolkit;
 import java.awt.event.ComponentAdapter;
@@ -254,5 +256,14 @@ class WindowedState extends ScreenState {
         } else {
             frame.setCursor(getBlankCursor());
         }
+    }
+
+    @Override
+    public FontMetrics getFontMetrics(Font font) {
+        Graphics2D g = (Graphics2D) canvas.getGraphics();
+        getContext().setQuality(g);
+        FontMetrics fm = g.getFontMetrics(font);
+        g.dispose();
+        return fm;
     }
 }

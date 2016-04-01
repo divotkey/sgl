@@ -13,6 +13,8 @@ package at.fhooe.mtd.sgl.graphics.screen;
 import java.awt.AWTException;
 import java.awt.Cursor;
 import java.awt.DisplayMode;
+import java.awt.Font;
+import java.awt.FontMetrics;
 import java.awt.Graphics2D;
 import java.awt.GraphicsDevice;
 import java.awt.GraphicsEnvironment;
@@ -278,5 +280,14 @@ class FullState extends ScreenState implements HierarchyListener {
         } else {
             frame.setCursor(getBlankCursor());
         }
+    }
+
+    @Override
+    public FontMetrics getFontMetrics(Font font) {
+        Graphics2D g = (Graphics2D) frame.getGraphics();
+        getContext().setQuality(g);
+        FontMetrics fm = g.getFontMetrics(font);
+        g.dispose();
+        return fm;
     }
 }

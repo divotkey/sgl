@@ -30,6 +30,8 @@ import static java.awt.RenderingHints.VALUE_TEXT_ANTIALIAS_ON;
 
 import java.awt.Color;
 import java.awt.DisplayMode;
+import java.awt.Font;
+import java.awt.FontMetrics;
 import java.awt.Graphics2D;
 import java.awt.event.KeyListener;
 import java.awt.event.MouseListener;
@@ -213,7 +215,7 @@ public class Screen implements Graphics {
         return context;
     }
     
-    private void setQuality(Graphics2D g) {
+    protected void setQuality(Graphics2D g) {
         switch (quality) {
         case Best:
             g.setRenderingHint(KEY_TEXT_ANTIALIASING, VALUE_TEXT_ANTIALIAS_ON);
@@ -289,6 +291,11 @@ public class Screen implements Graphics {
     @Override
     public void removeGraphicsListener(GraphicsListener l) {
         gfxListener.remove(l);
+    }
+
+    @Override
+    public FontMetrics getFontMetrics(Font font) {
+        return state.getFontMetrics(font);
     }
     
 }

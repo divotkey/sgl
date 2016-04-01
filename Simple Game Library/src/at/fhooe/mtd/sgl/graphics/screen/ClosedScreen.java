@@ -11,6 +11,8 @@
 package at.fhooe.mtd.sgl.graphics.screen;
 
 import java.awt.DisplayMode;
+import java.awt.Font;
+import java.awt.FontMetrics;
 import java.awt.Graphics2D;
 import java.awt.event.KeyListener;
 import java.awt.event.MouseListener;
@@ -120,6 +122,11 @@ class ClosedScreen extends ScreenState {
     @Override
     public void setShowCursor(boolean value) {
         // ignore
+    }
+
+    @Override
+    public FontMetrics getFontMetrics(Font font) {
+        return null;
     }
 
 }

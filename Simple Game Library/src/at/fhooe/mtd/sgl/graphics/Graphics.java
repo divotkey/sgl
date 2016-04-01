@@ -11,6 +11,8 @@
 package at.fhooe.mtd.sgl.graphics;
 
 import java.awt.Color;
+import java.awt.Font;
+import java.awt.FontMetrics;
 import java.awt.Graphics2D;
 
 /**
@@ -137,5 +139,14 @@ public interface Graphics {
      *            the graphics listener to be removed
      */
     public void removeGraphicsListener(GraphicsListener l);
+
+    /**
+     * Retrieves the font metrics for the specified font.
+     * 
+     * @param font
+     *            the font for which the font metrics should be retrieved
+     * @return the font metrics
+     */
+    public FontMetrics getFontMetrics(Font font);
     
 }

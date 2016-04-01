@@ -12,6 +12,8 @@ package at.fhooe.mtd.sgl.graphics.screen;
 
 import java.awt.Cursor;
 import java.awt.DisplayMode;
+import java.awt.Font;
+import java.awt.FontMetrics;
 import java.awt.Graphics2D;
 import java.awt.Point;
 import java.awt.Toolkit;
@@ -73,5 +75,7 @@ abstract class ScreenState {
     public abstract int getHeight();
 
     public abstract void setShowCursor(boolean value);
+
+    public abstract FontMetrics getFontMetrics(Font font);
 
 }
