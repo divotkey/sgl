@@ -67,6 +67,17 @@ public interface Graphics {
      * and front buffer.
      */
     public void endUpdate();
+    
+    /**
+     * Returns the current graphics context. This method must not be called out
+     * side a render cycle, that is between a call to {@link #beginUpdate} and
+     * {@link #endUpdate}.
+     * 
+     * @return the current graphics context of the back buffer
+     * @throws IllegalStateException
+     *             if this method is called outside the render cycle
+     */
+    public Graphics2D getCurrentContext() throws IllegalStateException;
 
     /**
      * Sets the clear color. The clear color will be used to clear the back

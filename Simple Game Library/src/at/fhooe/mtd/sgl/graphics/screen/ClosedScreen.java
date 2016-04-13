@@ -129,4 +129,9 @@ class ClosedScreen extends ScreenState {
         return null;
     }
 
+    @Override
+    public Graphics2D getCurrentContext() {
+        throw new IllegalStateException();
+    }
+
 }

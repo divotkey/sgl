@@ -290,4 +290,12 @@ class FullState extends ScreenState implements HierarchyListener {
         g.dispose();
         return fm;
     }
+    
+    @Override
+    public Graphics2D getCurrentContext() {
+        if (g2d == null) {
+            throw new IllegalStateException("outside render cycle");
+        }
+        return g2d;
+    }
 }

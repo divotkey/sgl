@@ -297,5 +297,10 @@ public class Screen implements Graphics {
     public FontMetrics getFontMetrics(Font font) {
         return state.getFontMetrics(font);
     }
+
+    @Override
+    public Graphics2D getCurrentContext() throws IllegalStateException {
+        return state.getCurrentContext();
+    }
     
 }

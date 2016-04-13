@@ -55,6 +55,7 @@ abstract class ScreenState {
 
     public abstract Graphics2D beginUpdate();
     public abstract void endUpdate();
+    public abstract Graphics2D getCurrentContext();
 
     public abstract void addKeyListener(KeyListener l);
     public abstract void removeKeyListener(KeyListener l);
