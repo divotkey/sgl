@@ -50,6 +50,14 @@ public class Java2dApplicationConfig {
     /** Defines the behavior if the user attempts to close the window. */
     public boolean exitOnClose = true;
     
+    /**
+     * Create a new instance using the selected configuration of the specified
+     * GfxConfiguratior.
+     * 
+     * @param gfxc
+     *            GfxConiguration that contains the configuration
+     * @return a newly created and initialized Java2dApplicationConfig instance
+     */
     public static Java2dApplicationConfig create(GfxConfigurator gfxc) {
         Java2dApplicationConfig config = new Java2dApplicationConfig();
         config.displayMode = gfxc.getDisplayMode();

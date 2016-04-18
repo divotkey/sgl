@@ -14,10 +14,20 @@ import at.fhooe.mtd.sgl.app.Application;
 import at.fhooe.mtd.sgl.graphics.Graphics;
 import at.fhooe.mtd.sgl.input.Input;
 
+/**
+ * This class provides global access to main parts of Sgl. The references
+ * provided here are initialized and maintained by the active application e.g.
+ * {@link Java2dApplication}.
+ */
 public class Sgl {
 
+    /** Reference to the application interface. */
     public static Application app;
+    
+    /** Reference to the graphics interface. */
     public static Graphics graphics;
+    
+    /** Reference to the input interface. */
     public static Input input;
     
 }

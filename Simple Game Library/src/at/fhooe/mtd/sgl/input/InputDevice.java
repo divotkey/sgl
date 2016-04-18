@@ -79,9 +79,9 @@ class InputDevice {
         }
     }
     
-    protected void fireMouseWheel(double amount, int button) {
+    protected void fireMouseWheel(double amount, int ticks, int button) {
         for (InputListener l : listeners) {
-            if (l.scrolled(amount, button))
+            if (l.scrolled(amount, ticks, button))
                 break;
         }
     }

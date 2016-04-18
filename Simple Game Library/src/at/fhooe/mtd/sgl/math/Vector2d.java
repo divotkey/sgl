@@ -254,6 +254,23 @@ public final class Vector2d {
 	public double dot(double x, double y) {
 		return this.x * x + this.y * y;
 	}
+
+    /**
+     * Calculates the dot product between the two specified vectors.
+     * 
+     * @param x1
+     *            the x coordinate of the first vector
+     * @param y1
+     *            the y coordinate of the first vector
+     * @param x2
+     *            the x coordinate of the second vector
+     * @param y2
+     *            the y coordinate of the second vector
+     * @return the dot product between the two specified vectors
+     */
+	public static double dot(double x1, double y1, double x2, double y2) {
+	    return x1 * x2 + y1 * y2;
+	}
 	
 	/**
 	 * Normalizes this vector. If the vector has zero length, this method has no
@@ -287,13 +304,16 @@ public final class Vector2d {
 		return this;
 	}
 
-	/**
-	 * Sets this vector to perpendicular version of itself.
-	 */
-	public void perpendicularize() {
+    /**
+     * Sets this vector to perpendicular version of itself.
+     * 
+     * @return reference to this vector for method chaining
+     */
+	public Vector2d perpendicularize() {
 		double tmp = x;
 		x = -y;
 		y = tmp;
+		return this;
 	}
 
 	/**

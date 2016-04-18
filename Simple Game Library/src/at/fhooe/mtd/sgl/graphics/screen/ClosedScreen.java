@@ -128,10 +128,5 @@ class ClosedScreen extends ScreenState {
     public FontMetrics getFontMetrics(Font font) {
         return null;
     }
-
-    @Override
-    public Graphics2D getCurrentContext() {
-        throw new IllegalStateException();
-    }
-
+    
 }

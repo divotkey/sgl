@@ -82,7 +82,7 @@ public class Mouse extends InputDevice implements MouseListener,
                 fireMouseMove(event.x, event.y);
                 break;
             case MOUSE_WHEEL:
-            	fireMouseWheel(event.rotation, event.button);
+            	fireMouseWheel(event.rotation, (int) event.x, event.button);
                 break;
                 
             default:
@@ -180,7 +180,7 @@ public class Mouse extends InputDevice implements MouseListener,
         event.type = InputEvent.Type.MOUSE_WHEEL;
         event.button = e.getButton();
         event.x = e.getWheelRotation();
-        event.y = 0;
+        event.y = e.getClickCount();
         event.rotation = e.getPreciseWheelRotation();
         events.add(event);
         

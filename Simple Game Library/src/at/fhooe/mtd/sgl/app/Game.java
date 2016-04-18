@@ -13,10 +13,31 @@ package at.fhooe.mtd.sgl.app;
 import at.fhooe.mtd.sgl.Sgl;
 import at.fhooe.mtd.sgl.app.ApplicationListener;
 
+/**
+ * This class together with the abstract class {@code GameState} implement the
+ * classic state pattern. It can be used to cover the major states (or screens)
+ * of the application.
+ * <p>
+ * This class implements the {@code ApplicationListener} interface and passes
+ * the application events on the current state.
+ * </p>
+ * 
+ * @see GameState
+ * @see ApplicationListener
+ */
 public class Game implements ApplicationListener {
 
+    /** The currently active state. */
     private GameState state;
     
+    /**
+     * Switches to the specified state. The current state will be exited and the
+     * new stated will be entered. It is safe to pass {@code null} as argument
+     * for the new state.
+     * 
+     * @param gs
+     *            the new game state
+     */
     public final void switchState(GameState gs) {
         if (state != null) {
             state.exit();
@@ -30,6 +51,12 @@ public class Game implements ApplicationListener {
         }
     }
     
+    /**
+     * Returns the current state.
+     * 
+     * @return the currently active state or {@code null} if the application has
+     *         no state at the moment
+     */
     public final GameState getState() {
         return state;
     }
