@@ -1,7 +1,7 @@
 # Version History
 
 ## Version 1.2.0
-Date: *2016-04-??*
+Date: *2016-04-18*
 
 - Added more JavaDoc comments.
 - Added Vector2d class.
