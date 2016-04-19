@@ -1,5 +1,10 @@
 # Version History
 
+## Version 1.?.?
+Date: *2016-04-??*
+
+- Added more JavaDoc comments.
+
 ## Version 1.2.0
 Date: *2016-04-18*
 
