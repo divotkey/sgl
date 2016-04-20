@@ -39,6 +39,7 @@ import java.awt.event.MouseMotionListener;
 import java.awt.event.MouseWheelListener;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.CopyOnWriteArrayList;
 
 import at.fhooe.mtd.sgl.graphics.Graphics;
 import at.fhooe.mtd.sgl.graphics.GraphicsListener;
@@ -57,6 +58,8 @@ public class Screen implements Graphics {
     private boolean showCursor;
     private Quality quality = Graphics.Quality.Good;
     private Graphics2D context;
+    
+    private List<Command> commands = new CopyOnWriteArrayList<>();
     
     public Screen() {
         this("[UNTITLED]");
@@ -180,27 +183,19 @@ public class Screen implements Graphics {
 	}
 
     void closing() {
-        for (GraphicsListener l : gfxListener) {
-            l.closing();
-        }
+    	commands.add(new ClosingCommand());
     }
 
     void iconified() {
-        for (GraphicsListener l : gfxListener) {
-            l.iconified();
-        }
+    	commands.add(new IconifiedCommand());
     }
     
     void deiconified() {
-        for (GraphicsListener l : gfxListener) {
-            l.deiconified();
-        }
+    	commands.add(new DeiconifiedCommand());
     }
 
     void resized(int width, int height) {
-        for (GraphicsListener l : gfxListener) {
-            l.resized(width, height);
-        }
+    	commands.add(new ResizeCommand(width, height));
     }
     
     
@@ -245,6 +240,12 @@ public class Screen implements Graphics {
     public void endUpdate() {
         state.endUpdate();
         context = null;
+        
+        // execute pending commands
+        for (Command cmd : commands) {
+        	cmd.execute();
+        }
+        commands.clear();
     }
     
     @Override
@@ -296,6 +297,57 @@ public class Screen implements Graphics {
     @Override
     public FontMetrics getFontMetrics(Font font) {
         return state.getFontMetrics(font);
+    }
+
+    /////////////////////////////////////////////////
+    /////// Inner Classes
+    /////////////////////////////////////////////////
+    
+    private abstract class Command {
+    	abstract void execute();
+    }
+    
+    private class ResizeCommand extends Command {
+    	int width, height;
+    	
+    	ResizeCommand(int w, int h) {
+    		width = w;
+    		height = h;
+    	}
+    	
+		@Override
+		void execute() {
+	        for (GraphicsListener l : gfxListener) {
+	            l.resized(width, height);
+	        }
+		}
+    }
+    
+    private class DeiconifiedCommand extends Command {
+		@Override
+		void execute() {
+	        for (GraphicsListener l : gfxListener) {
+	        	l.deiconified();
+	        }
+		}
+    }
+        
+    private class IconifiedCommand extends Command {
+		@Override
+		void execute() {
+	        for (GraphicsListener l : gfxListener) {
+	        	l.iconified();
+	        }
+		}
+    }
+    
+    private class ClosingCommand extends Command {
+		@Override
+		void execute() {
+	        for (GraphicsListener l : gfxListener) {
+	        	l.closing();
+	        }
+		}
     }
     
 }

@@ -63,7 +63,7 @@ class FullState extends ScreenState implements HierarchyListener {
             return;
         }
 
-        frameIsReady = false;        
+        frameIsReady = false;      
         frame.addHierarchyListener(this);
         gd.setFullScreenWindow(frame);
 
@@ -74,7 +74,29 @@ class FullState extends ScreenState implements HierarchyListener {
         waitForFrame();
         frame.removeHierarchyListener(this);
                 
-        for (KeyListener l : getContext().getKeyListeners()) {
+        registerListeners();
+        
+        try {
+			SwingUtilities.invokeAndWait(new Runnable() {
+
+				@Override
+				public void run() {
+					initBufferStrategy();
+				}
+			});
+            
+        } catch (InvocationTargetException | InterruptedException e) {
+			System.err.println("unable to initialize full-screen: "
+					+ e.getMessage());
+            e.printStackTrace();
+            getContext().switchState(new WindowedState(getContext(), mode));
+        }
+        
+        setShowCursor(getContext().isShowCursor());
+    }
+
+	private void registerListeners() {
+		for (KeyListener l : getContext().getKeyListeners()) {
             frame.addKeyListener(l);
         }
 
@@ -89,25 +111,25 @@ class FullState extends ScreenState implements HierarchyListener {
         for (MouseWheelListener l : getContext().getMouseWheelListeners()) {
         	frame.addMouseWheelListener(l);
         }
-        
-        try {
-			SwingUtilities.invokeAndWait(new Runnable() {
-
-				@Override
-				public void run() {
-					initBufferStrategy();
-				}
-			});
-            
-        } catch (InvocationTargetException | InterruptedException e) {
-            System.err.println("unable to initialize full-screen: " + e.getMessage());
-            e.printStackTrace();
-            getContext().switchState(new WindowedState(getContext(), mode));
+	}
+	
+    private void deregisterListeners() {
+        for (KeyListener l : getContext().getKeyListeners()) {
+            frame.removeKeyListener(l);
         }
-        
-        setShowCursor(getContext().isShowCursor());
-    }
-    
+
+        for (MouseListener l : getContext().getMouseListeners()) {
+            frame.removeMouseListener(l);
+        }
+
+        for (MouseMotionListener l : getContext().getMouseMotionListeners()) {
+            frame.removeMouseMotionListener(l);
+        }
+  
+        for (MouseWheelListener l : getContext().getMouseWheelListeners()) {
+        	frame.removeMouseWheelListener(l);
+        }
+    }    
     
     private void waitForFrame() {
         synchronized(frame) {
@@ -120,9 +142,10 @@ class FullState extends ScreenState implements HierarchyListener {
             }
         }
     }
-
+    
     @Override
     public void exit() {
+    	deregisterListeners();
         gd.setFullScreenWindow(null);
         frame.dispose();
     }
@@ -156,11 +179,6 @@ class FullState extends ScreenState implements HierarchyListener {
             return false;
         }
         
-//        try {
-//            Thread.sleep(1000);
-//        } catch (InterruptedException e) {
-//            Thread.currentThread().interrupt();
-//        }
         return true;
     }
     

@@ -61,21 +61,7 @@ class WindowedState extends ScreenState {
         frame.pack();
         
         // initialize listeners
-        for (KeyListener l : getContext().getKeyListeners()) {
-            canvas.addKeyListener(l);
-        }
-        
-        for (MouseListener l : getContext().getMouseListeners()) {
-            canvas.addMouseListener(l);
-        }
-
-        for (MouseMotionListener l : getContext().getMouseMotionListeners()) {
-            canvas.addMouseMotionListener(l);
-        }
-
-        for (MouseWheelListener l : getContext().getMouseWheelListeners()) {
-            canvas.addMouseWheelListener(l);
-        }
+        registerListeners();
         
         try {
 			SwingUtilities.invokeAndWait(new Runnable() {
@@ -117,6 +103,42 @@ class WindowedState extends ScreenState {
             }
         });
     }
+
+	private void registerListeners() {
+		for (KeyListener l : getContext().getKeyListeners()) {
+            canvas.addKeyListener(l);
+        }
+        
+        for (MouseListener l : getContext().getMouseListeners()) {
+            canvas.addMouseListener(l);
+        }
+
+        for (MouseMotionListener l : getContext().getMouseMotionListeners()) {
+            canvas.addMouseMotionListener(l);
+        }
+
+        for (MouseWheelListener l : getContext().getMouseWheelListeners()) {
+            canvas.addMouseWheelListener(l);
+        }
+	}
+	
+	private void deregisterListeners() {
+		for (KeyListener l : getContext().getKeyListeners()) {
+            canvas.removeKeyListener(l);
+        }
+        
+        for (MouseListener l : getContext().getMouseListeners()) {
+            canvas.removeMouseListener(l);
+        }
+
+        for (MouseMotionListener l : getContext().getMouseMotionListeners()) {
+            canvas.removeMouseMotionListener(l);
+        }
+
+        for (MouseWheelListener l : getContext().getMouseWheelListeners()) {
+            canvas.removeMouseWheelListener(l);
+        }
+	}
     
     private void initialize() {
         frame.setVisible(true);
@@ -148,7 +170,7 @@ class WindowedState extends ScreenState {
     
     @Override
     public void exit() {
-        if (g2d != null) g2d.dispose();
+        deregisterListeners();
         frame.dispose();
     }
 
