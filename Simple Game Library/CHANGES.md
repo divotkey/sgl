@@ -1,9 +1,11 @@
 # Version History
 
-## Version 1.?.?
+## Version 1.2.1
 Date: *2016-04-??*
 
 - Added more JavaDoc comments.
+- Added constructor to `Game` class taking an initial game state as parameter.
+- Fixed bug in Java2dApplication causing the `resize` method not to be called on startup.
 
 ## Version 1.2.0
 Date: *2016-04-18*

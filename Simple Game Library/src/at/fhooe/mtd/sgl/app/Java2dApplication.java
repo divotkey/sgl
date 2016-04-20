@@ -72,7 +72,7 @@ public class Java2dApplication implements Application, Input {
 			}
 		});
 
-        // initialize Sgl global data structure
+        // initialize SGL global data structure
         Sgl.app = this;
         Sgl.graphics = screen;
         Sgl.input = this;
@@ -80,6 +80,7 @@ public class Java2dApplication implements Application, Input {
         // run application
         screen.open(c.displayMode);
         appListener.create();
+        appListener.resize(screen.getWidth(), screen.getHeight());
         loop.run();
         
         // clean up

@@ -31,6 +31,27 @@ public class Game implements ApplicationListener {
     private GameState state;
     
     /**
+     * Creates a new instance with no active game state.
+     */
+    public Game() {
+        this(null);
+    }
+    
+    /**
+     * Creates a new instance of using the specified state as initial state.
+     * 
+     * @param gs
+     *            the initial game state
+     */
+    public Game(GameState gs) {
+        state = gs;
+        if (state != null) {
+            state.enter();
+            // resize will be called by the ApplicationListener interface
+        }
+    }
+
+    /**
      * Switches to the specified state. The current state will be exited and the
      * new stated will be entered. It is safe to pass {@code null} as argument
      * for the new state.

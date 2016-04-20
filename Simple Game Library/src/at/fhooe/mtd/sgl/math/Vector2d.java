@@ -2,7 +2,7 @@
 package at.fhooe.mtd.sgl.math;
 
 /**
- * A 2 dimensional vector with single-precision.
+ * A 2 dimensional vector with double-precision.
  */
 public final class Vector2d {
 
