@@ -211,7 +211,7 @@ class FullState extends ScreenState implements HierarchyListener {
 
     @Override
     public void endUpdate() {
-        assert g2d == null : "call to endUpdate() out of sequence";
+        assert g2d != null : "call to endUpdate() out of sequence";
         g2d.dispose();
         g2d = null;
         bufStrat.show();
