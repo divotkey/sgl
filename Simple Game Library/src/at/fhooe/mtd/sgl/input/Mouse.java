@@ -41,13 +41,22 @@ public class Mouse extends InputDevice implements MouseListener,
         Arrays.fill(buttons, false);
         posX = posY = lastX = lastY = deltaX = deltaY = 0;
     }
-
     
-    public int getDeltaX() {
+    /**
+     * Returns the delta movement in x-direction since last update.
+     * 
+     * @return the delta movement in x-direction
+     */
+    public synchronized int getDeltaX() {
         return deltaX;
     }
     
-    public int getDeltaY() {
+    /**
+     * Returns the delta movement in y-direction since last update.
+     * 
+     * @return the delta movement in y-direction
+     */
+    public synchronized int getDeltaY() {
         return deltaY;
     }
     
