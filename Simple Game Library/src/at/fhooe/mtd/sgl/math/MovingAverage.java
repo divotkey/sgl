@@ -14,10 +14,16 @@ import java.util.Arrays;
 
 public class MovingAverage {
 
+    public static final int DETAULT_WINDOW_SIZE = 50;
+    
     private double[] dataPoints;
     private double sum;
     private double avg;
     private int pos;
+
+    public MovingAverage() {
+        this(DETAULT_WINDOW_SIZE);
+    }
     
     public MovingAverage(int windowSize) {
         dataPoints = new double[windowSize];
@@ -34,5 +40,9 @@ public class MovingAverage {
     
     public double getAverage() {
         return avg;
+    }
+    
+    public int getWindowSize() {
+        return dataPoints.length;
     }
 }

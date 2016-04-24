@@ -48,6 +48,12 @@ public interface Graphics {
     public int getWidth();
     
     /**
+     * Returns the aspect ratio of the screen dimension.
+     * @return aspect ratio
+     */
+    public double getAspectRatio();
+    
+    /**
      * Return the current screen height in pixels.
      * 
      * @return height in pixels

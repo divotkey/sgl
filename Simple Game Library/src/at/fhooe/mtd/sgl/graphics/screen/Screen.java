@@ -257,6 +257,11 @@ public class Screen implements Graphics {
     public int getHeight() {
         return state.getHeight();
     }
+    
+    @Override
+    public double getAspectRatio() {
+        return (double) getWidth() / (double) getHeight();
+    }
 
     @Override
     public void showCursor(boolean show) {

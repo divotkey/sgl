@@ -1,3 +1,13 @@
+/*******************************************************************************
+ * Copyright (c) 2016 Roman Divotkey, Univ. of Applied Sciences Upper Austria. 
+ * All rights reserved.
+ *  
+ * This file is subject to the terms and conditions defined in file
+ * 'LICENSE', which is part of this source code package.
+ *  
+ * THIS CODE IS PROVIDED AS EDUCATIONAL MATERIAL AND NOT INTENDED TO ADDRESS
+ * ALL REAL WORLD PROBLEMS AND ISSUES IN DETAIL.
+ *******************************************************************************/
 
 package at.fhooe.mtd.sgl.math;
 
@@ -108,6 +118,32 @@ public final class Vector2d {
 	public double length() {
 		return Math.sqrt(x * x + y * y);
 	}
+	
+	/**
+	 * Returns the length of the specified vector;
+	 * 
+     * @param x
+     *            the x coordinate of the vector
+     * @param y
+     *            the y coordinate of the vector
+	 * @return
+	 */
+    public static double length(double x, double y) {
+        return Math.sqrt(x * x + y * y);
+    }
+	
+    /**
+     * Returns the length of the specified vector squared
+     * 
+     * @param x
+     *            the x coordinate of the vector
+     * @param y
+     *            the y coordinate of the vector
+     * @return
+     */
+    public static double lengthSquared(double x, double y) {
+        return x * x + y * y;
+    }
 	
 	/**
 	 * Returns the length of this vector squared.
@@ -322,5 +358,10 @@ public final class Vector2d {
 	public void setZero() {
 		x = y = 0;
 	}
+
+    @Override
+    public String toString() {
+        return String.format("<%f, %f>", x, y);
+    }
 	
 }
