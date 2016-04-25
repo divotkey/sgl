@@ -10,7 +10,7 @@
  *******************************************************************************/
 package at.fhooe.mtd.sgl;
 
-public class Info {
+public class SglInfo {
 
     public static final String NAME = "Simple Game Library";
     
@@ -21,7 +21,7 @@ public class Info {
     
     public static final String COPYRIGHT_YEAR = "2016";
         
-    public static final String FULL_NAME = NAME + " " + VERSION;
+    public static final String FULL_NAME = NAME + " (" + VERSION + ")";
     
     public static final String COPYRIGHT = "Copyright (c) " + COPYRIGHT_YEAR
             + COPYRIGHT_HOLDER + "." + " All rights reserved.";
