@@ -120,6 +120,55 @@ public final class Vector2d {
 	}
 	
 	/**
+	 * Returns the distance between this vector and the specified vector.
+     * @param x
+     *            the x coordinate of the other vector
+     * @param y
+     *            the y coordinate of the other vector
+	 * @return the distance
+	 */
+	public double distance(double x, double y) {
+	    return length(this.x - x, this.y - y);
+	}
+	
+    /**
+     * Returns the distance between this vector and the specified vector.
+     * 
+     * @param o
+     *            the other vector
+     * @return the distance
+     */
+	public double distance(Vector2d o) {
+	    return distance(o.x, o.y);
+	}
+	
+    /**
+     * Returns the squared distance between this vector and the specified
+     * vector.
+     * 
+     * @param x
+     *            the x coordinate of the other vector
+     * @param y
+     *            the y coordinate of the other vector
+     * @return the squared distance
+     */
+	public double distanceSquared(double x, double y) {
+	    return lengthSquared(this.x - x, this.y - y);
+	}
+	
+    /**
+     * Returns the squared distance between this vector and the specified
+     * vector.
+     * 
+     * @param o
+     *            the other vector
+     * @return the squared distance
+     */
+    public double distanceSquared(Vector2d o) {
+        return distanceSquared(o.x, o.y);
+    }
+	
+	/**
 	 * Returns the length of the specified vector;
 	 * 
      * @param x

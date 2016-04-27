@@ -54,12 +54,28 @@ public class Game implements ApplicationListener {
     /**
      * Switches to the specified state. The current state will be exited and the
      * new stated will be entered. It is safe to pass {@code null} as argument
-     * for the new state.
+     * for the new state. The state's {@code resize} method will be called after
+     * the new state has been entered.
      * 
      * @param gs
      *            the new game state
      */
     public final void switchState(GameState gs) {
+        switchState(gs, true);
+    }
+    
+    /**
+     * Switches to the specified state. The current state will be exited and the
+     * new stated will be entered. It is safe to pass {@code null} as argument
+     * for the new state.
+     * 
+     * @param gs
+     *            the new game state
+     * @param callResize
+     *            if set to {@code false} a call to the state's resize method
+     *            will be omitted
+     */
+    public final void switchState(GameState gs, boolean callResize) {
         if (state != null) {
             state.exit();
         }
@@ -68,8 +84,10 @@ public class Game implements ApplicationListener {
         
         if (state != null) {
             state.enter();
-            state.resize(Sgl.graphics.getWidth(), Sgl.graphics.getHeight());
-        }
+            if (callResize) {
+                state.resize(Sgl.graphics.getWidth(), Sgl.graphics.getHeight());
+            }
+        }        
     }
     
     /**

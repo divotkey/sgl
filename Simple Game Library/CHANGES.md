@@ -10,6 +10,7 @@ Date: *2016-04-??*
 - Add constants to math utilities used to convert nanoseconds.
 - Added `getAspectRatio` method to `Graphics` interface.
 - Added some additional JavaDoc comments.
+- Improved Game class, `switchState` has now a parameter if the state's  `resize` method should be called.
 
 ## Version 1.2.0
 Date: *2016-04-18*
