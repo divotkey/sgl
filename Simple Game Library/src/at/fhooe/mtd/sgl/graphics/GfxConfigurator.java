@@ -120,7 +120,8 @@ public class GfxConfigurator {
                 .append(" x ")
                 .append(mode.getHeight());
             if (mode.getRefreshRate() != 60 && mode.getRefreshRate() > 0) {
-                builder.append(" @")
+                builder.append(' ')
+                    .append('@')
                     .append(mode.getRefreshRate())
                     .append("Hz");
             }
