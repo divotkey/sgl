@@ -12,7 +12,7 @@ package at.fhooe.mtd.sgl.input;
 
 public interface InputListener {
 
-    public boolean keyDown(int keycode);
+    public boolean keyDown(int keycode, char ch);
     public boolean keyUp(int keycode);
     public boolean mouseDown(int x, int y, int button);
     public boolean mouseUp(int x, int y, int button);

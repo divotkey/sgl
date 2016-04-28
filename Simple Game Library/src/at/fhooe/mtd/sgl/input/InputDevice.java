@@ -44,9 +44,9 @@ class InputDevice {
         listeners.remove(l);
     }
     
-    protected void fireKeyDown(int keycode) {
+    protected void fireKeyDown(int keycode, char ch) {
         for (InputListener l : listeners) {
-            if (l.keyDown(keycode) )
+            if (l.keyDown(keycode, ch) )
                 break;
         }
     }

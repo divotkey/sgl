@@ -33,6 +33,7 @@ class InputEvent {
     public int x;
     public int y;
 	public double rotation;
+    public char character;
     
     public static InputEvent obtainEvent() {
         InputEvent result;

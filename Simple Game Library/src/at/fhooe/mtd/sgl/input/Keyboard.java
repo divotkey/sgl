@@ -38,7 +38,7 @@ public class Keyboard extends InputDevice implements KeyListener {
         for (InputEvent event : events) {
             switch (event.type) {
             case KEY_DOWN:
-                fireKeyDown(event.keycode);
+                fireKeyDown(event.keycode, event.character);
                 break;
             case KEY_UP:
                 fireKeyUp(event.keycode);
@@ -67,6 +67,7 @@ public class Keyboard extends InputDevice implements KeyListener {
         InputEvent event = InputEvent.obtainEvent();
         event.type = InputEvent.Type.KEY_DOWN;
         event.keycode = e.getKeyCode();
+        event.character = e.getKeyChar();
         events.add(event);
         
         

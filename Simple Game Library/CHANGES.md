@@ -3,6 +3,7 @@
 ## Version 1.2.1
 Date: *2016-04-??*
 
+- Improved input system. The `keyDown` method provides in addition to the key code the corresponding character.
 - Added more JavaDoc comments.
 - Added constructor to `Game` class taking an initial game state as parameter.
 - Fixed bug in Java2dApplication causing the `resize` method not to be called on startup.

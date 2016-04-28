@@ -18,7 +18,7 @@ package at.fhooe.mtd.sgl.input;
 public abstract class InputAdapter implements InputListener {
 
     @Override
-    public boolean keyDown(int keycode) {
+    public boolean keyDown(int keycode, char ch) {
         return false;
     }
 
