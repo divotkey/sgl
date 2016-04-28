@@ -4,6 +4,7 @@
 Date: *2016-04-??*
 
 - Improved input system. The `keyDown` method provides in addition to the key code the corresponding character.
+- Added utility class to test if a character is printable.
 - Added more JavaDoc comments.
 - Added constructor to `Game` class taking an initial game state as parameter.
 - Fixed bug in Java2dApplication causing the `resize` method not to be called on startup.
@@ -12,6 +13,7 @@ Date: *2016-04-??*
 - Added `getAspectRatio` method to `Graphics` interface.
 - Added some additional JavaDoc comments.
 - Improved Game class, `switchState` has now a parameter if the state's  `resize` method should be called.
+
 
 ## Version 1.2.0
 Date: *2016-04-18*
