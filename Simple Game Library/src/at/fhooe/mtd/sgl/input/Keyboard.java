@@ -22,6 +22,7 @@ public class Keyboard extends InputDevice implements KeyListener {
     
     private boolean keys[] = new boolean[MAX_KEYCODE];
     private List<InputEvent> events = new ArrayList<>();
+
         
     public Keyboard() {
         // intentionally left empty
@@ -30,9 +31,11 @@ public class Keyboard extends InputDevice implements KeyListener {
         
     public synchronized boolean isPressed(int keycode)
             throws IndexOutOfBoundsException {
+        if (keycode >= MAX_KEYCODE) {
+            return false;
+        }
         return keys[keycode];
-    }
-    
+    }    
         
     public synchronized void update() {
         for (InputEvent event : events) {
