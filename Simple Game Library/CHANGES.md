@@ -1,6 +1,6 @@
 # Version History
 
-## Version 1.2.1
+## Version 1.3.0
 Date: *2016-04-??*
 
 - Improved input system. The `keyDown` method provides in addition to the key code the corresponding character.
