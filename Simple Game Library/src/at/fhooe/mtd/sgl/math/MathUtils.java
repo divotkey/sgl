@@ -16,6 +16,9 @@ package at.fhooe.mtd.sgl.math;
  */
 public class MathUtils {
 
+    /** Constant used to convert milliseconds to nanoseconds. */
+    public static final long MILLIS_TO_NANOS = 1000000;
+    
     /** Constant used to convert nanoseconds to milliseconds. */
 	public static final double NANO_TO_MILLIS = 1.0 / 1000000.0;
 	
