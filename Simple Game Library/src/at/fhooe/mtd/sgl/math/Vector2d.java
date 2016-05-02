@@ -175,7 +175,7 @@ public final class Vector2d {
      *            the x coordinate of the vector
      * @param y
      *            the y coordinate of the vector
-	 * @return
+	 * @return the length of the specified vector
 	 */
     public static double length(double x, double y) {
         return Math.sqrt(x * x + y * y);
@@ -188,7 +188,7 @@ public final class Vector2d {
      *            the x coordinate of the vector
      * @param y
      *            the y coordinate of the vector
-     * @return
+     * @return the length of the specified vector
      */
     public static double lengthSquared(double x, double y) {
         return x * x + y * y;

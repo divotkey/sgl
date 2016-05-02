@@ -94,7 +94,7 @@ public class MathUtils {
      *            the end value
      * @param p
      *            the current interpolation position, must be between 0 and 1
-     * @return
+     * @return the result of the interpolation
      */
     public static double lerp (double from, double to, double p) {
         assert p >= 0 && p <= 1 : "interpolation position out of range";
@@ -110,7 +110,7 @@ public class MathUtils {
      *            the end value
      * @param p
      *            the current interpolation position, must be between 0 and 1
-     * @return
+     * @return the result of the interpolation
      */
     public static float lerp (float from, float to, float p) {
         assert p >= 0 && p <= 1 : "interpolation position out of range";
