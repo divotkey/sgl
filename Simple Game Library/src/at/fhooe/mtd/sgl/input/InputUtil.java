@@ -17,7 +17,7 @@ import java.awt.event.KeyEvent;
 /**
  * A collection of input related utility methods.
  */
-public class Util {
+public class InputUtil {
     
     /**
      * Returns if the specified character is a printable character.
