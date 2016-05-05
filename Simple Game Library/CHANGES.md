@@ -1,7 +1,7 @@
 # Version History
 
 ## Version 1.3.0
-Date: *2016-04-05*
+Date: *2016-05-04*
 
 - Added utility method `determineCommandKey` to get the command key for the current operating system.
 - Improved input system. The `keyDown` method provides in addition to the key code the corresponding character.
