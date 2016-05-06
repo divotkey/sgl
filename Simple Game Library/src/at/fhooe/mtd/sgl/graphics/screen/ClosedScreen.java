@@ -14,10 +14,13 @@ import java.awt.DisplayMode;
 import java.awt.Font;
 import java.awt.FontMetrics;
 import java.awt.Graphics2D;
+import java.awt.Point;
 import java.awt.event.KeyListener;
 import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
 import java.awt.event.MouseWheelListener;
+
+import javax.swing.TransferHandler;
 
 class ClosedScreen extends ScreenState {
 
@@ -127,6 +130,18 @@ class ClosedScreen extends ScreenState {
     @Override
     public FontMetrics getFontMetrics(Font font) {
         return null;
+    }
+
+    @Override
+    public void setTransferHandler(TransferHandler newHandler) {
+        // ignore
+    }
+
+    @Override
+    public Point getMousePosition(Point result) {
+        result.x = 0;
+        result.y = 0;
+        return result;
     }
     
 }

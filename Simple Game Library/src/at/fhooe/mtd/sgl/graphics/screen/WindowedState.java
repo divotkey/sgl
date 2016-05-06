@@ -18,6 +18,8 @@ import java.awt.DisplayMode;
 import java.awt.Font;
 import java.awt.FontMetrics;
 import java.awt.Graphics2D;
+import java.awt.MouseInfo;
+import java.awt.Point;
 import java.awt.Toolkit;
 import java.awt.event.ComponentAdapter;
 import java.awt.event.ComponentEvent;
@@ -32,6 +34,7 @@ import java.lang.reflect.InvocationTargetException;
 
 import javax.swing.JFrame;
 import javax.swing.SwingUtilities;
+import javax.swing.TransferHandler;
 
 class WindowedState extends ScreenState {
 
@@ -120,6 +123,8 @@ class WindowedState extends ScreenState {
         for (MouseWheelListener l : getContext().getMouseWheelListeners()) {
             canvas.addMouseWheelListener(l);
         }
+        
+        frame.setTransferHandler(getContext().getTransferHandler());
 	}
 	
 	private void deregisterListeners() {
@@ -288,4 +293,17 @@ class WindowedState extends ScreenState {
         g.dispose();
         return fm;
     }
+
+    @Override
+    public void setTransferHandler(TransferHandler newHandler) {
+        frame.setTransferHandler(newHandler);
+    }
+
+    @Override
+    public Point getMousePosition(Point result) {
+        result = MouseInfo.getPointerInfo().getLocation();
+        SwingUtilities.convertPointFromScreen(result, canvas);
+        return result;
+    }
+
 }

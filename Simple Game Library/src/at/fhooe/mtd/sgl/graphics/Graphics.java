@@ -14,12 +14,30 @@ import java.awt.Color;
 import java.awt.Font;
 import java.awt.FontMetrics;
 import java.awt.Graphics2D;
+import java.awt.Point;
+
+import javax.swing.TransferHandler;
 
 /**
  * This interface encapsulates access to the graphics system.
  */
 public interface Graphics {
 
+    /**
+     * Polls the current mouse position. The returned location is more
+     * up-to-date than the mouse position provided by the input facility.
+     * <p>
+     * This method uses low the level API to of Java's AWT to query the mouse
+     * location in screen coordinates and then uses translates these coordinates
+     * in window coordinates.
+     * </p>
+     * 
+     * @param result
+     *            the current mouse position in pixels
+     * @return a reference to the given result point for method chaining
+     */
+    public Point getMousePosition(Point result);
+    
     /**
      * Describes the available the quality levels used for graphics output.
      */
@@ -157,4 +175,12 @@ public interface Graphics {
      */
     public FontMetrics getFontMetrics(Font font);
     
+    /**
+     * Sets the transfer handler for the top level window. The transfer handler
+     * is used to support e.g. drag and drop operations.
+     * 
+     * @param newHandler
+     *            the new TransferHandler
+     */
+    public void setTransferHandler(TransferHandler newHandler);
 }

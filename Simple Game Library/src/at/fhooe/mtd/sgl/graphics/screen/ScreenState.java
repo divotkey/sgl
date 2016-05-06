@@ -23,6 +23,8 @@ import java.awt.event.MouseMotionListener;
 import java.awt.event.MouseWheelListener;
 import java.awt.image.BufferedImage;
 
+import javax.swing.TransferHandler;
+
 
 abstract class ScreenState {
         
@@ -33,7 +35,7 @@ abstract class ScreenState {
         this.context = context;
     }
     
-    protected Cursor getBlankCursor() {
+    protected final Cursor getBlankCursor() {
         if (noCursor == null) {
             noCursor = Toolkit.getDefaultToolkit()
                     .createCustomCursor(new BufferedImage(16,
@@ -42,7 +44,7 @@ abstract class ScreenState {
         return noCursor;
     }
     
-    protected Screen getContext() {
+    protected final Screen getContext() {
         return context;
     }
     
@@ -77,5 +79,9 @@ abstract class ScreenState {
     public abstract void setShowCursor(boolean value);
 
     public abstract FontMetrics getFontMetrics(Font font);
+
+    public abstract void setTransferHandler(TransferHandler newHandler);
+
+    public abstract Point getMousePosition(Point result);
 
 }

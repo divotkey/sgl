@@ -18,6 +18,8 @@ import java.awt.FontMetrics;
 import java.awt.Graphics2D;
 import java.awt.GraphicsDevice;
 import java.awt.GraphicsEnvironment;
+import java.awt.MouseInfo;
+import java.awt.Point;
 import java.awt.Toolkit;
 import java.awt.event.HierarchyEvent;
 import java.awt.event.HierarchyListener;
@@ -30,6 +32,7 @@ import java.lang.reflect.InvocationTargetException;
 
 import javax.swing.JFrame;
 import javax.swing.SwingUtilities;
+import javax.swing.TransferHandler;
 
 class FullState extends ScreenState implements HierarchyListener {
 
@@ -111,6 +114,8 @@ class FullState extends ScreenState implements HierarchyListener {
         for (MouseWheelListener l : getContext().getMouseWheelListeners()) {
         	frame.addMouseWheelListener(l);
         }
+        
+        frame.setTransferHandler(getContext().getTransferHandler());
 	}
 	
     private void deregisterListeners() {
@@ -307,5 +312,17 @@ class FullState extends ScreenState implements HierarchyListener {
         FontMetrics fm = g.getFontMetrics(font);
         g.dispose();
         return fm;
+    }
+
+    @Override
+    public void setTransferHandler(TransferHandler newHandler) {
+        frame.setTransferHandler(newHandler);
     }    
+    
+    @Override
+    public Point getMousePosition(Point result) {
+        result = MouseInfo.getPointerInfo().getLocation();
+        SwingUtilities.convertPointFromScreen(result, frame);
+        return result;
+    }
 }

@@ -33,6 +33,7 @@ import java.awt.DisplayMode;
 import java.awt.Font;
 import java.awt.FontMetrics;
 import java.awt.Graphics2D;
+import java.awt.Point;
 import java.awt.event.KeyListener;
 import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
@@ -40,6 +41,8 @@ import java.awt.event.MouseWheelListener;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;
+
+import javax.swing.TransferHandler;
 
 import at.fhooe.mtd.sgl.graphics.Graphics;
 import at.fhooe.mtd.sgl.graphics.GraphicsListener;
@@ -55,6 +58,7 @@ public class Screen implements Graphics {
     private List<MouseListener> mouseListeners = new ArrayList<>();
     private List<MouseMotionListener> mouseMotionListeners = new ArrayList<>();
     private List<MouseWheelListener> mouseWheelListeners = new ArrayList<>();
+    private TransferHandler transferHandler;
     private boolean showCursor;
     private Quality quality = Graphics.Quality.Good;
     private Graphics2D context;
@@ -107,7 +111,7 @@ public class Screen implements Graphics {
     public void removeKeyListener(KeyListener l) {
         keyListeners.remove(l);
         state.removeKeyListener(l);
-    }
+    }    
     
     void switchState(ScreenState newState) {
         if (state != null) {
@@ -157,6 +161,12 @@ public class Screen implements Graphics {
     }
 
     @Override
+    public void setTransferHandler(TransferHandler newHandler) {
+        transferHandler = newHandler;
+        state.setTransferHandler(newHandler);
+    }
+    
+    @Override
     public void setClearColor(Color c) {
         clearColor = c;
     }
@@ -182,6 +192,10 @@ public class Screen implements Graphics {
 		return mouseWheelListeners;
 	}
 
+    TransferHandler getTransferHandler() {
+        return transferHandler;
+    }
+    
     void closing() {
     	commands.add(new ClosingCommand());
     }
@@ -353,6 +367,11 @@ public class Screen implements Graphics {
 	        	l.closing();
 	        }
 		}
+    }
+
+    @Override
+    public Point getMousePosition(Point result) {
+        return state.getMousePosition(result);
     }
     
 }
