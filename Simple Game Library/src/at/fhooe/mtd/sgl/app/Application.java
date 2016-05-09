@@ -16,9 +16,9 @@ public interface Application {
      * Describes the available modes for executing the main application loop.
      * <p>Currently available modes are</p>
      * <ul>
-     * <li>{@link NO_WAIT}</li>
-     * <li>{@link BUSY_WAIT}</li>
-     * <li>{@link IDLE_WAIT}</li>
+     * <li>{@link #NO_WAIT}</li>
+     * <li>{@link #BUSY_WAIT}</li>
+     * <li>{@link #IDLE_WAIT}</li>
      * </ul>
      */
     public enum LoopMode {
