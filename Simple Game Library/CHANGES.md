@@ -1,7 +1,7 @@
 # Version History
 
 ## Version 1.4.0
-Date: *2016-05-??*
+Date: *2016-05-09*
 
 - Added support for transfer handlers (e.g. used for drag and drop operations).
 - Added method `getMousePosition` to the `Graphics` interface, which provides more up-to-date 
