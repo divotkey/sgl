@@ -1,5 +1,11 @@
 # Version History
 
+## Version 1.4.1
+Date: *2016-06-06*
+
+- Moved library information into META-INF folder to avoid name clashes when repacked into other jar archives.
+
+
 ## Version 1.4.0
 Date: *2016-05-09*
 
