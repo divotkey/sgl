@@ -8,6 +8,7 @@
  * THIS CODE IS PROVIDED AS EDUCATIONAL MATERIAL AND NOT INTENDED TO ADDRESS
  * ALL REAL WORLD PROBLEMS AND ISSUES IN DETAIL.
  *******************************************************************************/
+
 package at.fhooe.mtd.sgl.graphics.screen;
 
 import java.awt.AWTException;
@@ -29,6 +30,7 @@ import java.awt.event.MouseMotionListener;
 import java.awt.event.MouseWheelListener;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
+import java.awt.font.FontRenderContext;
 import java.awt.image.BufferStrategy;
 import java.lang.reflect.InvocationTargetException;
 
@@ -294,6 +296,15 @@ class WindowedState extends ScreenState {
         return fm;
     }
 
+	@Override
+	public FontRenderContext getFontMetrics() {
+        Graphics2D g = (Graphics2D) canvas.getGraphics();
+        getContext().setQuality(g);
+        FontRenderContext frc = g.getFontRenderContext();
+        g.dispose();
+		return frc;
+	}
+    
     @Override
     public void setTransferHandler(TransferHandler newHandler) {
         frame.setTransferHandler(newHandler);

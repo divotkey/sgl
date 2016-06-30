@@ -1,5 +1,10 @@
 # Version History
 
+## Version 1.4.2
+Date: *2016-07-??*
+
+- Add method `getFontRenderContext` to graphics interface.
+
 ## Version 1.4.1
 Date: *2016-06-06*
 

@@ -19,6 +19,7 @@ import java.awt.event.KeyListener;
 import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
 import java.awt.event.MouseWheelListener;
+import java.awt.font.FontRenderContext;
 
 import javax.swing.TransferHandler;
 
@@ -132,6 +133,11 @@ class ClosedScreen extends ScreenState {
         return null;
     }
 
+	@Override
+	public FontRenderContext getFontMetrics() {
+		return null;
+	}
+    
     @Override
     public void setTransferHandler(TransferHandler newHandler) {
         // ignore
@@ -143,5 +149,6 @@ class ClosedScreen extends ScreenState {
         result.y = 0;
         return result;
     }
+
     
 }

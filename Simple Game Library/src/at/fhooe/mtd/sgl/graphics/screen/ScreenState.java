@@ -21,6 +21,7 @@ import java.awt.event.KeyListener;
 import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
 import java.awt.event.MouseWheelListener;
+import java.awt.font.FontRenderContext;
 import java.awt.image.BufferedImage;
 
 import javax.swing.TransferHandler;
@@ -83,5 +84,7 @@ abstract class ScreenState {
     public abstract void setTransferHandler(TransferHandler newHandler);
 
     public abstract Point getMousePosition(Point result);
+
+	public abstract FontRenderContext getFontMetrics();
 
 }

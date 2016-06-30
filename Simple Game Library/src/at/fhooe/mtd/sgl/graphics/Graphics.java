@@ -15,6 +15,7 @@ import java.awt.Font;
 import java.awt.FontMetrics;
 import java.awt.Graphics2D;
 import java.awt.Point;
+import java.awt.font.FontRenderContext;
 
 import javax.swing.TransferHandler;
 
@@ -174,6 +175,13 @@ public interface Graphics {
      * @return the font metrics
      */
     public FontMetrics getFontMetrics(Font font);
+    
+	/**
+	 * Retrieves the font render context.
+	 * 
+	 * @return the font render context
+	 */
+    public FontRenderContext getFontRenderContext();
     
     /**
      * Sets the transfer handler for the top level window. The transfer handler

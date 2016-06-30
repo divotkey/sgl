@@ -38,6 +38,7 @@ import java.awt.event.KeyListener;
 import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
 import java.awt.event.MouseWheelListener;
+import java.awt.font.FontRenderContext;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;
@@ -317,6 +318,11 @@ public class Screen implements Graphics {
     public FontMetrics getFontMetrics(Font font) {
         return state.getFontMetrics(font);
     }
+    
+	@Override
+	public FontRenderContext getFontRenderContext() {
+        return state.getFontMetrics();
+	}
 
     /////////////////////////////////////////////////
     /////// Inner Classes
@@ -373,5 +379,6 @@ public class Screen implements Graphics {
     public Point getMousePosition(Point result) {
         return state.getMousePosition(result);
     }
+
     
 }

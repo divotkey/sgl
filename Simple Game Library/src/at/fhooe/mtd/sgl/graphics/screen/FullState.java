@@ -27,6 +27,7 @@ import java.awt.event.KeyListener;
 import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
 import java.awt.event.MouseWheelListener;
+import java.awt.font.FontRenderContext;
 import java.awt.image.BufferStrategy;
 import java.lang.reflect.InvocationTargetException;
 
@@ -314,6 +315,15 @@ class FullState extends ScreenState implements HierarchyListener {
         return fm;
     }
 
+	@Override
+	public FontRenderContext getFontMetrics() {
+        Graphics2D g = (Graphics2D) frame.getGraphics();
+        getContext().setQuality(g);
+        FontRenderContext frc = g.getFontRenderContext();
+        g.dispose();
+		return frc;
+	}
+    
     @Override
     public void setTransferHandler(TransferHandler newHandler) {
         frame.setTransferHandler(newHandler);
