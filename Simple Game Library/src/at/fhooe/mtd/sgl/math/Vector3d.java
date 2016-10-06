@@ -322,10 +322,114 @@ public class Vector3d {
 	}
 	
 	/**
+	 * Flips the sign of all components of this vector.
+	 * 
+	 * @return reference to this vector for method chaining
+	 */
+	public Vector3d flip() {
+		x = -x; y = -y; z = -z;
+		return this;
+	}
+	
+	/**
 	 * Sets this vector to zero length.
 	 */
-	public void setZero() {
+	public Vector3d setZero() {
 		x = y = z = 0;
+		return this;
+	}
+	
+	/**
+	 * Test is this vector is exactly zero length.
+	 * 
+	 * @return {@code true} if this vector is zero length.
+	 */
+	public boolean isZero() {
+		return x == 0 && y == 0 && z == 0;
+	}
+	
+	/**
+	 * Rotates this vector about the x axis.
+	 * 
+	 * @param angle
+	 *            the angle in radians
+	 * @return reference to this vector for method chaining
+	 */
+	public Vector3d rotateX(double angle) {
+		double cos = Math.cos(angle); double sin = Math.sin(angle);
+		
+		double t = y * cos - z * sin;
+		z = y * sin + z * cos;
+		y = t;
+		
+		return this;
+	}
+	
+	/**
+	 * Rotates this vector about the x axis.
+	 * 
+	 * @param angle
+	 *            the angle in degrees
+	 * @return reference to this vector for method chaining
+	 */
+	public Vector3d rotateDegX(double angle) {
+		return rotateX(Math.toRadians(angle));
+	}
+	
+	/**
+	 * Rotates this vector about the y axis.
+	 * 
+	 * @param angle
+	 *            the angle in radians
+	 * @return reference to this vector for method chaining
+	 */
+	public Vector3d rotateY(double angle) {
+		double cos = Math.cos(angle); double sin = Math.sin(angle);
+		
+		double t = z * sin + x * cos;
+		z = z * cos - x * sin;
+		x = t;
+		
+		return this;
+	}
+	
+	/**
+	 * Rotates this vector about the y axis.
+	 * 
+	 * @param angle
+	 *            the angle in degrees
+	 * @return reference to this vector for method chaining
+	 */
+	public Vector3d rotateDegY(double angle) {
+		return rotateX(Math.toRadians(angle));
+	}
+	
+	/**
+	 * Rotates this vector about the z axis.
+	 * 
+	 * @param angle
+	 *            the angle in radians
+	 * @return reference to this vector for method chaining
+	 */
+	public Vector3d rotateZ(double angle) {
+		double cos = Math.cos(angle); double sin = Math.sin(angle);
+		
+		double t = x * cos - y * sin;
+		y = x * sin + y * cos; 
+		x = t;
+		
+		return this;
+	}
+	
+	/**
+	 * Rotates this vector about the z axis.
+	 * 
+	 * @param angle
+	 *            the angle in degrees
+	 * @return reference to this vector for method chaining
+	 */
+	public Vector3d rotateDegZ(double angle) {
+		return rotateX(Math.toRadians(angle));
 	}
 	
     @Override
