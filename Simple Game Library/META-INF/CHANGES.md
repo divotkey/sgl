@@ -1,11 +1,12 @@
 # Version History
 
-## Version 1.4.2
+## Version 1.5.0
 Date: *2016-09-??*
 
 - Added matrix and vector class for 3d environments.
-
 - Add method `getFontRenderContext` to graphics interface.
+- Improved `Vector3d` class. 
+- Additional functionality for mouse input.
 
 ## Version 1.4.1
 Date: *2016-06-06*
