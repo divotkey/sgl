@@ -11,6 +11,9 @@
 
 package at.fhooe.mtd.sgl.math;
 
+/**
+ * A 4x4 Matrix. The matrix is organized in row-major order.
+ */
 public final class Matrix4d {
 
 	/** Used to avoid repetitive memory allocation.*/
@@ -60,6 +63,74 @@ public final class Matrix4d {
     	return this;
     }
 
+	/**
+	 * Sets this matrix to the transposed of the specified matrix.
+	 * 
+	 * @param m
+	 *            the other matrix
+	 * @return a reference to this matrix for method chaining
+	 */
+    public Matrix4d setTransposed(Matrix4d o) {
+    	m00 = o.m00; m01 = o.m10; m02 = o.m20; m03 = o.m30;
+    	m10 = o.m01; m11 = o.m11; m12 = o.m21; m13 = o.m31;
+    	m20 = o.m02; m21 = o.m12; m22 = o.m22; m23 = o.m32;
+    	m30 = o.m03; m31 = o.m13; m32 = o.m23; m33 = o.m33;
+    	return this;
+    }
+
+    public Matrix4d setInverted(Matrix4d o) {
+		double det = o.m30 * o.m21 * o.m12 * o.m03 - o.m20 * o.m31 * o.m12 * o.m03 - o.m30 * o.m11
+				* o.m22 * o.m03 + o.m10 * o.m31 * o.m22 * o.m03 + o.m20 * o.m11 * o.m32 * o.m03 - o.m10
+				* o.m21 * o.m32 * o.m03 - o.m30 * o.m21 * o.m02 * o.m13 + o.m20 * o.m31 * o.m02 * o.m13
+				+ o.m30 * o.m01 * o.m22 * o.m13 - o.m00 * o.m31 * o.m22 * o.m13 - o.m20 * o.m01 * o.m32
+				* o.m13 + o.m00 * o.m21 * o.m32 * o.m13 + o.m30 * o.m11 * o.m02 * o.m23 - o.m10 * o.m31
+				* o.m02 * o.m23 - o.m30 * o.m01 * o.m12 * o.m23 + o.m00 * o.m31 * o.m12 * o.m23 + o.m10
+				* o.m01 * o.m32 * o.m23 - o.m00 * o.m11 * o.m32 * o.m23 - o.m20 * o.m11 * o.m02 * o.m33
+				+ o.m10 * o.m21 * o.m02 * o.m33 + o.m20 * o.m01 * o.m12 * o.m33 - o.m00 * o.m21 * o.m12
+				* o.m33 - o.m10 * o.m01 * o.m22 * o.m33 + o.m00 * o.m11 * o.m22 * o.m33;
+		
+		if (det == 0f)  {
+			throw new RuntimeException("matrix is not invertible");
+		}
+		
+		double inv_det = 1.0f / det;
+
+		m00 = (o.m12 * o.m23 * o.m31 - o.m13 * o.m22 * o.m31 + o.m13 * o.m21 * o.m32 - o.m11 * o.m23 * o.m32
+				- o.m12 * o.m21 * o.m33 + o.m11 * o.m22 * o.m33) * inv_det;
+		m01 = (o.m03 * o.m22 * o.m31 - o.m02 * o.m23 * o.m31 - o.m03 * o.m21 * o.m32 + o.m01 * o.m23 * o.m32
+				+ o.m02 * o.m21 * o.m33 - o.m01 * o.m22 * o.m33) * inv_det;
+		m02 = (o.m02 * o.m13 * o.m31 - o.m03 * o.m12 * o.m31 + o.m03 * o.m11 * o.m32 - o.m01 * o.m13 * o.m32
+				- o.m02 * o.m11 * o.m33 + o.m01 * o.m12 * o.m33) * inv_det;
+		m03 = (o.m03 * o.m12 * o.m21 - o.m02 * o.m13 * o.m21 - o.m03 * o.m11 * o.m22 + o.m01 * o.m13 * o.m22
+				+ o.m02 * o.m11 * o.m23 - o.m01 * o.m12 * o.m23) * inv_det;
+		m10 = (o.m13 * o.m22 * o.m30 - o.m12 * o.m23 * o.m30 - o.m13 * o.m20 * o.m32 + o.m10 * o.m23 * o.m32
+				+ o.m12 * o.m20 * o.m33 - o.m10 * o.m22 * o.m33) * inv_det;
+		m11 = (o.m02 * o.m23 * o.m30 - o.m03 * o.m22 * o.m30 + o.m03 * o.m20 * o.m32 - o.m00 * o.m23 * o.m32
+				- o.m02 * o.m20 * o.m33 + o.m00 * o.m22 * o.m33) * inv_det;
+		m12 = (o.m03 * o.m12 * o.m30 - o.m02 * o.m13 * o.m30 - o.m03 * o.m10 * o.m32 + o.m00 * o.m13 * o.m32
+				+ o.m02 * o.m10 * o.m33 - o.m00 * o.m12 * o.m33) * inv_det;
+		m13 = (o.m02 * o.m13 * o.m20 - o.m03 * o.m12 * o.m20 + o.m03 * o.m10 * o.m22 - o.m00 * o.m13 * o.m22
+				- o.m02 * o.m10 * o.m23 + o.m00 * o.m12 * o.m23) * inv_det;
+		m20 = (o.m11 * o.m23 * o.m30 - o.m13 * o.m21 * o.m30 + o.m13 * o.m20 * o.m31 - o.m10 * o.m23 * o.m31
+				- o.m11 * o.m20 * o.m33 + o.m10 * o.m21 * o.m33) * inv_det;
+		m21 = (o.m03 * o.m21 * o.m30 - o.m01 * o.m23 * o.m30 - o.m03 * o.m20 * o.m31 + o.m00 * o.m23 * o.m31
+				+ o.m01 * o.m20 * o.m33 - o.m00 * o.m21 * o.m33) * inv_det;
+		m22 = (o.m01 * o.m13 * o.m30 - o.m03 * o.m11 * o.m30 + o.m03 * o.m10 * o.m31 - o.m00 * o.m13 * o.m31
+				- o.m01 * o.m10 * o.m33 + o.m00 * o.m11 * o.m33) * inv_det;
+		m23 = (o.m03 * o.m11 * o.m20 - o.m01 * o.m13 * o.m20 - o.m03 * o.m10 * o.m21 + o.m00 * o.m13 * o.m21
+				+ o.m01 * o.m10 * o.m23 - o.m00 * o.m11 * o.m23) * inv_det;
+		m30 = (o.m12 * o.m21 * o.m30 - o.m11 * o.m22 * o.m30 - o.m12 * o.m20 * o.m31 + o.m10 * o.m22 * o.m31
+				+ o.m11 * o.m20 * o.m32 - o.m10 * o.m21 * o.m32) * inv_det;
+		m31 = (o.m01 * o.m22 * o.m30 - o.m02 * o.m21 * o.m30 + o.m02 * o.m20 * o.m31 - o.m00 * o.m22 * o.m31
+				- o.m01 * o.m20 * o.m32 + o.m00 * o.m21 * o.m32) * inv_det;
+		m32 = (o.m02 * o.m11 * o.m30 - o.m01 * o.m12 * o.m30 - o.m02 * o.m10 * o.m31 + o.m00 * o.m12 * o.m31
+				+ o.m01 * o.m10 * o.m32 - o.m00 * o.m11 * o.m32) * inv_det;
+		m33 = (o.m01 * o.m12 * o.m20 - o.m02 * o.m11 * o.m20 + o.m02 * o.m10 * o.m21 - o.m00 * o.m12 * o.m21
+				- o.m01 * o.m10 * o.m22 + o.m00 * o.m11 * o.m22) * inv_det;
+		
+    	return this;    	
+    }
+    
 	/**
 	 * Sets this matrix to the specified values.
 	 * 
@@ -374,6 +445,92 @@ public final class Matrix4d {
     }
     
 	/**
+	 * Transposes this matrix.
+	 * 
+	 * @return a reference to this matrix for method chaining
+	 */
+    public Matrix4d transpose() {
+    	setTransposed(tmp.set(this));
+		return this;
+    }
+    
+    /**
+     * Inverts this matrix;
+     * 
+	 * @return a reference to this matrix for method chaining
+     */
+    public Matrix4d invert() {
+    	
+		double det = m30 * m21 * m12 * m03 - m20 * m31 * m12 * m03 - m30 * m11
+				* m22 * m03 + m10 * m31 * m22 * m03 + m20 * m11 * m32 * m03 - m10
+				* m21 * m32 * m03 - m30 * m21 * m02 * m13 + m20 * m31 * m02 * m13
+				+ m30 * m01 * m22 * m13 - m00 * m31 * m22 * m13 - m20 * m01 * m32
+				* m13 + m00 * m21 * m32 * m13 + m30 * m11 * m02 * m23 - m10 * m31
+				* m02 * m23 - m30 * m01 * m12 * m23 + m00 * m31 * m12 * m23 + m10
+				* m01 * m32 * m23 - m00 * m11 * m32 * m23 - m20 * m11 * m02 * m33
+				+ m10 * m21 * m02 * m33 + m20 * m01 * m12 * m33 - m00 * m21 * m12
+				* m33 - m10 * m01 * m22 * m33 + m00 * m11 * m22 * m33;
+		
+		if (det == 0f)  {
+			throw new RuntimeException("matrix is not invertible");
+		}
+		
+		double inv_det = 1.0f / det;
+		
+		double tm00 = m12 * m23 * m31 - m13 * m22 * m31 + m13 * m21 * m32 - m11 * m23 * m32 - m12 * m21 * m33
+				+ m11 * m22 * m33;
+		double tm01 = m03 * m22 * m31 - m02 * m23 * m31 - m03 * m21 * m32 + m01 * m23 * m32 + m02 * m21 * m33
+				- m01 * m22 * m33;
+		double tm02 = m02 * m13 * m31 - m03 * m12 * m31 + m03 * m11 * m32 - m01 * m13 * m32 - m02 * m11 * m33
+				+ m01 * m12 * m33;
+		double tm03 = m03 * m12 * m21 - m02 * m13 * m21 - m03 * m11 * m22 + m01 * m13 * m22 + m02 * m11 * m23
+				- m01 * m12 * m23;
+		double tm10 = m13 * m22 * m30 - m12 * m23 * m30 - m13 * m20 * m32 + m10 * m23 * m32 + m12 * m20 * m33
+				- m10 * m22 * m33;
+		double tm11 = m02 * m23 * m30 - m03 * m22 * m30 + m03 * m20 * m32 - m00 * m23 * m32 - m02 * m20 * m33
+				+ m00 * m22 * m33;
+		double tm12 = m03 * m12 * m30 - m02 * m13 * m30 - m03 * m10 * m32 + m00 * m13 * m32 + m02 * m10 * m33
+				- m00 * m12 * m33;
+		double tm13 = m02 * m13 * m20 - m03 * m12 * m20 + m03 * m10 * m22 - m00 * m13 * m22 - m02 * m10 * m23
+				+ m00 * m12 * m23;
+		double tm20 = m11 * m23 * m30 - m13 * m21 * m30 + m13 * m20 * m31 - m10 * m23 * m31 - m11 * m20 * m33
+				+ m10 * m21 * m33;
+		double tm21 = m03 * m21 * m30 - m01 * m23 * m30 - m03 * m20 * m31 + m00 * m23 * m31 + m01 * m20 * m33
+				- m00 * m21 * m33;
+		double tm22 = m01 * m13 * m30 - m03 * m11 * m30 + m03 * m10 * m31 - m00 * m13 * m31 - m01 * m10 * m33
+				+ m00 * m11 * m33;
+		double tm23 = m03 * m11 * m20 - m01 * m13 * m20 - m03 * m10 * m21 + m00 * m13 * m21 + m01 * m10 * m23
+				- m00 * m11 * m23;
+		double tm30 = m12 * m21 * m30 - m11 * m22 * m30 - m12 * m20 * m31 + m10 * m22 * m31 + m11 * m20 * m32
+				- m10 * m21 * m32;
+		double tm31 = m01 * m22 * m30 - m02 * m21 * m30 + m02 * m20 * m31 - m00 * m22 * m31 - m01 * m20 * m32
+				+ m00 * m21 * m32;
+		double tm32 = m02 * m11 * m30 - m01 * m12 * m30 - m02 * m10 * m31 + m00 * m12 * m31 + m01 * m10 * m32
+				- m00 * m11 * m32;
+		double tm33 = m01 * m12 * m20 - m02 * m11 * m20 + m02 * m10 * m21 - m00 * m12 * m21 - m01 * m10 * m22
+				+ m00 * m11 * m22;
+		
+		m00 = tm00 * inv_det;
+		m01 = tm01 * inv_det;
+		m02 = tm02 * inv_det;
+		m03 = tm03 * inv_det;
+		m10 = tm10 * inv_det;
+		m11 = tm11 * inv_det;
+		m12 = tm12 * inv_det;
+		m13 = tm13 * inv_det;
+		m20 = tm20 * inv_det;
+		m21 = tm21 * inv_det;
+		m22 = tm22 * inv_det;
+		m23 = tm23 * inv_det;
+		m30 = tm30 * inv_det;
+		m31 = tm31 * inv_det;
+		m32 = tm32 * inv_det;
+		m33 = tm33 * inv_det;
+			
+    	return this;
+    }
+        
+	/**
 	 * Multiplies this matrix with the specified matrix.
 	 * 
 	 * @param o
@@ -451,6 +608,54 @@ public final class Matrix4d {
 		vt.y = m10 * x + m11 * y + m12 * v.z;
 		vt.z = m20 * x + m21 * y + m22 * v.z;
 
+    	return vt;
+    }
+   
+	/**
+	 * Transforms the specified point with the transposed of this matrix. This
+	 * method multiplies the specified vector with the transposed of this matrix
+	 * assuming that the fourth element of the vector is one. The result is
+	 * stored in the specified output vector {@code vt}.
+	 * 
+	 * <p>
+	 * The vector to be transformed and the output vector can be identical.
+	 * </p>
+	 * 
+	 * @param v
+	 *            the vector to be transformed.
+	 * @param vt
+	 *            the transformed vector
+	 * @return reference to the transformed vector
+	 */
+    public Vector3d transformPointTransposed(Vector3d v, Vector3d vt) {
+    	double x = v.x; double y = v.y;
+		vt.x = m00 * x + m10 * y + m20 * v.z + m30;
+		vt.y = m01 * x + m11 * y + m21 * v.z + m31;
+		vt.z = m02 * x + m12 * y + m22 * v.z + m32;
+    	return vt;
+    }
+    
+	/**
+	 * Transforms the specified vector with the transposed of this matrix. This
+	 * method multiplies the specified vector with the transposed of this matrix
+	 * assuming that the fourth element of the vector is zero. The result is
+	 * stored in the specified output vector {@code vt}.
+	 * 
+	 * <p>
+	 * The vector to be transformed and the output vector can be identical.
+	 * </p>
+	 * 
+	 * @param v
+	 *            the vector to be transformed.
+	 * @param vt
+	 *            the transformed vector
+	 * @return reference to the transformed vector
+	 */
+    public Vector3d transformVectorTransposed(Vector3d v, Vector3d vt) {
+    	double x = v.x; double y = v.y;
+		vt.x = m00 * x + m10 * y + m20 * v.z;
+		vt.y = m01 * x + m11 * y + m21 * v.z;
+		vt.z = m02 * x + m12 * y + m22 * v.z;
     	return vt;
     }
 

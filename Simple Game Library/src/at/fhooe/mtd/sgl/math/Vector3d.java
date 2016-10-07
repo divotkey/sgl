@@ -276,7 +276,7 @@ public class Vector3d {
 	 * @return the dot product between this vector and the other vector
 	 */
 	public double dot(Vector3d o) {
-		return x * o.x + y * o.y + z + o.z;
+		return x * o.x + y * o.y + z * o.z;
 	}
 	
 	/**
@@ -290,7 +290,7 @@ public class Vector3d {
 	 *            the z coordinate of the other vector
 	 * @return the dot product between this vector and the other vector
 	 */
-	public double dot(double x, double y) {
+	public double dot(double x, double y, double z) {
 		return this.x * x + this.y * y + this.z * z;
 	}
 	
