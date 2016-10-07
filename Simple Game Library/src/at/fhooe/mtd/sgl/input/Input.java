@@ -74,4 +74,44 @@ public interface Input {
 	 * @return the y-coordinate in pixels
 	 */
     public int getMouseY();    
+    
+	/**
+	 * Sets the mouse mouse position.
+	 * 
+	 * @param x
+	 *            the x-coordinate of the new mouse position
+	 * @param y
+	 *            the y-coordinate of the new mouse position
+	 */
+    public void setMouse(int x, int y);
+
+	/**
+	 * Returns the delta movement of the mouse the x-axis.
+	 * 
+	 * @return the delta movement on the x-axis
+	 */
+	public int getMouseDeltaX();
+	
+	/**
+	 * Returns the delta movement of the mouse the y-axis.
+	 * 
+	 * @return the delta movement on the y-axis
+	 */
+	public int getMouseDeltaY();
+	
+
+	/**
+	 * Defines if the mouse should be trapped inside the window.
+	 * 
+	 * @param b
+	 *            {@code true} if the mouse should be trapped
+	 */
+	public void setMouseTrapped(boolean b);
+	
+	/**
+	 * Returns if the mouse is trapped inside the window.
+	 * 
+	 * @return {@code true} if the mouse is trapped
+	 */
+	public boolean isMouseTrapped();
 }

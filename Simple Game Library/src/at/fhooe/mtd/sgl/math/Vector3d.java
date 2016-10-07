@@ -432,6 +432,26 @@ public class Vector3d {
 		return rotateX(Math.toRadians(angle));
 	}
 	
+	/**
+	 * Tests if this vector is a unit vector.
+	 * 
+	 * @return {@code true} if this vector is a unit vector
+	 */
+	public boolean isUnit() {
+		return isUnit(0.000000001);
+	}
+	
+	/**
+	 * Tests if this vector is a unit vector.
+	 * 
+	 * @param epsilon
+	 *            error margin
+	 * @return {@code true} if this vector is a unit vector
+	 */
+	public boolean isUnit(double epsilon) {
+		return Math.abs(lengthSquared() - 1.0) < epsilon;
+	}
+	
     @Override
     public String toString() {
         return String.format("<%f, %f, %f>", x, y, z);

@@ -74,6 +74,10 @@ public class Screen implements Graphics {
         this.title = title;
     }
     
+    public void convertPointToScreen(Point p) {
+    	state.convertPointToScreen(p);
+    }
+    
 	public void addMouseWheelListener(MouseWheelListener l) {
 		mouseWheelListeners.add(l);
 		state.addMouseWheelListener(l);

@@ -54,7 +54,7 @@ public class Java2dApplication implements Application, Input {
         });
 
         // initialize input
-        mouse = new Mouse();
+        mouse = new Mouse(screen);
         keyboard = new Keyboard();
         screen.addKeyListener(keyboard);
         screen.addMouseListener(mouse);
@@ -154,6 +154,31 @@ public class Java2dApplication implements Application, Input {
 	@Override
 	public int getMouseY() {
 		return mouse.getPosY();
+	}
+
+	@Override
+	public int getMouseDeltaX() {
+		return mouse.getDeltaX();
+	}
+
+	@Override
+	public int getMouseDeltaY() {
+		return mouse.getDeltaY();
+	}
+	
+	@Override
+	public void setMouse(int x, int y) {
+		mouse.setPos(x, y);
+	}
+
+	@Override
+	public void setMouseTrapped(boolean b) {
+		mouse.setTrapped(b);
+	}
+
+	@Override
+	public boolean isMouseTrapped() {
+		return mouse.isTrapped();
 	}
         
 }

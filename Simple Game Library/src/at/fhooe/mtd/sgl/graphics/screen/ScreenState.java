@@ -87,4 +87,6 @@ abstract class ScreenState {
 
 	public abstract FontRenderContext getFontMetrics();
 
+	public abstract void convertPointToScreen(Point p);
+
 }

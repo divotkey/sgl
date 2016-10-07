@@ -11,6 +11,9 @@
 
 package at.fhooe.mtd.sgl.input;
 
+import java.awt.AWTException;
+import java.awt.Point;
+import java.awt.Robot;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
@@ -20,6 +23,9 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+import at.fhooe.mtd.sgl.Sgl;
+import at.fhooe.mtd.sgl.graphics.screen.Screen;
+
 public class Mouse extends InputDevice implements MouseListener,
 		MouseMotionListener, MouseWheelListener {
 
@@ -28,19 +34,48 @@ public class Mouse extends InputDevice implements MouseListener,
     private boolean[] buttons = new boolean[MAX_BUTTON];
     private List<InputEvent> events = new ArrayList<>();
     
-    
     private int posX = 0;
     private int posY = 0;
     private int lastX;
     private int lastY;
     private int deltaY = 0;
     private int deltaX = 0;
+    private boolean trapped = false;
+    private Robot robot;
     
+    // Used to convert window coordinates to screen coordinates (required for mouse trap)
+    private Screen screen;
+    private Point pt = new Point();
     
-    public Mouse() {
+    public Mouse(Screen screen) {
+    	this.screen = screen;
         Arrays.fill(buttons, false);
         posX = posY = lastX = lastY = deltaX = deltaY = 0;
+        try {
+			robot = new Robot();
+		} catch (AWTException e) {
+			throw new RuntimeException(e);
+		}
     }
+    
+	/**
+	 * Defines if the mouse should be trapped inside the window.
+	 * 
+	 * @param b
+	 *            {@code true} if the mouse should be trapped
+	 */
+	public void setTrapped(boolean b) {
+		trapped = b;
+	}
+	
+	/**
+	 * Returns if the mouse is trapped inside the window.
+	 * 
+	 * @return {@code true} if the mouse is trapped
+	 */
+	public boolean isTrapped() {
+		return trapped;
+	}
     
     /**
      * Returns the delta movement in x-direction since last update.
@@ -67,6 +102,12 @@ public class Mouse extends InputDevice implements MouseListener,
     public synchronized int getPosY() {
         return posY;
     }
+    
+	public synchronized void setPos(int x, int y) {
+		posX = x; posY = y;
+		deltaX = 0; deltaY = 0;
+		robot.mouseMove(x, y);
+	}
     
     public synchronized boolean isPressed(int button)
             throws IndexOutOfBoundsException {
@@ -148,6 +189,14 @@ public class Mouse extends InputDevice implements MouseListener,
 
     @Override
     public void mouseExited(MouseEvent e) {
+    	if (trapped) {
+    		posX = lastX = Sgl.graphics.getWidth() / 2;
+    		posY = lastY = Sgl.graphics.getHeight() / 2;
+    		
+    		pt.setLocation(posX, posY);
+    		screen.convertPointToScreen(pt);
+    		robot.mouseMove(pt.x, pt.y);
+    	}
         e.consume();
     }
 
@@ -173,7 +222,7 @@ public class Mouse extends InputDevice implements MouseListener,
     public synchronized void mouseMoved(MouseEvent e) {
         posX = e.getX();
         posY = e.getY();
-        
+
         InputEvent event = InputEvent.obtainEvent();
         event.type = InputEvent.Type.MOUSE_MOVE;
         event.x = e.getX();
@@ -195,4 +244,5 @@ public class Mouse extends InputDevice implements MouseListener,
         
         e.consume();
 	}
+
 }

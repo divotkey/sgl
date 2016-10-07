@@ -335,4 +335,9 @@ class FullState extends ScreenState implements HierarchyListener {
         SwingUtilities.convertPointFromScreen(result, frame);
         return result;
     }
+
+	@Override
+	public void convertPointToScreen(Point p) {
+		// points is already in screen coordinates
+	}
 }
