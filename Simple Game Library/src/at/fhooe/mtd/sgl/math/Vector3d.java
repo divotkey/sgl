@@ -92,6 +92,42 @@ public class Vector3d {
 	}
 	
 	/**
+	 * Sets the x coordinate of this vector.
+	 * 
+	 * @param x
+	 *            the x coordinate
+	 * @return reference to this vector for method chaining
+	 */
+	public Vector3d setX(double x) {
+		this.x = x;
+		return this;
+	}
+	
+	/**
+	 * Sets the y coordinate of this vector.
+	 * 
+	 * @param y
+	 *            the y coordinate
+	 * @return reference to this vector for method chaining
+	 */
+	public Vector3d setY(double y) {
+		this.y = y;
+		return this;
+	}
+	
+	/**
+	 * Sets the z coordinate of this vector.
+	 * 
+	 * @param z
+	 *            the z coordinate
+	 * @return reference to this vector for method chaining
+	 */
+	public Vector3d setZ(double z) {
+		this.z = z;
+		return this;
+	}
+	
+	/**
 	 * Sets this vector to the given vector.
 	 * 
 	 * @param x
