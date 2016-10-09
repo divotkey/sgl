@@ -587,6 +587,25 @@ public final class Matrix4d {
     }
     
 	/**
+	 * Transforms the specified point in-place. This method multiplies the specified
+	 * point with this matrix assuming that the fourth element of the vector is
+	 * one.
+	 * 
+	 * @param p
+	 *            the point to be transformed.
+	 * @return reference to the transformed point
+	 */
+    public Vector3d transformPoint(Vector3d p) {
+    	double x = p.x; double y = p.y;
+    	
+		p.x = m00 * x + m01 * y + m02 * p.z + m03;
+		p.y = m10 * x + m11 * y + m12 * p.z + m13;
+		p.z = m20 * x + m21 * y + m22 * p.z + m23;
+
+    	return p;
+    }
+    
+	/**
 	 * Transforms the specified vector. This method multiplies the specified
 	 * vector with this matrix assuming that the fourth element of the vector is
 	 * zero. The result is stored in the specified output vector {@code vt}.
@@ -609,6 +628,27 @@ public final class Matrix4d {
 		vt.z = m20 * x + m21 * y + m22 * v.z;
 
     	return vt;
+    }
+    
+	/**
+	 * Transforms the specified vector in-place. This method multiplies the specified
+	 * vector with this matrix assuming that the fourth element of the vector is
+	 * zero. 
+	 * 
+	 * @param v
+	 *            the vector to be transformed.
+	 * @param vt
+	 *            the transformed vector
+	 * @return reference to the transformed vector
+	 */
+    public Vector3d transformVector(Vector3d v) {
+    	double x = v.x; double y = v.y;
+    	
+		v.x = m00 * x + m01 * y + m02 * v.z;
+		v.y = m10 * x + m11 * y + m12 * v.z;
+		v.z = m20 * x + m21 * y + m22 * v.z;
+
+    	return v;
     }
    
 	/**
@@ -660,8 +700,8 @@ public final class Matrix4d {
     }
 
 	/**
-	 * Multiplies the specified point vector dividing by w assuming that the
-	 * fourth element of the vector is one.
+	 * Multiplies the specified point vector. The vector components are divided
+	 * by w assuming that the fourth element of the vector is one.
 	 * 
 	 * @param p
 	 *            the point to be projected
@@ -678,5 +718,36 @@ public final class Matrix4d {
     	pp.z = (m20 * x + m21 * y + m22 * p.z + m23) / w;
 		
 		return pp;
+	}
+	
+	public double projectPointW(Vector3d p, Vector3d pp) {
+    	double x = p.x; double y = p.y;
+		double w = x * m30 + y * m31 + p.z * m32 + m33;	
+    	
+    	pp.x = m00 * x + m01 * y + m02 * p.z + m03;
+    	pp.y = m10 * x + m11 * y + m12 * p.z + m13;
+    	pp.z = m20 * x + m21 * y + m22 * p.z + m23;
+		
+		return w;		
+	}
+	
+	
+	/**
+	 * Multiplies the specified point vector in-place. The vector components are
+	 * divided by w assuming that the fourth element of the vector is one.
+	 * 
+	 * @param p
+	 *            the point to be projected
+	 * @return a reference to the projected vector
+	 */
+	public Vector3d projectPoint(Vector3d p) {
+    	double x = p.x; double y = p.y;
+		double w = x * m30 + y * m31 + p.z * m32 + m33;	
+    	
+    	p.x = (m00 * x + m01 * y + m02 * p.z + m03) / w;
+    	p.y = (m10 * x + m11 * y + m12 * p.z + m13) / w;
+    	p.z = (m20 * x + m21 * y + m22 * p.z + m23) / w;
+		
+		return p;
 	}
 }
