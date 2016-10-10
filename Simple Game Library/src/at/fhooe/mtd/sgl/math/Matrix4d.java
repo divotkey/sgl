@@ -459,7 +459,7 @@ public final class Matrix4d {
      * 
 	 * @return a reference to this matrix for method chaining
      */
-    public Matrix4d invert() {
+    public Matrix4d inverse() {
     	
 		double det = m30 * m21 * m12 * m03 - m20 * m31 * m12 * m03 - m30 * m11
 				* m22 * m03 + m10 * m31 * m22 * m03 + m20 * m11 * m32 * m03 - m10
