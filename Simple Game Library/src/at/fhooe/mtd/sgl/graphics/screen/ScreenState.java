@@ -89,4 +89,6 @@ abstract class ScreenState {
 
 	public abstract void convertPointToScreen(Point p);
 
+	public abstract Point getLocationOnScreen();
+
 }

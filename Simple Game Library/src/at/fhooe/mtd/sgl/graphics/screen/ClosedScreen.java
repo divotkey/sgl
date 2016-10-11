@@ -154,5 +154,10 @@ class ClosedScreen extends ScreenState {
 	public void convertPointToScreen(Point p) {
 		// ignore
 	}
+
+	@Override
+	public Point getLocationOnScreen() {
+		return null;
+	}
     
 }

@@ -43,7 +43,7 @@ public class Mouse extends InputDevice implements MouseListener,
     private boolean trapped = false;
     private Robot robot;
     
-    // Used to convert window coordinates to screen coordinates (required for mouse trap)
+    // Used to get screen coordinates (required for mouse trap)
     private Screen screen;
     private Point pt = new Point();
     
@@ -65,7 +65,12 @@ public class Mouse extends InputDevice implements MouseListener,
 	 *            {@code true} if the mouse should be trapped
 	 */
 	public void setTrapped(boolean b) {
+		if (trapped == b) return;				
 		trapped = b;
+		if (trapped) {
+			lastX = lastY = deltaX = deltaY = 0;
+			centerMouse();
+		}
 	}
 	
 	/**
@@ -106,7 +111,7 @@ public class Mouse extends InputDevice implements MouseListener,
 	public synchronized void setPos(int x, int y) {
 		posX = x; posY = y;
 		deltaX = 0; deltaY = 0;
-		robot.mouseMove(x, y);
+		setMouse(x, y);
 	}
     
     public synchronized boolean isPressed(int button)
@@ -115,11 +120,17 @@ public class Mouse extends InputDevice implements MouseListener,
     }
     
     public synchronized void update() {
-        deltaX = posX - lastX;
-        deltaY = posY - lastY;
-        lastX = posX;
-        lastY = posY;
-        
+    	if (!trapped) {
+            deltaX = posX - lastX;
+            deltaY = posY - lastY;
+            lastX = posX;
+            lastY = posY;
+    	} else {
+    		deltaX = lastX;
+    		deltaY = lastY;
+    		lastX = lastY = 0;
+    	}
+    	
         for (InputEvent event : events) {
             switch (event.type) {
             case MOUSE_DOWN:
@@ -129,7 +140,7 @@ public class Mouse extends InputDevice implements MouseListener,
                 fireMouseUp(event.x, event.y, event.button);
                 break;
             case MOUSE_MOVE:
-                fireMouseMove(event.x, event.y);
+        		fireMouseMove(event.x, event.y);
                 break;
             case MOUSE_WHEEL:
             	fireMouseWheel(event.rotation, (int) event.x, event.button);
@@ -189,14 +200,6 @@ public class Mouse extends InputDevice implements MouseListener,
 
     @Override
     public void mouseExited(MouseEvent e) {
-    	if (trapped) {
-    		posX = lastX = Sgl.graphics.getWidth() / 2;
-    		posY = lastY = Sgl.graphics.getHeight() / 2;
-    		
-    		pt.setLocation(posX, posY);
-    		screen.convertPointToScreen(pt);
-    		robot.mouseMove(pt.x, pt.y);
-    	}
         e.consume();
     }
 
@@ -218,17 +221,35 @@ public class Mouse extends InputDevice implements MouseListener,
         e.consume();
     }
 
+    private void centerMouse() {
+		posX = Sgl.graphics.getWidth() / 2;
+		posY = Sgl.graphics.getHeight() / 2;
+		setMouse(posX, posY);    	
+    }
+    
+    private void setMouse(int x, int y) {
+    	pt = screen.getLocationOnScreen();
+		robot.mouseMove(pt.x + x, pt.y + y);
+    }
+    
     @Override
     public synchronized void mouseMoved(MouseEvent e) {
-        posX = e.getX();
-        posY = e.getY();
-
-        InputEvent event = InputEvent.obtainEvent();
-        event.type = InputEvent.Type.MOUSE_MOVE;
-        event.x = e.getX();
-        event.y = e.getY();
-        events.add(event);
-        
+    	if (trapped) {
+    		posX = Sgl.graphics.getWidth() / 2;
+    		posY = Sgl.graphics.getHeight() / 2;
+    		lastX += e.getX() - posX;
+    		lastY += e.getY() - posY;
+    		setMouse(posX, posY);
+    	} else {
+	        posX = e.getX();
+	        posY = e.getY();
+	
+	        InputEvent event = InputEvent.obtainEvent();
+	        event.type = InputEvent.Type.MOUSE_MOVE;
+	        event.x = e.getX();
+	        event.y = e.getY();
+	        events.add(event);
+    	}        
         e.consume();
     }
 

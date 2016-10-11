@@ -74,6 +74,10 @@ public class Screen implements Graphics {
         this.title = title;
     }
     
+    public Point getLocationOnScreen() {
+    	return state.getLocationOnScreen();
+    }
+    
     public void convertPointToScreen(Point p) {
     	state.convertPointToScreen(p);
     }
@@ -383,6 +387,5 @@ public class Screen implements Graphics {
     public Point getMousePosition(Point result) {
         return state.getMousePosition(result);
     }
-
     
 }

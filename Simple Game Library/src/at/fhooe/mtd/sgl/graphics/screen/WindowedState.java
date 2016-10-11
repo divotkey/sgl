@@ -321,5 +321,10 @@ class WindowedState extends ScreenState {
 	public void convertPointToScreen(Point p) {
 		SwingUtilities.convertPointToScreen(p, canvas);
 	}
+	
+	@Override
+	public Point getLocationOnScreen() {
+		return canvas.getLocationOnScreen();
+	}
 
 }
