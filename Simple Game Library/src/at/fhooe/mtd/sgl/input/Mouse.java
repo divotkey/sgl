@@ -209,14 +209,22 @@ public class Mouse extends InputDevice implements MouseListener,
     
     @Override
     public synchronized void mouseDragged(MouseEvent e) {
-        posX = e.getX();
-        posY = e.getY();
-
-        InputEvent event = InputEvent.obtainEvent();
-        event.type = InputEvent.Type.MOUSE_MOVE;
-        event.x = e.getX();
-        event.y = e.getY();
-        events.add(event);
+    	if (trapped) {
+    		posX = Sgl.graphics.getWidth() / 2;
+    		posY = Sgl.graphics.getHeight() / 2;
+    		lastX += e.getX() - posX;
+    		lastY += e.getY() - posY;
+    		setMouse(posX, posY);
+    	} else {
+	        posX = e.getX();
+	        posY = e.getY();
+	
+	        InputEvent event = InputEvent.obtainEvent();
+	        event.type = InputEvent.Type.MOUSE_MOVE;
+	        event.x = e.getX();
+	        event.y = e.getY();
+	        events.add(event);
+    	}
         
         e.consume();
     }
