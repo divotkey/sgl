@@ -327,4 +327,9 @@ class WindowedState extends ScreenState {
 		return canvas.getLocationOnScreen();
 	}
 
+	@Override
+	public void setTitle(String title) {
+		frame.setTitle(title);
+	}
+
 }

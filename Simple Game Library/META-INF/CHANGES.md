@@ -7,6 +7,7 @@ Date: *2016-09-??*
 - Add method `getFontRenderContext` to graphics interface.
 - Improved `Vector3d` class. 
 - Additional functionality for mouse input.
+- Add `setTitle` method to `Graphics` interface.
 
 ## Version 1.4.1
 Date: *2016-06-06*

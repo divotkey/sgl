@@ -345,4 +345,9 @@ class FullState extends ScreenState implements HierarchyListener {
 	public Point getLocationOnScreen() {
 		return frame.getLocationOnScreen();
 	}
+
+	@Override
+	public void setTitle(String title) {
+		frame.setTitle(title);
+	}
 }

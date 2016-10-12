@@ -24,6 +24,15 @@ import javax.swing.TransferHandler;
  */
 public interface Graphics {
 
+	/**
+	 * Sets the title of the window. This method has no effect in full-screen
+	 * mode.
+	 * 
+	 * @param title
+	 *            the title text to be set
+	 */
+	void setTitle(String title);
+	
     /**
      * Polls the current mouse position. The returned location is more
      * up-to-date than the mouse position provided by the input facility.
@@ -191,4 +200,5 @@ public interface Graphics {
      *            the new TransferHandler
      */
     public void setTransferHandler(TransferHandler newHandler);
+
 }

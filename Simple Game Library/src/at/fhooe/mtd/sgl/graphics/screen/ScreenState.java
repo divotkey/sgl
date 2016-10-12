@@ -91,4 +91,6 @@ abstract class ScreenState {
 
 	public abstract Point getLocationOnScreen();
 
+	public abstract void setTitle(String title);
+
 }
