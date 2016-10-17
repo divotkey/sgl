@@ -13,6 +13,16 @@ package at.fhooe.mtd.sgl.math;
 
 public class Vector3d {
 	
+	/** Used for tests to avoid precision error. */
+	public static final double EPSILON = 0.000000001;
+
+	/**
+	 * A vector with zero length.
+	 * <p>
+	 * <strong>Note:</strong> In Java this vector is not really a constant. Use
+	 * with care, do not modify it.
+	 * </p>
+	 */
 	public static final Vector3d ZERO = new Vector3d(0, 0, 0);
 
 	/** The x coordinate. */
@@ -342,6 +352,22 @@ public class Vector3d {
 	}
 	
 	/**
+	 * Sets this vector to the cross product between this vector and the given
+	 * vector.
+	 * 
+	 * @param vx
+	 *            the x component of the vector
+	 * @param vy
+	 *            the y component of the vector
+	 * @param vz
+	 *            the z component of the vector
+	 * @return reference to this vector for method chaining
+	 */
+	public Vector3d cross(double vx, double vy, double vz) {
+		return this.set(y * vz - z * vy, z * vx - x * vz, x * vy - y * vx);
+	}
+	
+	/**
 	 * Normalizes this vector. If the vector has zero length, this method has no
 	 * effect.
 	 * 
@@ -474,18 +500,38 @@ public class Vector3d {
 	 * @return {@code true} if this vector is a unit vector
 	 */
 	public boolean isUnit() {
-		return isUnit(0.000000001);
+		return isUnit(EPSILON);
 	}
 	
 	/**
 	 * Tests if this vector is a unit vector.
 	 * 
-	 * @param epsilon
-	 *            error margin
+	 * @param e
+	 *            error margin (epsilon) 
 	 * @return {@code true} if this vector is a unit vector
 	 */
-	public boolean isUnit(double epsilon) {
-		return Math.abs(lengthSquared() - 1.0) < epsilon;
+	public boolean isUnit(double e) {
+		return Math.abs(lengthSquared() - 1.0) < e;
+	}
+	
+	/**
+	 * Tests if this vector is equal with the specified vector. The comparison
+	 * is made using the given tolerance value (epsilon) within the two vectors
+	 * considered to be equal. The tolerance value is used for each dimension
+	 * separately.
+	 * 
+	 * @param o
+	 *            the other vector
+	 * @param e
+	 *            the tolerance value
+	 * @return {@code true} if the two vectors are equal
+	 */
+	public boolean equals(Vector3d o, double e) {
+		if (o == null) return false;
+		if (Math.abs(o.x - x) > e) return false;
+		if (Math.abs(o.y - y) > e) return false;
+		if (Math.abs(o.z - z) > e) return false;
+		return true;		
 	}
 	
     @Override
