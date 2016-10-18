@@ -131,6 +131,42 @@ public final class Vector2d {
 	    return length(this.x - x, this.y - y);
 	}
 	
+	/**
+	 * Calculates the angle of this vector relative to the given vector. Angles
+	 * are towards the positive y-axis.
+	 * 
+	 * @param o
+	 *            the other vector
+	 * @return the angle between this vector and the given vector in radians
+	 */
+	public double angle(Vector2d o) {
+		return Math.atan2(cross(o), dot(o));
+	}	
+
+	/**
+	 * Calculates the 2d cross product between this vector and the given vector.
+	 * 
+	 * @param x
+	 *            the x coordinate of the other vector
+	 * @param y
+	 *            the y coordinate of the other vector
+	 * @return the 2d cross product between this vector and the other vector
+	 */
+	public double cross(double x, double y) {
+		return this.x * y - this.y * x;
+	}
+	
+	/**
+	 * Calculates the 2d cross product between this vector and the given vector.
+	 * 
+	 * @param o
+	 *            the other vector
+	 * @return the 2d cross  product between this vector and the other vector
+	 */
+	public double cross(Vector2d o) {
+		return x * o.y - y * o.x;		
+	}
+		
     /**
      * Returns the distance between this vector and the specified vector.
      * 
