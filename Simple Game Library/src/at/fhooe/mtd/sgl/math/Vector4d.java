@@ -105,6 +105,28 @@ public class Vector4d {
 	public double getX() {
 		return x;
 	}
+	
+	/**
+	 * Returns the vector's component with the specified index.
+	 * 
+	 * @param idx
+	 *            the index of the component of this vector
+	 * @return the requested value
+	 */
+	public double get(int idx) {
+		switch (idx) {
+		case 0: 
+			return x;
+		case 1: 
+			return y;
+		case 2:
+			return z;
+		case 3: 
+			return w;
+		default:	
+			throw new IndexOutOfBoundsException("index must be between 0 and 3, got " + idx);
+		}
+	}
 
 	/**
 	 * Returns the y coordinate of this vector.
