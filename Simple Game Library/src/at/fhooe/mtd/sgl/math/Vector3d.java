@@ -11,6 +11,13 @@
 
 package at.fhooe.mtd.sgl.math;
 
+/**
+ * A three-dimensional vector with double-precision.
+ * <p>
+ * These vector classes are optimized to avoid repetitive memory allocation. For
+ * a more detailed explanation see {@link Vector2d}.
+ * </p>
+ */
 public class Vector3d {
 	
 	/** Used for tests to avoid precision error. */
@@ -54,7 +61,7 @@ public class Vector3d {
 	public Vector3d(double x, double y, double z) {
 		set(x, y, z);
 	}
-
+	
 	/**
 	 * Creates a new vector from the given vector (copy constructor).
 	 * 
@@ -63,6 +70,18 @@ public class Vector3d {
 	 */
 	public Vector3d(Vector3d o) {
 		set(o);
+	}
+	
+	/**
+	 * Creates a new vector from the given vector and z-component.
+	 * 
+	 * @param o
+	 *            the other vector
+	 * @param z
+	 *            the z-component
+	 */
+	public Vector3d(Vector2d o, double z) {
+		set(o, z);
 	}
 	
 	/**
@@ -149,26 +168,67 @@ public class Vector3d {
 	 * @return reference to this vector for method chaining
 	 */
 	public Vector3d set(double x, double y, double z) {
-		this.x = x; 
-		this.y = y;
-		this.z = z;
+		this.x = x; this.y = y; this.z = z;
 		return this;
 	}
 	
 	/**
-	 * Sets this vector o the given vector.
+	 * Sets this vector to the given vector.
 	 * 
 	 * @param o
 	 *            the other vector
 	 * @return reference to this vector for method chaining
 	 */
 	public Vector3d set(Vector3d o) {
-		x = o.x; 
-		y = o.y;
-		z = o.z;
+		x = o.x; y = o.y; z = o.z;
 		return this;
 	}
 
+	/**
+	 * Sets the vector's components using values form the specified array.
+	 * 
+	 * @param src
+	 *            the array where to take the components from
+	 * @return reference to this vector for method chaining
+	 * @throws IndexOutOfBoundsException
+	 *             if the specified position is negative or the array does not
+	 *             contain enough values
+	 */
+	public Vector3d set(double[] src) throws IndexOutOfBoundsException{
+		return set(src, 0);
+	}
+	
+	/**
+	 * Sets the vector's components using values form the specified array.
+	 * 
+	 * @param src
+	 *            the array where to take the components from
+	 * @param pos
+	 *            the position within the array
+	 * @return reference to this vector for method chaining
+	 * @throws IndexOutOfBoundsException
+	 *             if the specified position is negative or the array does not
+	 *             contain enough values
+	 */
+	public Vector3d set(double[] src, int pos) throws IndexOutOfBoundsException {
+		x = src[pos]; y = src[pos + 1]; z = src[pos + 2];
+		return this;		
+	}
+	
+	/**
+	 * Sets the vector to the given vector and z-component.
+	 * 
+	 * @param v
+	 *            the other vector
+	 * @param z
+	 *            the z component
+	 * @return reference to this vector for method chaining
+	 */
+	public Vector3d set(Vector2d v, double z) {
+		x = v.x; y = v.y; this.z = z;
+		return this;
+	}
+	
 	/**
 	 * Returns the length of this vector.
 	 * 
@@ -195,9 +255,7 @@ public class Vector3d {
 	 * @return reference to this vector for method chaining
 	 */
 	public Vector3d sub(Vector3d o) {
-		x -= o.x;
-		y -= o.y;
-		z -= o.z;
+		x -= o.x; y -= o.y; z -= o.z;
 		return this;
 	}
 	
@@ -213,9 +271,7 @@ public class Vector3d {
 	 * @return reference to this vector for method chaining
 	 */
 	public Vector3d sub(double x, double y, double z) {
-		this.x -= x;
-		this.y -= y;
-		this.z -= z;
+		this.x -= x; this.y -= y; this.z -= z;
 		return this;
 	}
 	
@@ -227,9 +283,7 @@ public class Vector3d {
 	 * @return reference to this vector for method chaining
 	 */
 	public Vector3d add(Vector3d o) {
-		x += o.x;
-		y += o.y;
-		z += o.z;
+		x += o.x; y += o.y; z += o.z;
 		return this;
 	}
 	
@@ -245,9 +299,7 @@ public class Vector3d {
 	 * @return reference to this vector for method chaining
 	 */
 	public Vector3d add(double x, double y, double z) {
-		this.x += x;
-		this.y += y;
-		this.z += z;
+		this.x += x; this.y += y; this.z += z;
 		return this;
 	}
 	
@@ -259,9 +311,7 @@ public class Vector3d {
 	 * @return reference to this vector for method chaining
 	 */
 	public Vector3d scale(double s) {
-		x *= s;
-		y *= s;
-		z *= s;
+		x *= s; y *= s; z *= s;
 		return this;
 	}
 	
@@ -269,17 +319,15 @@ public class Vector3d {
 	 * Scales this vector by the given vector.
 	 * 
 	 * @param sx
-	 *            x coordinate of the other vector
+	 *            the scaling factor of the x-component
 	 * @param sy
-	 *            y coordinate of the other vector
+	 *            the scaling factor of the y-component
 	 * @param sz
-	 *            z coordinate of the other vector
+	 *            the scaling factor of the z-component
 	 * @return reference to this vector for method chaining
 	 */
 	public Vector3d scale(double sx, double sy, double sz) {
-		x *= sx;
-		y *= sy;
-		z *= sz;
+		x *= sx; y *= sy; z *= sz;
 		return this;
 	}
 	
@@ -291,9 +339,7 @@ public class Vector3d {
 	 * @return reference to this vector for method chaining
 	 */
 	public Vector3d scale(Vector3d o) {
-		x *= o.x;
-		y *= o.y;
-		z *= o.z;
+		x *= o.x; y *= o.y; z *= o.z;
 		return this;
 	}
 	
@@ -308,9 +354,7 @@ public class Vector3d {
 	 * @return reference to this vector for method chaining
 	 */
 	public Vector3d mulAdd(Vector3d o, double s) {
-		x += o.x * s;
-		y += o.y * s;
-		z += o.z * s;
+		x += o.x * s; y += o.y * s; z += o.z * s;
 		return this;
 	}
 	

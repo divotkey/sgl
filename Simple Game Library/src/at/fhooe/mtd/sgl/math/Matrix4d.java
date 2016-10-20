@@ -650,6 +650,79 @@ public final class Matrix4d {
 
     	return v;
     }
+
+	/**
+	 * Transforms the specified four dimensional vector. This method multiplies
+	 * the specified vector with this matrix. Using a four-dimensional vector,
+	 * there is no need to distinguish between point and vector. The result is
+	 * stored in the specified output vector {@code vt}.
+	 * 
+	 * <p>
+	 * The vector to be transformed and the output vector can be identical.
+	 * </p>
+	 * 
+	 * @param v
+	 *            the vector to be transformed
+	 * @param vt
+	 *            the vector where to store the result
+	 * @return reference to the result vector
+	 */
+    public Vector4d transform(Vector4d v, Vector4d vt) {
+    	double x = v.x; double y = v.y; double z = v.z;
+    	
+    	vt.x = m00 * x + m01 * y + m02 * z + m03 * v.w;
+    	vt.y = m10 * x + m11 * y + m12 * z + m13 * v.w;
+    	vt.z = m20 * x + m21 * y + m22 * z + m23 * v.w;
+    	vt.w = m30 * x + m31 * y + m32 * z + m33 * v.w;
+    	return vt;
+    }
+    
+	/**
+	 * Transforms the specified four dimensional vector in-place. This method
+	 * multiplies the specified vector with this matrix. Using a
+	 * four-dimensional vector, there is no need to distinguish between point
+	 * and vector.
+	 * 
+	 * @param v
+	 *            the vector to be transformed
+	 * @return reference to the result vector
+	 */
+    public Vector4d transform(Vector4d v) {
+    	double x = v.x; double y = v.y; double z = v.z;
+    	
+    	v.x = m00 * x + m01 * y + m02 * z + m03 * v.w;
+    	v.y = m10 * x + m11 * y + m12 * z + m13 * v.w;
+    	v.z = m20 * x + m21 * y + m22 * z + m23 * v.w;
+    	v.w = m30 * x + m31 * y + m32 * z + m33 * v.w;
+    	return v;
+    }
+    
+	/**
+	 * Transforms the specified four-dimensional vector with the transposed of
+	 * this matrix. This method multiplies the specified vector with the
+	 * transposed of this matrix. Using a four-dimensional vector, there is no
+	 * need to distinguish between point and vector. The result is stored in the
+	 * specified output vector {@code vt}.
+	 * 
+	 * <p>
+	 * The vector to be transformed and the output vector can be identical.
+	 * </p>
+	 * 
+	 * @param v
+	 *            the vector to be transformed
+	 * @param vt
+	 *            the vector where to store the result
+	 * @return reference to the result vector
+	 */
+    public Vector4d transformTransposed(Vector4d v, Vector4d vt) {
+    	double x = v.x; double y = v.y; double z = v.z;
+    	
+    	vt.x = m00 * x + m10 * y + m20 * z + m30 * v.w;
+    	vt.y = m01 * x + m11 * y + m21 * z + m31 * v.w;
+    	vt.z = m02 * x + m12 * y + m22 * z + m32 * v.w;
+    	vt.w = m03 * x + m13 * y + m23 * z + m33 * v.w;
+    	return vt;
+    }
    
 	/**
 	 * Transforms the specified point with the transposed of this matrix. This
@@ -662,7 +735,7 @@ public final class Matrix4d {
 	 * </p>
 	 * 
 	 * @param v
-	 *            the vector to be transformed.
+	 *            the vector to be transformed
 	 * @param vt
 	 *            the transformed vector
 	 * @return reference to the transformed vector

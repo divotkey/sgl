@@ -12,7 +12,102 @@
 package at.fhooe.mtd.sgl.math;
 
 /**
- * A 2 dimensional vector with double-precision.
+ * A two-dimensional vector with double-precision.
+ * <p>
+ * These vector classes are optimized to avoid repetitive memory allocation.
+ * This means, that almost all methods modify the vector
+ * <strong>in-place</strong>, meaning the vector itself is changed. In order to
+ * make it easy to carry out several operations at once without staring a new
+ * statement, most methods <strong>return a this reference</strong>, which is
+ * often <strong>mistaken as the a result vector</strong>.
+ * 
+ * <h3>Example</h3> Let's assume we want to add two vectors and store the result
+ * in a third vector. So we have the two vectors to add, we call them
+ * {@code v1}, and {@code v2} and the result vector {@code v3}. The code
+ * sequence for the operation v3 = v1 + v2 would look like this:
+ * 
+ * <pre>
+ * Vector2d v1 = new Vector(1, 2);
+ * Vector2d v2 = new Vector(3, 4);
+ * Vector2d v3 = new Vector();
+ * 
+ * v3.set(v1).add(v2);
+ * </pre>
+ * 
+ * First we assign the vector v2 to the result vector v3 and then we add the
+ * vector v3. Both vectors v1 and v2 are untouched, v3 carries the result.
+ * 
+ * To make it more illustrative what the code actually does, we can rewrite the
+ * code sequence like this:
+ * 
+ * <pre>
+ * Vector2d v1 = new Vector(1, 2);
+ * Vector2d v2 = new Vector(3, 4);
+ * Vector2d v3 = new Vector();
+ *
+ * v3.set(v1);
+ * v3.add(v2);
+ * </pre>
+ * 
+ * This code does exactly the same as the first version, however requires two
+ * statements to carry out the operation. This is the reason, why methods like
+ * {@code add}, {@code sub}, {@code scale}, {@code muladd}, {@code cross} etc.
+ * return a this reference of its vector.
+ *
+ * <h3>Unintended alteration</h3> The following code demonstrates a tricky
+ * situation where an unintended alteration of source vectors could take place.
+ * Let's assume we have a method that requires one vector as parameter
+ * {@code foo} and we have another method that takes two vectors as parameter
+ * {@code bar}. Now we want to call {@code foo} from {@code bar} with the
+ * addition of parameter {@code v1} and {@code v2}, meaning we want to call
+ * <em>foo(v1 + v2)</em>.
+ * 
+ * <pre>
+ * void foo(Vector2d v) {
+ * 	// does something with v
+ * }
+ * 
+ * void bar(Vector2d v1, Vector2d v2) {
+ * 	foo(v1.add(v2)); // probably the an unintended alteration of vector v1!
+ * }
+ * </pre>
+ * 
+ * This code would modify vector {@code v1}, which is probably not what we want.
+ * The next example solves this problem and shows several versions of method
+ * {@code bar}, which do basically all the same, they use a temporary vector
+ * instance to store the result of the <em>v1 + v2</em> operation:
+ * 
+ * <pre>
+ * class MyClass {
+ * 
+ *     // Auxiliary vector used to avoid repetitive memory allocation.
+ *     Vector2d auxVec = new Vector2d();
+ * 
+ *     void foo(Vector3d v) {
+ *         // does something with v
+ *     }
+ * 
+ *     void bar1(Vector2d v1, Vector2d v2) {
+ *         foo(v1.copy().add(v2));
+ *     }
+ * 
+ *     void bar2(Vector2d v1, Vector2d v2) {
+ *         foo(new Vector2d(v1).add(v2));
+ *     }
+ * 
+ *     void bar3(Vector2d v1, Vector2d v2) {
+ *         Vector3d tmp = new Vector3d();
+ *         foo(tmp.set(v1).add(v2));
+ *     }
+ *     
+ *     void bar4(Vector2d v1, Vector2d v2) {
+ *         foo(auxVec.set(v1).add(v2));
+ *     }
+ * </pre>
+ * 
+ * The last version {@code bar4} if probably the best solution if the operation
+ * is executed quite a lot (e.g. within the game loop), because it avoid the
+ * allocation (and destruction) of a temporary instance of a vector object.
  */
 public final class Vector2d {
 
@@ -92,8 +187,7 @@ public final class Vector2d {
 	 * @return reference to this vector for method chaining
 	 */
 	public Vector2d set(double x, double y) {
-		this.x = x; 
-		this.y = y;
+		this.x = x; this.y = y;
 		return this;
 	}
 
@@ -105,11 +199,41 @@ public final class Vector2d {
 	 * @return reference to this vector for method chaining
 	 */
 	public Vector2d set(Vector2d o) {
-		x = o.x; 
-		y = o.y;
+		x = o.x; y = o.y;
 		return this;
 	}
 
+	/**
+	 * Sets the vector's components using values form the specified array.
+	 * 
+	 * @param src
+	 *            the array where to take the components from
+	 * @return reference to this vector for method chaining
+	 * @throws IndexOutOfBoundsException
+	 *             if the specified position is negative or the array does not
+	 *             contain enough values
+	 */
+	public Vector2d set(double[] src) throws IndexOutOfBoundsException{
+		return set(src, 0);
+	}
+	
+	/**
+	 * Sets the vector's components using values form the specified array.
+	 * 
+	 * @param src
+	 *            the array where to take the components from
+	 * @param pos
+	 *            the position within the array
+	 * @return reference to this vector for method chaining
+	 * @throws IndexOutOfBoundsException
+	 *             if the specified position is negative or the array does not
+	 *             contain enough values
+	 */
+	public Vector2d set(double[] src, int pos) throws IndexOutOfBoundsException {
+		x = src[pos]; y = src[pos + 1];
+		return this;		
+	}
+	
 	/**
 	 * Returns the length of this vector.
 	 * 
@@ -312,9 +436,9 @@ public final class Vector2d {
 	 * Scales this vector by the given vector.
 	 * 
 	 * @param sx
-	 *            x coordinate of the other vector
+	 *            the scaling factor of the x-component
 	 * @param sy
-	 *            y coordinate of the other vector
+	 *            the scaling factor of the y-component
 	 * @return reference to this vector for method chaining
 	 */
 	public Vector2d scale(double sx, double sy) {
@@ -347,7 +471,7 @@ public final class Vector2d {
 	 * @return reference to this vector for method chaining
 	 */
 	public Vector2d mulAdd(Vector2d o, double s) {
-		x += o.x * s;
+		x += o.x * s; 
 		y += o.y * s;
 		return this;
 	}

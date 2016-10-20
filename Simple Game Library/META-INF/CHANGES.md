@@ -5,7 +5,7 @@ Date: *2016-09-??*
 
 - Added matrix and vector class for 3d environments.
 - Add method `getFontRenderContext` to graphics interface.
-- Improved `Vector3d` class. 
+- Improved vector classes, added Vector4d class.
 - Additional functionality for mouse input.
 - Add `setTitle` method to `Graphics` interface.
 
