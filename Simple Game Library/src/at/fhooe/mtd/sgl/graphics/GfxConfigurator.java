@@ -53,6 +53,9 @@ public class GfxConfigurator {
 
     private boolean finished;
     private String prefNodeName;
+
+	private int forceWidth = -1;
+	private int forceHeight = -1;
     
     private static String findTag(int width, int height) {
         for (FormatTag tag : TAGS) {
@@ -170,6 +173,11 @@ public class GfxConfigurator {
         for (DisplayMode mode : gd.getDisplayModes()) {
             r.add(new DisplayModeWrapper(mode));
         }
+        if (forceHeight > 0 && forceWidth > 0) {
+        	DisplayMode dmSrc = r.get(0).mode;
+			r.add(new DisplayModeWrapper(
+					new DisplayMode(forceWidth, forceHeight, dmSrc.getBitDepth(), dmSrc.getRefreshRate())));
+        }
         Collections.sort(r);
         Collections.reverse(r);
 
@@ -192,6 +200,7 @@ public class GfxConfigurator {
             throw new RuntimeException("unable to init gfx configurator", e);
         }
     }
+    
     
     public DisplayMode getDisplayMode() {
         return modeCombo.getItemAt(modeCombo.getSelectedIndex()).mode;
@@ -372,4 +381,9 @@ public class GfxConfigurator {
     public void setVsync(boolean b) {
         
     }
+
+	public void forceResolution(int width, int height) {
+		forceWidth = width;
+		forceHeight = height;
+	}
 }
