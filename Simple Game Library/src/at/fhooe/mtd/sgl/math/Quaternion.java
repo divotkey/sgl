@@ -162,7 +162,6 @@ public final class Quaternion {
 		w -= o.w; x -= o.x; y -= o.y; z -= o.z;
 		return this;
 	}
-
 	
 	/**
 	 * Sets the length of this quaternion to one. If this quaternion has zero
@@ -184,6 +183,19 @@ public final class Quaternion {
 			z /= l;
 		}
 		return this;
+	}
+	
+    /**
+     * Multiplies each component of this quaternion with the given scalar
+     * in-place.
+     * 
+     * @param s
+     *            the scalar value
+     * @return a reference to this quaternion for method chaining
+     */
+	public Quaternion mul(double s) {
+	    w *= s; x *= s; y = s; z *= s; 
+	    return this;
 	}
 	
 	/**
