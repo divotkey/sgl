@@ -115,5 +115,20 @@ public class MathUtils {
     public static float lerp (float from, float to, float p) {
         assert p >= 0 && p <= 1 : "interpolation position out of range";
         return from + (to - from) * p;
-    }   
+    }
+    
+	/**
+	 * Tests if the specified two values are equal within a tolerance (epsilon).
+	 * 
+	 * @param a
+	 *            the first value
+	 * @param b
+	 *            the second value
+	 * @param epsilon
+	 *            the error margin
+	 * @return {@code true} if the two values are equal
+	 */
+    public static boolean isEqual(double a, double b, double epsilon) {
+    	return Math.abs(a - b) <= epsilon;
+    }
 }
