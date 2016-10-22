@@ -36,12 +36,11 @@ public final class Quaternion {
 	/** The z-component of this quaternion. */
 	public double z;
 	
-	
 	/**
-	 * Creates a new instance with all components set to zero.
+	 * Creates a new instance. The new instance will be set to identity.
 	 */
 	public Quaternion() {
-		// intentionally left empty
+	    setToIdentity();
 	}
 	
 	/**
