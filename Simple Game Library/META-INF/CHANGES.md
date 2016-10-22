@@ -9,6 +9,7 @@ Date: *2016-09-??*
 - Additional functionality for mouse input.
 - Add `setTitle` method to `Graphics` interface.
 - Added option to force graphics mode in `GfxConfigurator'.
+- Added resource loader from POWIDL (thanks a lot to Quantum Reboot).
 
 ## Version 1.4.1
 Date: *2016-06-06*

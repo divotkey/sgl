@@ -315,6 +315,47 @@ public final class Matrix4d {
     	return this;
     }
     
+    public Matrix4d set(Vector3d t, Quaternion q) {
+    	return set(t.x, t.y, t.z, q.w, q.x, q.y, q.z);
+    }
+    
+    public Matrix4d set(double tx, double ty, double tz, double qw, double qx, double qy, double qz) {
+		double xs = qx * 2,  ys = qy * 2,  zs = qz * 2;
+		double wx = qw * xs, wy = qw * ys, wz = qw * zs;
+		double xx = qx * xs, xy = qx * ys, xz = qx * zs;
+		double yy = qy * ys, yz = qy * zs, zz = qz * zs;
+
+		m00 = (1.0f - (yy + zz));
+		m01 = (xy - wz);
+		m02 = (xz + wy);
+		m03 = tx;
+
+		m10 = (xy + wz);
+		m11 = (1.0f - (xx + zz));
+		m12 = (yz - wx);
+		m13 = ty;
+
+		m20 = (xz - wy);
+		m21 = (yz + wx);
+		m22 = (1.0f - (xx + yy));
+		m23 = tz;
+
+		m30 = 0.f;
+		m31 = 0.f;
+		m32 = 0.f;
+		m33 = 1.0f;
+		
+		return this;
+    }
+    
+    public Matrix4d setToRotate(double qw, double qx, double qy, double qz) {
+    	return set(0, 0, 0, qw, qx, qy, qz);
+    }
+    
+    public Matrix4d setToRotate(Quaternion q) {
+    	return set(0, 0, 0, q.w, q.x, q.y, q.z);
+    }
+    
 	/**
 	 * Multiplies this matrix with a translate matrix with the specified
 	 * translation.
