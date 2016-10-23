@@ -359,6 +359,21 @@ public class Vector3d {
 	}
 	
 	/**
+	 * Scales the given vector by the given scale vector and adds the result to
+	 * this vector.
+	 * 
+	 * @param o
+	 *            the other vector that should be scaled and added
+	 * @param sv
+	 *            the scale vector that will scale the other vector
+	 * @return reference to this vector for method chaining
+	 */
+	public Vector3d mulAdd(Vector3d o, Vector3d sv) {
+		x += o.x * sv.x; y += o.y * sv.y; z += o.z * sv.z;
+		return this;
+	}
+	
+	/**
 	 * Calculates the dot product between this vector and the given vector.
 	 * 
 	 * @param o
