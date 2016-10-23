@@ -194,7 +194,7 @@ public final class Quaternion {
      * @return a reference to this quaternion for method chaining
      */
 	public Quaternion mul(double s) {
-	    w *= s; x *= s; y = s; z *= s; 
+	    w *= s; x *= s; y *= s; z *= s; 
 	    return this;
 	}
 	
