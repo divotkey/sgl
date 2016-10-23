@@ -726,7 +726,7 @@ public final class Matrix4d {
 	 * 
 	 * @param v
 	 *            the vector to be transformed
-	 * @return reference to the result vector
+	 * @return reference to the transformed input vector
 	 */
     public Vector4d transform(Vector4d v) {
     	double x = v.x; double y = v.y; double z = v.z;

@@ -22,7 +22,13 @@ package at.fhooe.mtd.sgl.math;
 public final class Quaternion {
 
 	/** Used for tests to avoid precision error. */
-	public static final double EPSILON = 0.000000001;
+	private static final double EPSILON = 0.000000001;
+
+	/** Used to store a quaternion temporarily. Method that use this are not thread-safe. */
+	private static Quaternion tmp1 = new Quaternion();
+	
+	/** Used to store a quaternion temporarily. Method that use this are not thread-safe. */
+	private static Quaternion tmp2 = new Quaternion();
 
 	/** The w-component of this quaternion. */
 	public double w;
@@ -35,6 +41,7 @@ public final class Quaternion {
 	
 	/** The z-component of this quaternion. */
 	public double z;
+	
 	
 	/**
 	 * Creates a new instance. The new instance will be set to identity.
@@ -298,6 +305,49 @@ public final class Quaternion {
 		return this;
 	}
 		
+	/**
+	 * Conjugates this quaternion.
+	 * 
+	 * @return a reference to this quaternion for method chaining
+	 */
+	public Quaternion conjugate() {
+		x = -x; y = -y; z = -z;
+		return this;
+	}
+	
+	/**
+	 * Transforms (rotates) the specified vector by this quaternion in-place.
+	 * <p>
+	 * v' = q * v * q<sup>-1</sup>
+	 * </p>
+	 * 
+	 * @param v
+	 *            the vector to transform
+	 * @return reference to the transformed input vector
+	 */
+	public Vector3d transform(Vector3d v) {
+		tmp2.set(this).conjugate().preMul(tmp1.set(0, v)).preMul(this);		
+		v.set(tmp2.x, tmp2.y, tmp2.z);
+		return v;
+	}
+	
+	/**
+	 * Transforms (rotates) the specified vector by this quaternion. The input
+	 * vector and the result vector can be identical.
+	 * <p>
+	 * v' = q * v * q<sup>-1</sup>
+	 * </p>
+	 * 
+	 * @param v
+	 *            the vector to transform
+	 * @return reference to the result vector
+	 */
+	public Vector3d transform(Vector3d v, Vector3d result) {
+		tmp2.set(this).conjugate().preMul(tmp1.set(0, v)).preMul(this);		
+		result.set(tmp2.x, tmp2.y, tmp2.z);
+		return result;
+	}
+	
     @Override
     public String toString() {
         return String.format("<%f, %f, %f, %f>", w, x, y, z);
