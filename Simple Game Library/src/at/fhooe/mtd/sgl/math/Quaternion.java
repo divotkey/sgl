@@ -316,7 +316,8 @@ public final class Quaternion {
 	}
 	
 	/**
-	 * Transforms (rotates) the specified vector by this quaternion in-place.
+	 * Transforms (rotates) the specified vector by this quaternion. The result
+	 * is stored in the given vector.
 	 * <p>
 	 * v' = q * v * q<sup>-1</sup>
 	 * </p>
@@ -340,12 +341,52 @@ public final class Quaternion {
 	 * 
 	 * @param v
 	 *            the vector to transform
+	 * @param result
+	 *            the result vector used to store the result
 	 * @return reference to the result vector
 	 */
 	public Vector3d transform(Vector3d v, Vector3d result) {
 		tmp2.set(this).conjugate().preMul(tmp1.set(0, v)).preMul(this);		
 		result.set(tmp2.x, tmp2.y, tmp2.z);
 		return result;
+	}
+
+	/**
+	 * Transforms (rotates) the specified vector by the inverse of this
+	 * quaternion. The input vector and the result vector can be identical.
+	 * 
+	 * <p>
+	 * v' = q<sup>-1</sup> * v * q
+	 * </p>
+	 * 
+	 * @param v
+	 *            the vector to transform
+	 * @param result
+	 *            the result vector used to store the result
+	 * @return reference to the result vector
+	 */
+	public Vector3d transformInverse(Vector3d v, Vector3d result) {
+		tmp2.set(this).conjugate().mul(tmp1.set(0, v)).mul(this);		
+		result.set(tmp2.x, tmp2.y, tmp2.z);
+		return result;
+	}
+	
+	/**
+	 * Transforms (rotates) the specified vector by the inverse of this
+	 * quaternion. The result is stored in the given vector.
+	 * 
+	 * <p>
+	 * v' = q<sup>-1</sup> * v * q
+	 * </p>
+	 * 
+	 * @param v
+	 *            the vector to transform
+	 * @return reference to the result vector
+	 */
+	public Vector3d transformInverse(Vector3d v) {
+		tmp2.set(this).conjugate().mul(tmp1.set(0, v)).mul(this);		
+		v.set(tmp2.x, tmp2.y, tmp2.z);
+		return v;
 	}
 	
     @Override
