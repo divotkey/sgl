@@ -35,8 +35,14 @@ public class TextRenderer {
         setFont(f);
     }
 
-    public void reset() {
+	/**
+	 * Resets the vertical position of this text renderer.
+	 * 
+	 * @return a reference to this text renderer for method chaining
+	 */
+    public TextRenderer reset() {
         offY = 0;
+        return this;
     }
     
     public void setFont(Font f) {
