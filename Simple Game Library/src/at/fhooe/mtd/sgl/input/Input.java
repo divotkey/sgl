@@ -43,6 +43,16 @@ public interface Input {
 	 */
     public void removeInputListener(InputListener l);
     
+    
+	/**
+	 * Tests if the specified input listener has already been added.
+	 * 
+	 * @param l
+	 *            the input listener to be tested.
+	 * @return {@code true} if the input listener has already been added
+	 */
+    public boolean hasInputListener(InputListener l);
+    
 	/**
 	 * Polls the state of the specified key.
 	 * 

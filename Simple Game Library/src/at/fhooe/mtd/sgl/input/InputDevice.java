@@ -30,6 +30,10 @@ class InputDevice {
 		}
 	};
 	
+	public boolean hasInputListener(InputListener l) {
+		return listeners.contains(l);
+	}
+		
 	public void addInputListener(InputListener l, int priority) {
 		if (listeners.contains(l)) {
 			throw new IllegalArgumentException("input listener already added");

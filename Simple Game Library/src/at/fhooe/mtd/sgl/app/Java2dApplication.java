@@ -120,6 +120,12 @@ public class Java2dApplication implements Application, Input {
     }
     
 	@Override
+	public boolean hasInputListener(InputListener l) {
+		assert keyboard.hasInputListener(l) == mouse.hasInputListener(l);
+		return keyboard.hasInputListener(l);
+	}
+
+	@Override
 	public void addInputListener(InputListener l, int priority) {
 		keyboard.addInputListener(l, priority);
 		mouse.addInputListener(l, priority);
