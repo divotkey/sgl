@@ -143,7 +143,7 @@ public class MathUtils {
 	 *            third value
 	 * @return the minimum of the three values
 	 */
-	public int min3(int a, int b, int c) {
+	public static int min3(int a, int b, int c) {
 		return Math.min(Math.min(a, b), c);
 	}
 	
@@ -158,7 +158,8 @@ public class MathUtils {
 	 *            third value
 	 * @return the maximum of the three values
 	 */
-	public int max3(int a, int b, int c) {
+	public static int max3(int a, int b, int c) {
 		return Math.max(Math.max(a, b), c);
 	}
-	}
+	
+}
