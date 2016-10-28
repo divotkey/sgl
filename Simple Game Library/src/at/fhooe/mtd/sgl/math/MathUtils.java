@@ -131,4 +131,34 @@ public class MathUtils {
     public static boolean isEqual(double a, double b, double epsilon) {
     	return Math.abs(a - b) <= epsilon;
     }
-}
+    
+	/**
+	 * Returns the minimum of the three specified values.
+	 * 
+	 * @param a
+	 *            first value
+	 * @param b
+	 *            second value
+	 * @param c
+	 *            third value
+	 * @return the minimum of the three values
+	 */
+	public int min3(int a, int b, int c) {
+		return Math.min(Math.min(a, b), c);
+	}
+	
+	/**
+	 * Returns the maximum of the three specified values.
+	 * 
+	 * @param a
+	 *            first value
+	 * @param b
+	 *            second value
+	 * @param c
+	 *            third value
+	 * @return the maximum of the three values
+	 */
+	public int max3(int a, int b, int c) {
+		return Math.max(Math.max(a, b), c);
+	}
+	}
