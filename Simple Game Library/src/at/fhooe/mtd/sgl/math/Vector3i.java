@@ -232,4 +232,8 @@ public class Vector3i {
 		return this;
 	}
 	
+    @Override
+    public String toString() {
+        return String.format("<%d, %d, %d>", x, y, z);
+    }	
 }
