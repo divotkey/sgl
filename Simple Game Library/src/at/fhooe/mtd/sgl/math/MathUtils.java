@@ -164,5 +164,20 @@ public class MathUtils {
 	public static int max3(int a, int b, int c) {
 		return Math.max(Math.max(a, b), c);
 	}
-	
+
+	/**
+	 * Returns the maximum of the three specified values.
+	 * 
+	 * @param a
+	 *            first value
+	 * @param b
+	 *            second value
+	 * @param c
+	 *            third value
+	 * @return the maximum of the three values
+	 */
+	public static double max3(double a, double b, double c) {
+		return Math.max(Math.max(a, b), c);
+	}
+		
 }

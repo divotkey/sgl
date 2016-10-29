@@ -291,6 +291,17 @@ public final class Quaternion {
 	}
 	
 	/**
+	 * Extracts the Euler angles from this quaternion.
+	 * 
+	 * @param result
+	 *            the vector where to store the angles
+	 * @return reference to the result vector
+	 */
+	public Vector3d getEulerAngles(Vector3d result) {
+		return result.set(getYaw(), getPitch(), getRoll());
+	}
+	
+	/**
 	 * Sets the length of this quaternion to one. If this quaternion has zero length, this method has no effect.
 	 * @return a reference to this quaternion for method chaining
 	 */
@@ -305,6 +316,41 @@ public final class Quaternion {
 		return this;
 	}
 		
+	private int getGimbalPole () {
+		double t = y * x + z * w;
+		return t > 0.499 ? 1 : (t < -0.499 ? -1 : 0);
+	}	
+	
+	/**
+	 * Returns the rotation about the x axis.
+	 * 
+	 * @return the angle in radians
+	 */
+	public double getPitch () {
+		int pole = getGimbalPole();
+		return pole == 0 ? Math.asin(MathUtils.clamp(2 * (w * x - z * y), -1.0, 1.0)) : pole * Math.PI * 0.5;
+	}	
+	
+	/**
+	 * Returns the rotation about the y axis.
+	 * 
+	 * @return the angle in radians
+	 */
+	public double getYaw () {
+		return getGimbalPole() == 0 ? Math.atan2(2.0 * (y * w + x * z), 1.0 - 2.0 * (y * y + x * x)) : 0.0;
+	}	
+	
+	/**
+	 * Returns the rotation about the z axis.
+	 * 
+	 * @return the angle in radians
+	 */
+	public double getRoll () {
+		int pole = getGimbalPole();
+		return pole == 0 ? Math.atan2(2.0 * (w * z + y * x), 1.0 - 2.0 * (x * x + z * z))
+				: pole * 2.0 * Math.atan2(y, w);
+	}	
+	
 	/**
 	 * Conjugates this quaternion.
 	 * 
