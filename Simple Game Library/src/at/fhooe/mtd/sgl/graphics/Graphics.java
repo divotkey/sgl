@@ -201,4 +201,29 @@ public interface Graphics {
      */
     public void setTransferHandler(TransferHandler newHandler);
 
+	/**
+	 * Enables or disables vertical synchronization.
+	 * 
+	 * <p>
+	 * <strong>Note: </strong> Vertical synchronization, also reported to be
+	 * active, may not work on all systems.
+	 * </p>
+	 * 
+	 * @param b
+	 *            {@code true} to enable vsync
+	 */
+	void setVsyncEnabled(boolean b);
+
+	/**
+	 * Returns whether vertical synchronization is enabled.
+	 * 
+	 * <p>
+	 * <strong>Note: </strong> Vertical synchronization, also reported to be
+	 * active, may not work on all systems.
+	 * </p>
+	 * 
+	 * @return {@code true} if vertical synchronization is enabled.
+	 */
+	boolean isVsyncEnabled();
+
 }

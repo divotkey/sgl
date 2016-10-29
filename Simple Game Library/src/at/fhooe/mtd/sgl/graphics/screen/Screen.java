@@ -141,12 +141,14 @@ public class Screen implements Graphics {
         state.close();
     }
         
+    @Override
     public void setVsyncEnabled(boolean value) {
         if (value == vsync) return;
         vsync = value;
         state.updateVsyncState();
     }
     
+    @Override
     public boolean isVsyncEnabled() {
         return vsync;
     }
