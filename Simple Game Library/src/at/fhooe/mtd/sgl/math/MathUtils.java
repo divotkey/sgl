@@ -25,6 +25,9 @@ public class MathUtils {
     /** Constant used to convert nanoseconds to seconds. */
     public static final double NANO_TO_SECONDS = 1.0 / 1000000000.0;
 
+    /** Constant representing 2 * PI. */
+    public static final double PI2 = Math.PI * 2;
+    
     /**
      * Clamps the a value to a specified range.
      * 
