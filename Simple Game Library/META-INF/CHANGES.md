@@ -11,6 +11,7 @@ Date: *2016-09-??*
 - Added option to force graphics mode in `GfxConfigurator'.
 - Added resource loader from POWIDL (thanks a lot to Quantum Reboot).
 - Added hasInputListener method to input interface.
+- Vertical synchronization can be activated and deactivated during runtime.
 
 ## Version 1.4.1
 Date: *2016-06-06*
