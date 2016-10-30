@@ -183,6 +183,19 @@ public class Vector3d {
 		x = o.x; y = o.y; z = o.z;
 		return this;
 	}
+	
+	/**
+	 * Sets this vector to the given vector. The fourth component of the
+	 * four-dimensional vector will be ignored.
+	 * 
+	 * @param o
+	 *            the other vector
+	 * @return reference to this vector for method chaining
+	 */
+	public Vector3d set(Vector4d o) {
+		x = o.x; y = o.y; z = o.z;
+		return this;
+	}
 
 	/**
 	 * Sets the vector's components using values form the specified array.

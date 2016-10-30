@@ -414,6 +414,23 @@ public class Vector4d {
 		return this;
 	}
 	
+	/**
+	 * Normalizes this vector. If the vector has zero length, this method has no
+	 * effect.
+	 * 
+	 * @return reference to this vector for method chaining
+	 */
+	public Vector4d normalize() {
+		double len = length();
+		if (len != 0) {
+			x /= len;
+			y /= len;
+			z /= len;
+			w /= len;
+		}
+		return this;
+	}
+	
 	
     @Override
     public String toString() {
