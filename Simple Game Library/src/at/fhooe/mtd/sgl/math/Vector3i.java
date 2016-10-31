@@ -232,8 +232,17 @@ public class Vector3i {
 		return this;
 	}
 	
+	/**
+	 * Sets this vector to zero length.
+	 */
+	public Vector3i setZero() {
+		x = y = z = 0;
+		return this;
+	}
+	
     @Override
     public String toString() {
         return String.format("<%d, %d, %d>", x, y, z);
-    }	
+    }
+
 }
