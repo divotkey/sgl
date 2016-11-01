@@ -11,6 +11,8 @@
 
 package at.fhooe.mtd.sgl.math;
 
+import java.io.Serializable;
+
 /**
  * A three-dimensional vector with double-precision.
  * <p>
@@ -18,8 +20,10 @@ package at.fhooe.mtd.sgl.math;
  * a more detailed explanation see {@link Vector2d}.
  * </p>
  */
-public class Vector3d {
+public class Vector3d implements Serializable {
 	
+	private static final long serialVersionUID = 6257240278839840396L;
+
 	/** Used for tests to avoid precision error. */
 	public static final double EPSILON = 0.000000001;
 
@@ -118,6 +122,26 @@ public class Vector3d {
 	 */
 	public double getZ() {
 		return z;
+	}
+	
+	/**
+	 * Returns the vector's component with the specified index.
+	 * 
+	 * @param idx
+	 *            the index of the component of this vector
+	 * @return the requested value
+	 */
+	public double get(int idx) {
+		switch (idx) {
+		case 0: 
+			return x;
+		case 1: 
+			return y;
+		case 2:
+			return z;
+		default:	
+			throw new IndexOutOfBoundsException("index must be between 0 and 2, got " + idx);
+		}
 	}
 	
 	/**

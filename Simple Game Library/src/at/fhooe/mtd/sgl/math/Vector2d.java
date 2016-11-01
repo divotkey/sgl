@@ -178,6 +178,24 @@ public final class Vector2d {
 	}
 
 	/**
+	 * Returns the vector's component with the specified index.
+	 * 
+	 * @param idx
+	 *            the index of the component of this vector
+	 * @return the requested value
+	 */
+	public double get(int idx) {
+		switch (idx) {
+		case 0: 
+			return x;
+		case 1: 
+			return y;
+		default:	
+			throw new IndexOutOfBoundsException("index must be between 0 and 2, got " + idx);
+		}
+	}
+	
+	/**
 	 * Sets this vector to the given vector.
 	 * 
 	 * @param x
