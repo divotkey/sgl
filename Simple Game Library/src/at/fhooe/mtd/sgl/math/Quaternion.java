@@ -87,7 +87,7 @@ public final class Quaternion {
 	}
 			
 	/**
-	 * Sets this quaternion by the specified components.
+	 * Sets this quaternion to the specified components.
 	 * @param w
 	 *            the w-component
 	 * @param x
@@ -259,10 +259,9 @@ public final class Quaternion {
 	 * @return a reference to this quaternion for method chaining
 	 */
 	public Quaternion setToRotation(double yaw, double pitch, double roll) {
-		double hr = roll * 0.5f, shr = Math.sin(hr), chr =  Math.cos(hr);
-		
-		double hp = pitch * 0.5f, shp = Math.sin(hp),        chp = Math.cos(hp);
-		double hy = yaw * 0.5f,   shy = (float)Math.sin(hy), chy = Math.cos(hy);
+		double hr = roll * 0.5,	 shr = Math.sin(hr), chr = Math.cos(hr);
+		double hp = pitch * 0.5, shp = Math.sin(hp), chp = Math.cos(hp);
+		double hy = yaw * 0.5,   shy = Math.sin(hy), chy = Math.cos(hy);
 		
 		double chy_shp = chy * shp;
 		double shy_chp = shy * chp;
@@ -302,7 +301,9 @@ public final class Quaternion {
 	}
 	
 	/**
-	 * Sets the length of this quaternion to one. If this quaternion has zero length, this method has no effect.
+	 * Sets the length of this quaternion to one. If this quaternion has zero
+	 * length, this method has no effect.
+	 * 
 	 * @return a reference to this quaternion for method chaining
 	 */
 	public Quaternion normalize() {
