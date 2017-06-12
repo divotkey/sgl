@@ -159,6 +159,21 @@ public final class Quaternion {
 	}
 	
 	/**
+	 * Scales the given quaternion with the given scalar value and add the
+	 * result to this quaternion.
+	 * 
+	 * @param o
+	 *            the quaternion to be scaled and added
+	 * @param s
+	 *            the scalar value used to scale the given quaternion
+	 * @return a reference to this quaternion for method chaining
+	 */
+	public Quaternion addScaled(Quaternion o, double s) {
+		w += o.w * s; x += o.x * s; y += o.y * s; z += o.z * s;
+		return this;
+	}
+	
+	/**
 	 * Subtracts the specified quaternion from this quaternion.
 	 * 
 	 * @param o
@@ -204,6 +219,8 @@ public final class Quaternion {
 	    w *= s; x *= s; y *= s; z *= s; 
 	    return this;
 	}
+	
+	
 	
 	/**
 	 * Multiplies this quaternion with the specified quaternion in-place (this = this * o). 
