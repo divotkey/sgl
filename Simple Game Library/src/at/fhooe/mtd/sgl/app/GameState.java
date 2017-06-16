@@ -30,6 +30,12 @@ public abstract class GameState {
     /** The context of this state. */
     private Game context;
     
+	/**
+	 * Creates a new instance
+	 * 
+	 * @param context
+	 *            the main game class, the context of this state
+	 */
     public GameState(Game context) {
         this.context = context;
     }
