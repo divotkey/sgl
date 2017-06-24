@@ -19,7 +19,7 @@ public class SglInfo {
     public static final String COPYRIGHT_HOLDER 
         = "Roman Divotkey, Univ. of Applied Sciences Upper Austria";
     
-    public static final String COPYRIGHT_YEAR = "2016";
+    public static final String COPYRIGHT_YEAR = "2016, 2017";
         
     public static final String FULL_NAME = NAME + " (" + VERSION + ")";
     
