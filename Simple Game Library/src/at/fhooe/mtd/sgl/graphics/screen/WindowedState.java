@@ -58,6 +58,7 @@ class WindowedState extends ScreenState {
         frame.setResizable(false);
         frame.setIgnoreRepaint(true);
         frame.setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
+        frame.setIconImages(getContext().getApplicationIcons());
 
         // initialize canvas
         canvas = new Canvas();

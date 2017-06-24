@@ -37,6 +37,7 @@ public class Java2dApplication implements Application, Input {
         screen.setVsyncEnabled(c.vsync);
         screen.showCursor(c.showCursor);
         screen.setGraphicsQuality(c.graphicsQuality);
+        screen.setApplicationIcons(c.iconImages);
         screen.addGraphicsListener(new GraphicsAdapter() {
             
             @Override

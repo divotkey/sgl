@@ -1,8 +1,9 @@
 # Version History
 
-## Version 1.5.0
-Date: *2016-09-??*
+## Version 1.5.2
+Date: *2017-06-24*
 
+- Added support for application icons.
 - Added matrix and vector class for 3d environments.
 - Add method `getFontRenderContext` to graphics interface.
 - Improved vector classes, added Vector4d class.

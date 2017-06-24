@@ -33,6 +33,7 @@ import java.awt.DisplayMode;
 import java.awt.Font;
 import java.awt.FontMetrics;
 import java.awt.Graphics2D;
+import java.awt.Image;
 import java.awt.Point;
 import java.awt.event.KeyListener;
 import java.awt.event.MouseListener;
@@ -63,8 +64,12 @@ public class Screen implements Graphics {
     private boolean showCursor;
     private Quality quality = Graphics.Quality.Good;
     private Graphics2D context;
-    
+
     private List<Command> commands = new CopyOnWriteArrayList<>();
+
+    /** List icon images used as the application icons. */
+    private List<? extends Image> appIcons = new ArrayList<>();
+    
     
     public Screen() {
         this("[UNTITLED]");
@@ -188,6 +193,25 @@ public class Screen implements Graphics {
     public Color getClearColor() {
         return clearColor;
     }
+    
+	/**
+	 * Returns a list of icon images used as application icons.
+	 * 
+	 * @return list of application images
+	 */
+	public List<? extends Image> getApplicationIcons() {
+		return appIcons;
+	}
+	
+	/**
+	 * Sets the icon images used as application icons.
+	 * 
+	 * @param icons
+	 *            the list of application icons
+	 */
+	public void setApplicationIcons(List<? extends Image> icons) {
+		appIcons = icons;
+	}
 
     List<KeyListener> getKeyListeners() {
         return keyListeners;

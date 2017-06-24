@@ -56,6 +56,7 @@ class FullState extends ScreenState implements HierarchyListener {
         frame.setUndecorated(true);
         frame.setIgnoreRepaint(true);
         frame.setResizable(false);
+        frame.setIconImages(getContext().getApplicationIcons());
         
         GraphicsEnvironment ge = 
                 GraphicsEnvironment.getLocalGraphicsEnvironment();

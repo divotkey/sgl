@@ -11,6 +11,9 @@
 package at.fhooe.mtd.sgl.app;
 
 import java.awt.DisplayMode;
+import java.awt.Image;
+import java.util.ArrayList;
+import java.util.List;
 
 import at.fhooe.mtd.sgl.app.Application.LoopMode;
 import at.fhooe.mtd.sgl.graphics.GfxConfigurator;
@@ -49,6 +52,9 @@ public class Java2dApplicationConfig {
 
     /** Defines the behavior if the user attempts to close the window. */
     public boolean exitOnClose = true;
+    
+    /** List icon images used as the application icons. */
+    public List<Image> iconImages = new ArrayList<>();
     
     /**
      * Create a new instance using the selected configuration of the specified
