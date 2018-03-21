@@ -1,5 +1,13 @@
 # Version History
 
+## Version 1.6.0
+Date: 2018-03-20
+
+- Class `GameState` has generic type parameter specifying the concrete game class.
+- Method `ResourceLoader.getStream()` throws FileNotFoundException instead of IllegalArgumentExcepiton.
+- The `Game` class postpones state changes when triggered while updating until the update cycle is finished.
+- SGL now supports simple audio playback. Have a look at the new audio package.
+
 ## Version 1.5.2
 Date: *2017-06-24*
 

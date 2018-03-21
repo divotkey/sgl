@@ -11,6 +11,7 @@
 
 package at.fhooe.mtd.sgl.util;
 
+import java.io.FileNotFoundException;
 import java.io.InputStream;
 import java.net.URL;
 
@@ -43,18 +44,17 @@ public class ResourceLoader {
      * @param name
      *            the resource name of path
      * @return the input stream of the specified resource
-     * @throws IllegalArgumentException
-     *             in case the specified resource has not been found
+     * @throws FileNotFoundException
+     *             in case the specified resource could not be found
      */    
-    public static InputStream getStream(String name)
-            throws IllegalArgumentException {
+	public static InputStream getStream(String name) throws FileNotFoundException {
         
         InputStream result = ResourceLoader.class.getResourceAsStream(name);
         if (result == null && !name.startsWith("/")) {
             result = ResourceLoader.class.getResourceAsStream("/" + name);
         }
         if (result == null) {
-            throw new IllegalArgumentException("unknown resource " + name);
+            throw new FileNotFoundException("unknown resource " + name);
         }
         
         return result;

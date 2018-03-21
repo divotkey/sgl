@@ -11,7 +11,9 @@
 package at.fhooe.mtd.sgl.app;
 
 /**
- * Abstract base class for major game states. Typical major state for games are:
+ * Abstract base class for major game states.
+ * 
+ * <p>Typical major state for games are</p>
  * <ul>
  * <li>Splash Screen</li>
  * <li>Main Menu</li>
@@ -22,13 +24,14 @@ package at.fhooe.mtd.sgl.app;
  * <li>etc...</li>
  * </ul>
  *
+ * @param <T> the game this state belongs to
  * @see Game
  * @see ApplicationListener
  */
-public abstract class GameState {
+public abstract class GameState<T extends Game<?>> {
 
     /** The context of this state. */
-    private Game context;
+    private T context;
     
 	/**
 	 * Creates a new instance
@@ -36,7 +39,7 @@ public abstract class GameState {
 	 * @param context
 	 *            the main game class, the context of this state
 	 */
-    public GameState(Game context) {
+    public GameState(T context) {
         this.context = context;
     }
     
@@ -74,7 +77,7 @@ public abstract class GameState {
      * 
      * @return the context
      */
-    public final Game getContext() {
+    public final T getContext() {
         return context;
     }
 

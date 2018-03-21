@@ -12,6 +12,7 @@ package at.fhooe.mtd.sgl.app;
 
 import at.fhooe.mtd.sgl.Sgl;
 import at.fhooe.mtd.sgl.app.loop.GameLoop;
+import at.fhooe.mtd.sgl.audio.JavaAudio;
 import at.fhooe.mtd.sgl.graphics.GraphicsAdapter;
 import at.fhooe.mtd.sgl.graphics.screen.Screen;
 import at.fhooe.mtd.sgl.input.Input;
@@ -26,6 +27,7 @@ public class Java2dApplication implements Application, Input {
     private GameLoop loop;
     private Keyboard keyboard;
     private Mouse mouse;
+    private JavaAudio audio;
     
     public Java2dApplication(final Java2dApplicationConfig c, ApplicationListener l) {
         appListener = l;
@@ -62,6 +64,12 @@ public class Java2dApplication implements Application, Input {
         screen.addMouseWheelListener(mouse);
         screen.addMouseMotionListener(mouse);
                 
+        // initialize audio
+        if (c.enableAudio) {
+        	audio = new JavaAudio();
+        	audio.open();
+        }
+        
         // initialize game loop
         loop = new GameLoop(c.ups);
         loop.setMode(c.loopMode);
@@ -77,6 +85,7 @@ public class Java2dApplication implements Application, Input {
         Sgl.app = this;
         Sgl.graphics = screen;
         Sgl.input = this;
+        Sgl.audio = audio;
         
         // run application
         screen.open(c.displayMode);
@@ -86,6 +95,8 @@ public class Java2dApplication implements Application, Input {
         
         // clean up
         appListener.dispose();
+        if (audio != null)
+        	audio.close();
         screen.removeKeyListener(keyboard);
         screen.removeMouseListener(mouse);
         screen.removeMouseWheelListener(mouse);

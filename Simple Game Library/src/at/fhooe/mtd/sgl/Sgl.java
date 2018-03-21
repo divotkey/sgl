@@ -11,6 +11,7 @@
 package at.fhooe.mtd.sgl;
 
 import at.fhooe.mtd.sgl.app.Application;
+import at.fhooe.mtd.sgl.audio.Audio;
 import at.fhooe.mtd.sgl.graphics.Graphics;
 import at.fhooe.mtd.sgl.input.Input;
 
@@ -26,6 +27,9 @@ public class Sgl {
     
     /** Reference to the graphics interface. */
     public static Graphics graphics;
+
+    /** Reference to the audio interface. */
+    public static Audio audio;
     
     /** Reference to the input interface. */
     public static Input input;

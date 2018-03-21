@@ -10,6 +10,9 @@
  *******************************************************************************/
 package at.fhooe.mtd.sgl.app;
 
+import java.util.ArrayDeque;
+import java.util.Deque;
+
 import at.fhooe.mtd.sgl.Sgl;
 import at.fhooe.mtd.sgl.app.ApplicationListener;
 
@@ -25,10 +28,16 @@ import at.fhooe.mtd.sgl.app.ApplicationListener;
  * @see GameState
  * @see ApplicationListener
  */
-public class Game implements ApplicationListener {
+public class Game<T extends Game<?>> implements ApplicationListener {
 
     /** The currently active state. */
-    private GameState state;
+    private GameState<T> state;
+    
+    /** Flag determining if an update cycle is in progress.*/
+    private boolean updating = false;
+    
+    /** Queue with pending commands. */
+    private Deque<Runnable> commands = new ArrayDeque<>();
     
     /**
      * Creates a new instance with no active game state.
@@ -43,7 +52,7 @@ public class Game implements ApplicationListener {
      * @param gs
      *            the initial game state
      */
-    public Game(GameState gs) {
+    public Game(GameState<T> gs) {
         state = gs;
         if (state != null) {
             state.enter();
@@ -60,7 +69,7 @@ public class Game implements ApplicationListener {
      * @param gs
      *            the new game state
      */
-    public final void switchState(GameState gs) {
+    public final void switchState(GameState<T> gs) {
         switchState(gs, true);
     }
     
@@ -75,11 +84,19 @@ public class Game implements ApplicationListener {
      *            if set to {@code false} a call to the state's resize method
      *            will be omitted
      */
-    public final void switchState(GameState gs, boolean callResize) {
+    public final void switchState(GameState<T> gs, boolean callResize) {
+    	if (updating) {
+    		// no state changes during update -> queue command
+    		commands.add(() -> switchState(gs, callResize));
+    		return;
+    	}
+    	
+    	// exit current state
         if (state != null) {
             state.exit();
         }
-        
+
+        // switch to new state
         state = gs;
         
         if (state != null) {
@@ -96,7 +113,7 @@ public class Game implements ApplicationListener {
      * @return the currently active state or {@code null} if the application has
      *         no state at the moment
      */
-    public final GameState getState() {
+    public final GameState<T> getState() {
         return state;
     }
     
@@ -110,8 +127,17 @@ public class Game implements ApplicationListener {
 
     @Override
     public void update(double dt) {
-        if (state != null)
+    	// update state (if there is one)
+    	if (state != null) {
+        	updating = true;
             state.update(dt);
+            updating = false;
+    	}
+        
+        // execute pending commands
+        while (!commands.isEmpty()) {
+        	commands.remove().run();
+        }
     }
 
     @Override

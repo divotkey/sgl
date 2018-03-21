@@ -56,6 +56,10 @@ public class Java2dApplicationConfig {
     /** List icon images used as the application icons. */
     public List<Image> iconImages = new ArrayList<>();
     
+    /** Whether to activate the audio system. */
+    public boolean enableAudio = true;
+    
+    
     /**
      * Create a new instance using the selected configuration of the specified
      * GfxConfiguratior.
