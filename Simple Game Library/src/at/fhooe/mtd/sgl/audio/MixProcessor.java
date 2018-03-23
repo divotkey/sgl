@@ -26,6 +26,9 @@ public class MixProcessor implements Runnable {
 	
 	/** Control variable used to terminate thread. */
 	private boolean terminate = false;
+	
+	/** Master volume. */
+	private float volume = 1.0f;
 		
 	
 	/**
@@ -123,9 +126,9 @@ public class MixProcessor implements Runnable {
 		float v = mix.getVolume();
 		
 		for (int j = 0; mix.pos < data.length && j < mixBuffer.length;) {
-			mixBuffer[j] = clamp(mixBuffer[j] + data[mix.pos] * gl * v);
+			mixBuffer[j] = clamp(volume * (mixBuffer[j] + data[mix.pos] * gl * v));
 			++j; ++mix.pos;
-			mixBuffer[j] = clamp(mixBuffer[j] + data[mix.pos] * gr * v);
+			mixBuffer[j] = clamp(volume * (mixBuffer[j] + data[mix.pos] * gr * v));
 			++j; ++mix.pos;
 		}
 		
@@ -146,9 +149,9 @@ public class MixProcessor implements Runnable {
 		float v = mix.getVolume();
 		
 		for (int j = 0; mix.pos < data.length && j < mixBuffer.length; ++mix.pos) {
-			mixBuffer[j] = clamp(mixBuffer[j] + data[mix.pos] * gl * v);
+			mixBuffer[j] = clamp(volume * (mixBuffer[j] + data[mix.pos] * gl * v));
 			++j;
-			mixBuffer[j] = clamp(mixBuffer[j] + data[mix.pos] * gr * v);
+			mixBuffer[j] = clamp(volume * (mixBuffer[j] + data[mix.pos] * gr * v));
 			++j;
 		}
 		
@@ -223,17 +226,17 @@ public class MixProcessor implements Runnable {
 		}
 	}
 
-	public void setVolume(int id, double v) {
+	public void setVolume(int id, float v) {
 		synchronized (monoMixes) {
 			 MonoMix mix = findMonoMix(id);
 			 if (mix != null) {
-				mix.volume((float) v);
+				mix.volume(v);
 			 }
 		}
 		synchronized (stereoMixes) {
 			 StereoMix mix = findStereoMix(id);
 			 if (mix != null) {
-					mix.volume((float) v);
+					mix.volume(v);
 			 }
 		}
 	}
@@ -254,5 +257,47 @@ public class MixProcessor implements Runnable {
 		}
 		
 		return 0;
+	}
+
+	/**
+	 * Sets the master volume.
+	 * 
+	 * @param v
+	 *            master volume within the range
+	 */
+	public void setVolume(float v) {
+		synchronized (stereoMixes) {
+			synchronized (monoMixes) {
+				volume = v;
+			}
+		}
+	}
+
+	/**
+	 * Returns the master volume.
+	 * 
+	 * @return the master volume
+	 */
+	public float getVolume() {
+		return volume;
+	}
+
+	/**
+	 * Stops all currently played mixes.
+	 */
+	public void stopAll() {
+		synchronized (stereoMixes) {
+			for (int i = 0; i < stereoMixes.size(); ++i) {
+				stereoMixes.get(i).free();
+			}
+			stereoMixes.clear();
+		}
+		
+		synchronized (monoMixes) {
+			for (int i = 0; i < monoMixes.size(); ++i) {
+				monoMixes.get(i).free();
+			}
+			monoMixes.clear();
+		}
 	}
 }

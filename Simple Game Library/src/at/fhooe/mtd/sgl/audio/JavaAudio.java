@@ -42,10 +42,7 @@ public class JavaAudio implements Audio {
 	
 	/** Used to read audio files into byte array. */
 	private ByteArrayOutputStream bos = new ByteArrayOutputStream();
-	
-	/** The master volume of all sounds. */
-	private double masterVolume = 1.0;
-	
+		
 	/**
 	 * Creates a new instance.
 	 */
@@ -310,17 +307,21 @@ public class JavaAudio implements Audio {
 		if (v < 0.0 || v > 1.0) {
 			throw new IllegalArgumentException("volume parameter out of range [0, 1], got " + v);
 		}
-		masterVolume = v;
+		mixProc.setVolume((float) v);
 	}
 
 	@Override
 	public double getVolume() {
-		return masterVolume;
+		return (float) mixProc.getVolume();
 	}
 
 	@Override
 	public void stopSound(int h) {
-		mixProc.stopMix(h);
+		if (h == INVALID_HANDLE) {
+			stopAll();
+		} else {
+			mixProc.stopMix(h);			
+		}
 	}
 
 	@Override
@@ -328,12 +329,24 @@ public class JavaAudio implements Audio {
 		if (v < 0.0 || v > 1.0) {
 			throw new IllegalArgumentException("volume parameter out of range [0, 1], got " + v);
 		}
-		mixProc.setVolume(h, v);
+		if (h == INVALID_HANDLE) {
+			mixProc.setVolume((float) v);
+		} else {
+			mixProc.setVolume(h, (float) v);			
+		}
 	}
 
 	@Override
 	public double getVolume(int h) {
+		if (h == INVALID_HANDLE) {
+			return getVolume();
+		} 
 		return mixProc.getVolume(h);
+	}
+
+	@Override
+	public void stopAll() {
+		mixProc.stopAll();
 	}
 		
 }

@@ -41,7 +41,8 @@ public interface Audio {
 	
 	/**
 	 * Stops the playback of the specified sound. If the specified handle is
-	 * invalid, this method has no effect.
+	 * invalid, this method has no effect. If the specified handle 0, all sounds
+	 * currently played are stopped.
 	 * 
 	 * @param h
 	 *            the handle of the sound
@@ -69,5 +70,11 @@ public interface Audio {
 	 * @return the current volume or 0 if the handle is invalid
 	 */
 	public double getVolume(int h);
+	
+	/**
+	 * Stops all currently played sounds.
+	 * @return 
+	 */
+	public void stopAll();
 	
 }
