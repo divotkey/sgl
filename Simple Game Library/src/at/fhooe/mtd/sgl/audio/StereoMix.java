@@ -8,6 +8,7 @@ import java.util.List;
  * used internally by the audio system.
  */
 final class StereoMix extends AbstractMix<StereoMix> {
+	
 	/** The pool of mix instances. */
 	private static final List<StereoMix> pool = new ArrayList<>();
 				

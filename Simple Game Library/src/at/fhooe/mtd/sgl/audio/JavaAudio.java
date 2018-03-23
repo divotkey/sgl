@@ -78,18 +78,27 @@ public class JavaAudio implements Audio {
 		}
 	}
 	
-	private int playSound(MonoSound snd, float leftGain, float rightGain, boolean loop) {
+	private int playSound(MonoSound snd, float volume, float leftGain, float rightGain, boolean loop) {
 		MonoMix m;
-		mixProc.addMix(m = MonoMix.obtain(snd.data).leftGain(leftGain).rightGain(rightGain).loop(loop));
+		mixProc.addMix(m = MonoMix.obtain(snd.data)
+				.volume(volume)
+				.leftGain(leftGain)
+				.rightGain(rightGain)
+				.loop(loop));
+		return m.getId();
+	}
+
+	private int playSound(StereoSound snd, float volume, float leftGain, float rightGain, boolean loop) {
+		StereoMix m;
+		mixProc.addMix(m = StereoMix
+				.obtain(snd.data)
+				.volume(volume)
+				.leftGain(leftGain)
+				.rightGain(rightGain)
+				.loop(loop));
 		return m.getId();
 	}
 	
-	private int playSound(StereoSound snd, float leftGain, float rightGain, boolean loop) {
-		StereoMix m;
-		mixProc.addMix(m = StereoMix.obtain(snd.data).leftGain(leftGain).rightGain(rightGain).loop(loop));
-		return m.getId();
-	}
-		
 	public void close() {
 		if (mixProc != null) {
 			mixProc.terminate();
@@ -203,9 +212,9 @@ public class JavaAudio implements Audio {
 		@Override
 		public int play() {
 			double p = (1.0 + panning) / 2.0;
-			double lg = Math.cos(p * Math.PI * 0.5) * volume; 
-			double rg = Math.sin(p * Math.PI * 0.5) * volume; 
-			return playSound(this, (float) lg, (float) rg, loop);
+			double lg = Math.cos(p * Math.PI * 0.5); 
+			double rg = Math.sin(p * Math.PI * 0.5); 
+			return playSound(this, (float) volume, (float) lg, (float) rg, loop);
 		}
 
 		@Override
@@ -255,11 +264,11 @@ public class JavaAudio implements Audio {
 		@Override
 		public int play() {
 			if (panning == 0) {
-				return playSound(this, (float) volume, (float) volume, loop);
+				return playSound(this, (float) volume, 1.0f, 1.0f, loop);
 			} else if (panning > 0) {
-				return playSound(this, (float) ((1.0 - panning / 1.0) * volume), (float) volume, loop);				
+				return playSound(this,(float) volume, (float) (1.0 - panning / 1.0), 1.0f, loop);				
 			} else {
-				return playSound(this, (float) volume, (float) ((1.0 + panning / 1.0) * volume), loop);								
+				return playSound(this, (float) volume, 1.0f, (float) (1.0 + panning / 1.0), loop);								
 			}
 		}
 
