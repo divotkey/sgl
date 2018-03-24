@@ -215,11 +215,12 @@ public class JavaAudio implements Audio {
 		}
 
 		@Override
-		public void setPanning(double p) throws IllegalArgumentException {
+		public Sound setPanning(double p) throws IllegalArgumentException {
 			if (p < -1.0 || p > 1.0) {
 				throw new IllegalArgumentException("panning value must be in the range of [-1, 1], got " + p);
 			}
 			panning = p;
+			return this;
 		}
 
 		@Override
@@ -228,11 +229,12 @@ public class JavaAudio implements Audio {
 		}
 
 		@Override
-		public void setVolume(double v) throws IllegalArgumentException {
+		public Sound setVolume(double v) throws IllegalArgumentException {
 			if (volume < 0 || volume > 1.0) {
 				throw new IllegalArgumentException("volume must be within the range [0, 1], got " + v);
 			}
 			volume = v;
+			return this;
 		}
 
 		@Override
@@ -241,8 +243,9 @@ public class JavaAudio implements Audio {
 		}
 
 		@Override
-		public void setLoop(boolean value) {
+		public Sound setLoop(boolean value) {
 			loop = true;
+			return this;
 		}
 
 	}
@@ -270,11 +273,12 @@ public class JavaAudio implements Audio {
 		}
 
 		@Override
-		public void setPanning(double p) throws IllegalArgumentException {
+		public Sound setPanning(double p) throws IllegalArgumentException {
 			if (p < -1.0 || p > 1.0) {
 				throw new IllegalArgumentException("panning value must be in the range of [-1, 1], got " + p);
 			}
 			panning = p;
+			return this;
 		}
 
 		@Override
@@ -283,11 +287,12 @@ public class JavaAudio implements Audio {
 		}
 
 		@Override
-		public void setVolume(double v) throws IllegalArgumentException {
+		public Sound setVolume(double v) throws IllegalArgumentException {
 			if (volume < 0 || volume > 1.0) {
 				throw new IllegalArgumentException("volume must be within the range [0, 1], got " + v);
 			}
 			volume = v;
+			return this;
 		}
 
 		@Override
@@ -296,8 +301,9 @@ public class JavaAudio implements Audio {
 		}
 
 		@Override
-		public void setLoop(boolean value) {
+		public Sound setLoop(boolean value) {
 			loop = value;
+			return this;
 		}
 
 	}

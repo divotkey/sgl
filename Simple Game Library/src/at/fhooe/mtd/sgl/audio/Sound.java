@@ -20,10 +20,11 @@ public interface Sound {
 	 * 
 	 * @param p
 	 *            the panning in the range [-1, 1]
+	 * @return reference to this sound for method chaining
 	 * @throws IllegalStateException
 	 *             in case the specified panning value is out of range
 	 */
-	public void setPanning(double p) throws IllegalArgumentException;
+	public Sound setPanning(double p) throws IllegalArgumentException;
 	
 	/**
 	 * Returns the currently set panning for this sound.
@@ -39,10 +40,11 @@ public interface Sound {
 	 * 
 	 * @param v
 	 *            the volume of this sound
+	 * @return reference to this sound for method chaining
 	 * @throws IllegalArgumentException
 	 *             in case the specified volume is out of range
 	 */
-	public void setVolume(double v) throws IllegalArgumentException ;
+	public Sound setVolume(double v) throws IllegalArgumentException ;
 	
 	/**
 	 * Returns the volume of this sound.
@@ -56,6 +58,7 @@ public interface Sound {
 	 * 
 	 * @param value
 	 *            {@code true} if this sound should be looped
+	 * @return reference to this sound for method chaining
 	 */
-	public void setLoop(boolean value);
+	public Sound setLoop(boolean value);
 }
