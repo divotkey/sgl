@@ -284,7 +284,21 @@ public final class Vector2d {
 	public double angle(Vector2d o) {
 		return Math.atan2(cross(o), dot(o));
 	}	
-
+	
+	/**
+	 * Calculates the angle of this vector relative to the given vector. Angles are
+	 * towards the positive y-axis.
+	 * 
+	 * @param vx
+	 *            x-coordinate of the other vector
+	 * @param vy
+	 *            y-coordinate of the other vector
+	 * @return the angle between this vector and the given vector in radians
+	 */
+	public double angle(double vx, double vy) {
+		return Math.atan2(cross(vx, vy), dot(vx, vy));
+	}
+	
 	/**
 	 * Calculates the 2d cross product between this vector and the given vector.
 	 * 
