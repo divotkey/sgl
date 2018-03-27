@@ -43,10 +43,12 @@ class FullState extends ScreenState implements HierarchyListener {
     private Graphics2D g2d;
     private boolean frameIsReady;
     private DisplayMode mode;
+    private int idxScreenDevice;
     
-    public FullState(Screen context, DisplayMode m) {
+    public FullState(Screen context, DisplayMode m, int idxScreenDevice) {
         super(context);
         mode = m;
+        this.idxScreenDevice = idxScreenDevice;
     }
 
     @Override
@@ -60,7 +62,20 @@ class FullState extends ScreenState implements HierarchyListener {
         
         GraphicsEnvironment ge = 
                 GraphicsEnvironment.getLocalGraphicsEnvironment();
-        gd = ge.getDefaultScreenDevice();
+        
+        if (idxScreenDevice == Screen.DEFAULT_SCREEN_DEVICE) {
+            gd = ge.getDefaultScreenDevice();
+        } else {
+        	GraphicsDevice[] devices = ge.getScreenDevices();
+        	if (idxScreenDevice >= devices.length) {
+				System.err.println(
+						String.format("requested screen device %d not "
+								+ "available, using default", idxScreenDevice));
+                gd = ge.getDefaultScreenDevice();
+        	} else {
+            	gd = devices[idxScreenDevice];       		
+        	}
+        }
         
         if (!gd.isFullScreenSupported()) {
             System.err.print("full-screen not supported");
@@ -268,7 +283,7 @@ class FullState extends ScreenState implements HierarchyListener {
 	}
     
     @Override
-    public void setFullScreen(boolean value) {
+    public void setFullScreen(boolean value, int idxScreenDevice) {
         if (value) return;
         getContext().switchState(new WindowedState(getContext(), mode));
     }

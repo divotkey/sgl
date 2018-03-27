@@ -62,7 +62,7 @@ abstract class ScreenState {
     public abstract void addKeyListener(KeyListener l);
     public abstract void removeKeyListener(KeyListener l);
 
-    public abstract void setFullScreen(boolean value);
+    public abstract void setFullScreen(boolean value, int screenDeviceIdx);
     public abstract boolean isFullscreen();
 
     public abstract void addMouseListener(MouseListener l);

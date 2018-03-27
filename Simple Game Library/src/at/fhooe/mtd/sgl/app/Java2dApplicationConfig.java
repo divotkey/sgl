@@ -18,6 +18,7 @@ import java.util.List;
 import at.fhooe.mtd.sgl.app.Application.LoopMode;
 import at.fhooe.mtd.sgl.graphics.GfxConfigurator;
 import at.fhooe.mtd.sgl.graphics.Graphics.Quality;
+import at.fhooe.mtd.sgl.graphics.screen.Screen;
 
 /**
  * This class holds configuration data for Java2dApplications.
@@ -56,6 +57,9 @@ public class Java2dApplicationConfig {
     /** List icon images used as the application icons. */
     public List<Image> iconImages = new ArrayList<>();
     
+    /** Index of default screen device used for full-screen mode. */
+    public int screenDevice = Screen.DEFAULT_SCREEN_DEVICE;
+    
     /** Whether to activate the audio system. */
     public boolean enableAudio = true;
     
@@ -75,6 +79,7 @@ public class Java2dApplicationConfig {
         config.fullScreen = gfxc.isFullScreen();
         config.loopMode = gfxc.getLoopMode();
         config.graphicsQuality = gfxc.getGraphicsQuality();
+        config.screenDevice = gfxc.getGraphicsDevice();
         
         return config;
     }

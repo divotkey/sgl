@@ -35,6 +35,7 @@ public class Java2dApplication implements Application, Input {
         // initialize screen
         screen = new Screen();
         screen.setTitle(c.title);
+        screen.setScreenDevice(c.screenDevice);
         screen.setFullScreen(c.fullScreen);
         screen.setVsyncEnabled(c.vsync);
         screen.showCursor(c.showCursor);

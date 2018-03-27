@@ -259,9 +259,9 @@ class WindowedState extends ScreenState {
 	}
     
     @Override
-    public void setFullScreen(boolean value) {
+    public void setFullScreen(boolean value, int idxScreenDevice) {
         if (value == false) return;
-        getContext().switchState(new FullState(getContext(), mode));
+        getContext().switchState(new FullState(getContext(), mode, idxScreenDevice));
     }
 
     @Override

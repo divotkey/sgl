@@ -51,6 +51,9 @@ import at.fhooe.mtd.sgl.graphics.GraphicsListener;
 
 public class Screen implements Graphics {
 
+	/** The default screen device. */
+	public static final int DEFAULT_SCREEN_DEVICE = -1;
+	
     private ScreenState state = new ClosedScreen(this);
     private String title;
     private boolean vsync;
@@ -64,6 +67,9 @@ public class Screen implements Graphics {
     private boolean showCursor;
     private Quality quality = Graphics.Quality.Good;
     private Graphics2D context;
+    
+    /** The index of the screen device to be used for full-screen mode. */
+    private int idxScreenDevice = -1;
 
     private List<Command> commands = new CopyOnWriteArrayList<>();
 
@@ -77,6 +83,27 @@ public class Screen implements Graphics {
     
     public Screen(String title) {
         this.title = title;
+    }
+    
+    
+	/**
+	 * Sets the index of the screen device to be used in full-screen mode. Use
+	 * {@link #DEFAULT_SCREEN_DEVICE} if the default screen device should be used.
+	 * 
+	 * @param idx
+	 *            the index of the screen device.
+	 */
+    public void setScreenDevice(int idx) {
+    	idxScreenDevice = idx;
+    }
+    
+	/**
+	 * Returns index of screen device to be used for full-screen mode.
+	 * 
+	 * @return the index of the screen device
+	 */
+    public int getScreenDevice() {
+    	return idxScreenDevice;
     }
     
     public Point getLocationOnScreen() {
@@ -160,7 +187,7 @@ public class Screen implements Graphics {
     
     @Override
     public void setFullScreen(boolean value) {
-        state.setFullScreen(value);
+        state.setFullScreen(value, idxScreenDevice);
     }
     
     @Override

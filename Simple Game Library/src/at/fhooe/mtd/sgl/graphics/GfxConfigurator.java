@@ -48,6 +48,7 @@ public class GfxConfigurator {
     private JComboBox<DisplayModeWrapper> modeCombo;
     private JComboBox<Quality> qualityCombo;
     private JComboBox<LoopModeWrapper> loopCombo;
+    private JComboBox<GraphicsDeviceWrapper> deviceCombo;
     private JCheckBox fullScreenChk;
     private JCheckBox vsyncChk;
 
@@ -64,6 +65,28 @@ public class GfxConfigurator {
             }
         }
         return null;
+    }
+    
+    private static class GraphicsDeviceWrapper {
+    	private int idx;
+    	private String name;
+    	private DisplayModeWrapper[] modes;
+    	
+    	public GraphicsDeviceWrapper(String name, int idx, DisplayModeWrapper[] modes) {
+    		this.idx = idx;
+    		this.name = name;
+    		this.modes = modes;
+    	}
+    	
+        @Override
+        public String toString() {
+        	if (name != null) {
+        		return name;
+        	} else {
+        		return String.format("Device %d", idx);
+        	}
+        }
+    	
     }
     
     private static class LoopModeWrapper {
@@ -164,10 +187,19 @@ public class GfxConfigurator {
     }
     
     private DisplayModeWrapper[] getModes() {
+    	return getModes(-1);
+    }
+    
+    private DisplayModeWrapper[] getModes(int idx) {
         GraphicsEnvironment ge = GraphicsEnvironment
                 .getLocalGraphicsEnvironment();
 
-        GraphicsDevice gd = ge.getDefaultScreenDevice();
+        GraphicsDevice gd;
+        if (idx == -1) {
+            gd = ge.getDefaultScreenDevice();        	
+        } else {
+        	gd = ge.getScreenDevices()[idx];
+        }
 
         List<DisplayModeWrapper> r = new ArrayList<>();
         for (DisplayMode mode : gd.getDisplayModes()) {
@@ -209,6 +241,10 @@ public class GfxConfigurator {
     public Quality getGraphicsQuality() {
         return qualityCombo.getItemAt(qualityCombo.getSelectedIndex());        
     }
+    
+    public int getGraphicsDevice() {
+    	return deviceCombo.getItemAt(deviceCombo.getSelectedIndex()).idx;
+    }
 
     public LoopMode getLoopMode() {
         return loopCombo.getItemAt(loopCombo.getSelectedIndex()).getMode();        
@@ -230,7 +266,6 @@ public class GfxConfigurator {
     private synchronized boolean isFinished() {
         return finished;
     }
-    
     
     private synchronized void waitForFinished() {
         while (!isFinished()) {
@@ -297,9 +332,11 @@ public class GfxConfigurator {
         modeCombo = new JComboBox<>(getModes());
         qualityCombo = new JComboBox<>(Quality.values());
         loopCombo = new JComboBox<>(getGameLoopModes());
+        deviceCombo = new JComboBox<>(getGraphicsDeviceList());
         JLabel resLabel = new JLabel("Screen resolution");
         JLabel qualLabel = new JLabel("Graphics quality");
         JLabel loopLabel = new JLabel("Loop mode");
+        JLabel deviceLabel = new JLabel("Screen");
         JButton okButton = new JButton("Ok");
         fullScreenChk = new JCheckBox("Full screen");
         vsyncChk = new JCheckBox("V-Sync");
@@ -314,10 +351,12 @@ public class GfxConfigurator {
                 .addGroup(layout.createParallelGroup()
                     .addComponent(resLabel)
                     .addComponent(qualLabel)
+                    .addComponent(deviceLabel)
                     .addComponent(loopLabel))
                 .addGroup(layout.createParallelGroup(Alignment.LEADING)
                     .addComponent(modeCombo)
                     .addComponent(qualityCombo)
+                    .addComponent(deviceCombo)
                     .addComponent(loopCombo)
                     .addGroup(layout.createSequentialGroup()
                             .addComponent(fullScreenChk)
@@ -333,6 +372,9 @@ public class GfxConfigurator {
                         .addComponent(qualLabel)
                         .addComponent(qualityCombo))
                 .addGroup(layout.createParallelGroup(Alignment.BASELINE)
+                        .addComponent(deviceLabel)
+                        .addComponent(deviceCombo))
+                .addGroup(layout.createParallelGroup(Alignment.BASELINE)
                         .addComponent(loopLabel)
                         .addComponent(loopCombo))
                 .addGroup(layout.createParallelGroup(Alignment.BASELINE)
@@ -340,6 +382,23 @@ public class GfxConfigurator {
                         .addComponent(vsyncChk))
                 .addComponent(okButton)
                 );
+        
+        if (numGraphicsDevices() <= 1) {
+	        deviceCombo.setVisible(false);
+	        deviceLabel.setVisible(false);
+        }
+        
+        deviceCombo.addActionListener(new ActionListener() {
+			
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				GraphicsDeviceWrapper item = (GraphicsDeviceWrapper) deviceCombo.getSelectedItem();
+				modeCombo.removeAllItems();
+				for (DisplayModeWrapper m : item.modes) {
+					modeCombo.addItem(m);
+				}
+			}
+		});
         
 		okButton.addActionListener(new ActionListener() {
 			@Override
@@ -351,7 +410,24 @@ public class GfxConfigurator {
         return pane;
     }
     
-    private LoopModeWrapper[] getGameLoopModes() {
+    private int numGraphicsDevices() {
+		GraphicsEnvironment ge = GraphicsEnvironment.getLocalGraphicsEnvironment();
+		return ge.getScreenDevices().length;
+    }
+    
+    private GraphicsDeviceWrapper[] getGraphicsDeviceList() {
+    	List<GraphicsDeviceWrapper> result = new ArrayList<>();
+		GraphicsEnvironment ge = GraphicsEnvironment.getLocalGraphicsEnvironment();
+		
+		GraphicsDevice[] devices = ge.getScreenDevices();
+		for (int i = 0; i < devices.length; ++i) {
+			GraphicsDevice dev = devices[i];
+			result.add(new GraphicsDeviceWrapper(dev.getIDstring(), i, getModes(i)));
+		}
+		return result.toArray(new GraphicsDeviceWrapper[0]);
+	}
+
+	private LoopModeWrapper[] getGameLoopModes() {
         List<LoopModeWrapper> result = new ArrayList<>();
         for (LoopMode m : LoopMode.values()) {
             result.add(new LoopModeWrapper(m));
@@ -376,10 +452,6 @@ public class GfxConfigurator {
 
     public void setTitle(String title) {
         this.title = title;
-    }
-
-    public void setVsync(boolean b) {
-        
     }
 
 	public void forceResolution(int width, int height) {

@@ -26,6 +26,7 @@ import javax.swing.TransferHandler;
 class ClosedScreen extends ScreenState {
 
     private boolean fullScreen;
+    private int idxScreenDevice = Screen.DEFAULT_SCREEN_DEVICE;
 
     public ClosedScreen(Screen context) {
         super(context);
@@ -35,7 +36,7 @@ class ClosedScreen extends ScreenState {
     public void open(DisplayMode mode) {
         if (fullScreen) {
             getContext().switchState(
-                    new FullState(getContext(), mode));
+                    new FullState(getContext(), mode, idxScreenDevice));
         } else {
             getContext().switchState(
                     new WindowedState(getContext(), mode));
@@ -104,8 +105,9 @@ class ClosedScreen extends ScreenState {
 	}
     
     @Override
-    public void setFullScreen(boolean value) {
+    public void setFullScreen(boolean value, int idxScreenDevice) {
         fullScreen = value;
+        this.idxScreenDevice = idxScreenDevice;
     }
 
     @Override
