@@ -122,7 +122,7 @@ public class JavaAudio implements Audio {
 			throw new IOException("unsupported audio format", e);
 		}
 	}
-	
+		
 	/**
 	 * Converts a byte array with 6-bit audio data to float data.
 	 * 
