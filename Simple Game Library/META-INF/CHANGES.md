@@ -7,7 +7,8 @@ Date: 2018-03-27
 - Method `ResourceLoader.getStream()` throws FileNotFoundException instead of IllegalArgumentExcepiton.
 - The `Game` class postpones state changes when triggered while updating until the update cycle is finished.
 - SGL now supports simple audio playback. Have a look at the new audio package.
-- SGL now graphics configuration now supports multiple screen environments.
+- SGL graphics configuration now supports multiple screen environments.
+- Added 3x3 matrix utlity class.
 
 ## Version 1.5.2
 Date: *2017-06-24*
