@@ -16,6 +16,11 @@ import java.io.FileNotFoundException;
 import java.io.InputStream;
 import java.net.URL;
 
+/**
+ * This class provides static methods to locate resources. Resources are first
+ * searched within the local file system and then within the applications JAR
+ * file.
+ */
 public class ResourceLoader {
 
     /**
