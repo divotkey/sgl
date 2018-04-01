@@ -17,6 +17,9 @@ import java.awt.FontMetrics;
 import java.awt.Graphics2D;
 import java.awt.geom.Rectangle2D;
 
+/**
+ * Utility class for rendering text with Java2D.
+ */
 public class TextRenderer {
 
     private static final Font DEF_FONT = new Font(Font.DIALOG, Font.PLAIN, 12);

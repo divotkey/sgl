@@ -202,6 +202,7 @@ public class Screen implements Graphics {
     	state.setTitle(title);
     }
     
+    @Override
     public String getTitle() {
         return title;
     }
