@@ -32,7 +32,7 @@ public interface Graphics {
 	 * @param title
 	 *            the title text to be set
 	 */
-	void setTitle(String title);
+	public void setTitle(String title);
 	
     /**
      * Polls the current mouse position. The returned location is more
