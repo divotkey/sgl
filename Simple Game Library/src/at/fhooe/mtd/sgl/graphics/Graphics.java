@@ -211,7 +211,7 @@ public interface Graphics {
 	 * </p>
 	 * 
 	 * @param b
-	 *            {@code true} to enable vsync
+	 *            {@code true} to enable v-sync
 	 */
 	void setVsyncEnabled(boolean b);
 
