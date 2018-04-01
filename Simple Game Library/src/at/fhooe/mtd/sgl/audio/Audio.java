@@ -84,7 +84,6 @@ public interface Audio {
 	
 	/**
 	 * Stops all currently played sounds.
-	 * @return 
 	 */
 	public void stopAll();
 	
