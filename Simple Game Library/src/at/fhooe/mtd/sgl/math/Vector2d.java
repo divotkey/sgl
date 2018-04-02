@@ -69,7 +69,7 @@ package at.fhooe.mtd.sgl.math;
  * }
  * 
  * void bar(Vector2d v1, Vector2d v2) {
- * 	foo(v1.add(v2)); // probably the an unintended alteration of vector v1!
+ * 	foo(v1.add(v2)); // unintended alteration of vector v1!
  * }
  * </pre>
  * 
