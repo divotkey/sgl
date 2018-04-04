@@ -15,6 +15,7 @@ import java.util.Arrays;
 
 public class MovingAverage {
 
+	/** The default window size. */
     public static final int DETAULT_WINDOW_SIZE = 50;
     
     private double[] dataPoints;
@@ -22,10 +23,19 @@ public class MovingAverage {
     private double avg;
     private int pos;
 
+	/**
+	 * Creates a new instance using the default window size of 50.
+	 */
     public MovingAverage() {
         this(DETAULT_WINDOW_SIZE);
     }
-    
+
+	/**
+	 * Creates a new instance with the specified window size.
+	 * 
+	 * @param windowSize
+	 *            the window size
+	 */
     public MovingAverage(int windowSize) {
         dataPoints = new double[windowSize];
         Arrays.fill(dataPoints, 0.0);
