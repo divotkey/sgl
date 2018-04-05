@@ -43,6 +43,24 @@ final class MonoMix extends AbstractMix<MonoMix> {
 		return result;
 	}
 	
+	public float getData() {
+		int idx = (int) fpos;
+		float p = fpos - idx;
+		
+		float d1 = data[idx];
+		float d2 = idx + 1 < data.length ? data[idx + 1] : 0.0f;
+		return (1.0f - p) * d1 + p * d2;
+	}
+	
+	public boolean hasData() {
+		return fpos < data.length ;
+	}
+	
+	public void moveToEnd() {
+		fpos = data.length;
+	}
+
+	
 	/**
 	 * Creates a new mix instance.
 	 */

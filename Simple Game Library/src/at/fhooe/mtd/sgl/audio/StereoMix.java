@@ -43,6 +43,41 @@ final class StereoMix extends AbstractMix<StereoMix> {
 		return result;
 	}
 	
+	public float getDataCh1() {
+		int idx = (int) fpos;
+		float p = fpos - idx;
+		
+		// consider two-channel values per position
+		idx <<= 1;
+		
+		// first channel, index is fine
+		
+		float d1 = data[idx];
+		float d2 = idx + 2 < data.length ? data[idx + 2] : 0.0f;
+		return (1.0f - p) * d1 + p * d2;
+	}
+	
+	public float getDataCh2() {
+		int idx = (int) fpos;
+		float p = fpos - idx;
+		
+		// consider two-channel values per position (times 2), second channel
+		idx = 1 + (idx << 1);
+				
+		float d1 = data[idx];
+		float d2 = idx + 2 < data.length ? data[idx + 2] : 0.0f;
+		return (1.0f - p) * d1 + p * d2;
+	}
+
+	public boolean hasData() {
+		return fpos < data.length >> 1;
+	}
+	
+	public void moveToEnd() {
+		fpos = data.length >> 1;
+	}
+	
+	
 	/**
 	 * Creates a new mix instance.
 	 */

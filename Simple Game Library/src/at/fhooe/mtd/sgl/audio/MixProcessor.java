@@ -131,49 +131,83 @@ public class MixProcessor implements Runnable {
 	}
 	
 	private boolean mix(StereoMix mix) {
-		float[] data = mix.getAudioData();
 		float gl = mix.getLeftGain();
 		float gr = mix.getRightGain();
 		float v = mix.getVolume();
 		
-		for (int j = 0; mix.pos < data.length && j < mixBuffer.length;) {
-			mixBuffer[j] = clamp(volume * (mixBuffer[j] + data[mix.pos] * gl * v));
-			++j; ++mix.pos;
-			mixBuffer[j] = clamp(volume * (mixBuffer[j] + data[mix.pos] * gr * v));
-			++j; ++mix.pos;
-		}
+		for (int i = 0; i < mixBuffer.length && mix.hasData(); ) {
+			mixBuffer[i] = clamp(volume * (mixBuffer[i] + mix.getDataCh1() * gl * v));
+			++i;
+			mixBuffer[i] = clamp(volume * (mixBuffer[i] + mix.getDataCh2() * gr * v));
+			++i;
+			mix.nextPos();
+		}		
 		
-		if (mix.pos >= data.length) {
+		if (!mix.hasData()) {
 			if (mix.isLoop()) {
-				mix.pos = 0;
+				mix.rewind();
 			} else {
 				return true;
 			}
 		}
 		return false;
+		
+//		for (int j = 0; mix.pos < data.length && j < mixBuffer.length;) {
+//			mixBuffer[j] = clamp(volume * (mixBuffer[j] + data[mix.pos] * gl * v));
+//			++j; ++mix.pos;
+//			mixBuffer[j] = clamp(volume * (mixBuffer[j] + data[mix.pos] * gr * v));
+//			++j; ++mix.pos;
+//		}
+//		
+//		if (mix.pos >= data.length) {
+//			if (mix.isLoop()) {
+//				mix.pos = 0;
+//			} else {
+//				return true;
+//			}
+//		}
+//		return false;
 	}
 
 	private boolean mix(MonoMix mix) {
-		float[] data = mix.getAudioData();
 		float gl = mix.getLeftGain();
 		float gr = mix.getRightGain();
 		float v = mix.getVolume();
 		
-		for (int j = 0; mix.pos < data.length && j < mixBuffer.length; ++mix.pos) {
-			mixBuffer[j] = clamp(volume * (mixBuffer[j] + data[mix.pos] * gl * v));
-			++j;
-			mixBuffer[j] = clamp(volume * (mixBuffer[j] + data[mix.pos] * gr * v));
-			++j;
+		for (int i = 0; i < mixBuffer.length && mix.hasData(); ) {
+			float dat = mix.getData();
+			mixBuffer[i] = clamp(volume * (mixBuffer[i] + dat * gl * v));
+			++i;
+			mixBuffer[i] = clamp(volume * (mixBuffer[i] + dat * gr * v));
+			++i;
+			mix.nextPos();
 		}
 		
-		if (mix.pos >= data.length) {
+		if (!mix.hasData()) {
 			if (mix.isLoop()) {
-				mix.pos = 0;
+				mix.rewind();
 			} else {
 				return true;
 			}
 		}
 		return false;
+		
+		
+//		for (int j = 0; mix.pos < data.length && j < mixBuffer.length; ++mix.pos) {
+//			mixBuffer[j] = clamp(volume * (mixBuffer[j] + data[mix.pos] * gl * v));
+//			mixBuffer[j] = clamp(volume * (mixBuffer[j] + data[mix.pos] * gr * v));
+//			++j;
+//		}
+//		
+//		if (mix.pos >= data.length) {
+//			if (mix.isLoop()) {
+//				mix.pos = 0;
+//			} else {
+//				return true;
+//			}
+//		}
+//		
+//		return false;
 	}
 	
 	private float clamp(float x) {
@@ -224,7 +258,7 @@ public class MixProcessor implements Runnable {
 			 MonoMix mix = findMonoMix(id);
 			 if (mix != null) {
 					mix.loop(false);
-					mix.pos = mix.getAudioData().length;
+					mix.moveToEnd();
 			 }
 		}
 		
@@ -232,7 +266,7 @@ public class MixProcessor implements Runnable {
 			 StereoMix mix = findStereoMix(id);
 			 if (mix != null) {
 					mix.loop(false);
-					mix.pos = mix.getAudioData().length;
+					mix.moveToEnd();
 			 }
 		}
 	}

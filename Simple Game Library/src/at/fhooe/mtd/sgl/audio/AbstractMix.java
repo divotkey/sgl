@@ -26,7 +26,7 @@ public abstract class AbstractMix<T> {
 	private int id;
 
 	/** The audio data represented as float values. */
-	private float data[];
+	protected float data[];
 	
 	/** The left gain factor of this mix. */
 	private float leftGain;
@@ -37,11 +37,15 @@ public abstract class AbstractMix<T> {
 	/** The volume of this mix. */
 	private float volume;
 	
+	/** The pitch multiplier. */
+	private float pitch;
+	
 	/** Whether this mix should be looped. */
 	private boolean loop;
 	
-	/** Current position within this mix. */
-	public int pos;
+	/** Floating position. */
+	protected float fpos;
+	
 	
 	/**
 	 * Returns the next unique identifier.
@@ -84,6 +88,15 @@ public abstract class AbstractMix<T> {
 		return getThis();
 	}
 	
+	public T pitch(float p) {
+		pitch = p;
+		return getThis();
+	}
+	
+	public float getPitch() {
+		return pitch;
+	}
+	
 	public float getVolume() {
 		return volume;
 	}
@@ -101,13 +114,21 @@ public abstract class AbstractMix<T> {
 		return data;
 	}
 	
+	public void nextPos() {
+		fpos += pitch;
+	}
+		
+	public void rewind() {
+		fpos = 0.0f;
+	}
+		
 	/**
 	 * Resets this instance to is default condition.
 	 */
 	protected void reset() {
 		data = null;
-		pos = 0;
-		leftGain = rightGain = volume = 1.0f;
+		fpos = 0.0f;
+		leftGain = rightGain = volume = pitch = 1.0f;
 		loop = false;
 		id = INVALID_ID;
 	}

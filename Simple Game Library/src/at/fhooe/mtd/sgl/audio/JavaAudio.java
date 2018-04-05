@@ -86,24 +86,27 @@ public class JavaAudio implements Audio {
 		}
 	}
 	
-	private int playSound(MonoSound snd, float volume, float leftGain, float rightGain, boolean loop) {
+	private int playSound(MonoSound snd, float volume, float leftGain, float rightGain, boolean loop, float pitch) {
 		MonoMix m;
 		mixProc.addMix(m = MonoMix.obtain(snd.data)
 				.volume(volume)
 				.leftGain(leftGain)
 				.rightGain(rightGain)
-				.loop(loop));
+				.loop(loop)
+				.pitch(pitch)
+				);
 		return m.getId();
 	}
 
-	private int playSound(StereoSound snd, float volume, float leftGain, float rightGain, boolean loop) {
+	private int playSound(StereoSound snd, float volume, float leftGain, float rightGain, boolean loop, float pitch) {
 		StereoMix m;
 		mixProc.addMix(m = StereoMix
 				.obtain(snd.data)
 				.volume(volume)
 				.leftGain(leftGain)
 				.rightGain(rightGain)
-				.loop(loop));
+				.loop(loop)
+				.pitch(pitch));
 		return m.getId();
 	}
 	
@@ -212,6 +215,7 @@ public class JavaAudio implements Audio {
 		private double panning = 0.0;
 		private double volume = 1.0;
 		private boolean loop = false;
+		private double pitch = 1.0;
 
 		public MonoSound(float[] data) {
 			this.data = data;
@@ -222,7 +226,7 @@ public class JavaAudio implements Audio {
 			double p = (1.0 + panning) / 2.0;
 			double lg = Math.cos(p * Math.PI * 0.5); 
 			double rg = Math.sin(p * Math.PI * 0.5); 
-			return playSound(this, (float) volume, (float) lg, (float) rg, loop);
+			return playSound(this, (float) volume, (float) lg, (float) rg, loop, (float) pitch);
 		}
 
 		@Override
@@ -259,6 +263,20 @@ public class JavaAudio implements Audio {
 			return this;
 		}
 
+		@Override
+		public Sound setPitch(double p) throws IllegalArgumentException {
+			if (p < 0.5 || p > 2.0) {
+				throw new IllegalArgumentException("pitch out of range, got " + p);
+			}
+			pitch = p;
+			return this;
+		}
+
+		@Override
+		public double getPitch() {
+			return pitch;
+		}
+
 	}
 	
 	private class StereoSound implements Sound {
@@ -267,6 +285,7 @@ public class JavaAudio implements Audio {
 		private double panning = 0.0;
 		private double volume = 1.0;
 		private boolean loop = false;
+		private double pitch = 1.0;
 
 		public StereoSound(float[] data) {
 			this.data = data;
@@ -275,11 +294,11 @@ public class JavaAudio implements Audio {
 		@Override
 		public int play() {
 			if (panning == 0) {
-				return playSound(this, (float) volume, 1.0f, 1.0f, loop);
+				return playSound(this, (float) volume, 1.0f, 1.0f, loop, (float) pitch);
 			} else if (panning > 0) {
-				return playSound(this,(float) volume, (float) (1.0 - panning / 1.0), 1.0f, loop);				
+				return playSound(this,(float) volume, (float) (1.0 - panning / 1.0), 1.0f, loop, (float) pitch);
 			} else {
-				return playSound(this, (float) volume, 1.0f, (float) (1.0 + panning / 1.0), loop);								
+				return playSound(this, (float) volume, 1.0f, (float) (1.0 + panning / 1.0), loop, (float) pitch);				
 			}
 		}
 
@@ -316,6 +335,21 @@ public class JavaAudio implements Audio {
 			loop = value;
 			return this;
 		}
+		
+		@Override
+		public Sound setPitch(double p) throws IllegalArgumentException {
+			if (p < 0.5 || p > 2.0) {
+				throw new IllegalArgumentException("pitch out of range, got " + p);
+			}
+			pitch = p;
+			return this;
+		}
+
+		@Override
+		public double getPitch() {
+			return pitch;
+		}
+
 
 	}
 

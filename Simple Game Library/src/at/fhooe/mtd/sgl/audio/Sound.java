@@ -55,7 +55,7 @@ public interface Sound {
 	 * @throws IllegalArgumentException
 	 *             in case the specified volume is out of range
 	 */
-	public Sound setVolume(double v) throws IllegalArgumentException ;
+	public Sound setVolume(double v) throws IllegalArgumentException;
 	
 	/**
 	 * Returns the volume of this sound.
@@ -63,6 +63,11 @@ public interface Sound {
 	 * @return the volume of this sound
 	 */
 	public double getVolume();
+	
+	
+	public Sound setPitch(double p) throws IllegalArgumentException;
+	
+	public double getPitch();
 	
 	/**
 	 * Specifies if this sound should be looped.
