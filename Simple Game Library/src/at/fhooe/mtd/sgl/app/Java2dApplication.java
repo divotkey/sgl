@@ -69,7 +69,7 @@ public class Java2dApplication implements Application, Input {
         // initialize audio
         if (c.enableAudio) {
         	audio = new JavaAudio();
-        	audio.open();
+        	audio.open(c.audioBufferSize);
         }
         
         // initialize game loop

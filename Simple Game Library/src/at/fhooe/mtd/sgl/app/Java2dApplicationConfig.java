@@ -17,6 +17,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import at.fhooe.mtd.sgl.app.Application.LoopMode;
+import at.fhooe.mtd.sgl.audio.JavaAudio;
 import at.fhooe.mtd.sgl.graphics.GfxConfigurator;
 import at.fhooe.mtd.sgl.graphics.Graphics.Quality;
 import at.fhooe.mtd.sgl.graphics.screen.Screen;
@@ -63,6 +64,9 @@ public class Java2dApplicationConfig {
     
     /** Whether to activate the audio system. */
     public boolean enableAudio = true;
+    
+    /** The size of the audio buffer (affects latency). */
+    public int audioBufferSize = JavaAudio.DEFAULT_BUFFER_SIZE;
     
     
     /**

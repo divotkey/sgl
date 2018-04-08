@@ -31,7 +31,7 @@ public class JavaAudio implements Audio {
 
 
 	/** The default buffer size for audio processing. */
-	private static final int DEFAULT_BUFFER_SIZE = 1024;
+	public static final int DEFAULT_BUFFER_SIZE = 1024;
 	
 	/** Audio format used for output. */
 	private AudioFormat format = new AudioFormat(44100.0f,	// sample rate
@@ -245,7 +245,7 @@ public class JavaAudio implements Audio {
 
 		@Override
 		public Sound setVolume(double v) throws IllegalArgumentException {
-			if (volume < 0 || volume > 1.0) {
+			if (v < 0 || v > 1.0) {
 				throw new IllegalArgumentException("volume must be within the range [0, 1], got " + v);
 			}
 			volume = v;
@@ -265,9 +265,9 @@ public class JavaAudio implements Audio {
 
 		@Override
 		public Sound setPitch(double p) throws IllegalArgumentException {
-			if (p < 0.5 || p > 2.0) {
-				throw new IllegalArgumentException("pitch out of range, got " + p);
-			}
+//			if (p < 0.5 || p > 2.0) {
+//				throw new IllegalArgumentException("pitch out of range, got " + p);
+//			}
 			pitch = p;
 			return this;
 		}

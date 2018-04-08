@@ -1,5 +1,11 @@
 # Version History
 
+## Version 1.6.1
+Date: 2018-04-??
+
+- Sounds clips can now be pitched.
+- Java2dApplicationConfig contains entry for size of audio buffer.
+
 ## Version 1.6.0
 Date: 2018-03-27
 
