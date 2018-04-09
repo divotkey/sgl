@@ -451,7 +451,6 @@ public class JavaAudio implements Audio {
 			return pitch;
 		}
 
-
 	}
 
 	@Override
