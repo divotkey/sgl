@@ -24,6 +24,10 @@ import javax.sound.sampled.LineUnavailableException;
 import javax.sound.sampled.SourceDataLine;
 import javax.sound.sampled.UnsupportedAudioFileException;
 
+/**
+ * This implementation of the {@link Audio} interface is using Java's low level
+ * audio API.
+ */
 public class JavaAudio implements Audio {
 
 	/** Used to convert short values to floats. */
@@ -61,15 +65,38 @@ public class JavaAudio implements Audio {
 		// intentionally left empty
 	}
 	
+	
+	/**
+	 * Returns whether this audio system has already been initialized.
+	 * 
+	 * @return {@true} if this audio system has already been initialized
+	 */
 	public boolean isOpen() {
 		return mixProc != null;
 	}
 	
-	public void open() {
+	/**
+	 * Initializes the this audio system using the default buffer size.
+	 * 
+	 * @throws IllegalStateException
+	 *             in case the audio system has already been initialized
+	 */
+	public void open() throws IllegalStateException  {
 		open(DEFAULT_BUFFER_SIZE);
 	}
 	
+	/**
+	 * Initializes the this audio system using the specified buffer size. The
+	 * specified buffer size represents the number of audio frames not the number of
+	 * bytes.
+	 * 
+	 * @param bufferSize
+	 *            the buffer size
+	 * @throws IllegalStateException
+	 *             in case the audio system has already been initialized
+	 */
 	public void open(int bufferSize) throws IllegalStateException {
+		
 		if (mixProc != null) {
 			throw new IllegalStateException("already opened");
 		}
@@ -84,6 +111,36 @@ public class JavaAudio implements Audio {
 		} catch (LineUnavailableException e) {
 			throw new RuntimeException("unable to open audio output line", e);
 		}
+	}
+
+	/**
+	 * Closes this audio system. If this audio system has not been initialized or
+	 * already closed, this method has no effect.
+	 */
+	public void close() {
+		if (mixProc != null) {
+			mixProc.terminate();
+			mixProc = null;
+		}
+	}
+	
+	
+	/**
+	 * Returns the one-channel audio format this system is using.
+	 * 
+	 * @return the audio format
+	 */
+	public AudioFormat getMonoFormat() {
+		return formatMono;
+	}
+
+	/**
+	 * Returns the two-channel audio format this system is using.
+	 * 
+	 * @return the audio format
+	 */
+	public AudioFormat getStereoFormat() {
+		return format;
 	}
 	
 	private int playSound(MonoSound snd, float volume, float leftGain, float rightGain, boolean loop, float pitch) {
@@ -109,14 +166,7 @@ public class JavaAudio implements Audio {
 				.pitch(pitch));
 		return m.getId();
 	}
-	
-	public void close() {
-		if (mixProc != null) {
-			mixProc.terminate();
-			mixProc = null;
-		}
-	}
-		
+			
 	@Override
 	public Sound createSound(InputStream is) throws IOException {
 		if (!is.markSupported()) {
@@ -126,7 +176,7 @@ public class JavaAudio implements Audio {
 		}
 		
 		try {
-			boolean stereo = AudioSystem.getAudioFileFormat(is).getFormat().getChannels() == 2;
+			boolean stereo = AudioSystem.getAudioFileFormat(is).getFormat().getChannels() >= 2;
 			if (stereo) {
 				return new StereoSound(convertToFloats(loadAudio(is, format)));
 			} else {
@@ -134,6 +184,27 @@ public class JavaAudio implements Audio {
 			}
 		} catch (UnsupportedAudioFileException e) {
 			throw new IOException("unsupported audio format", e);
+		}
+	}
+	
+	/**
+	 * Creates a new sound instance from the specified audio input stream stream.
+	 * 
+	 * @param ais
+	 *            the audio input stream containing the audio data
+	 * @return the newly created sound instance
+	 * @throws IOException
+	 *             in case the audio file could not be loaded
+	 */
+	public Sound createSound(AudioInputStream ais) throws IOException {
+		int numChannels = ais.getFormat().getChannels();
+		
+		if (numChannels == 1) {
+			return new MonoSound(convertToFloats(loadAudio(ais, formatMono)));
+		} else if (numChannels == 2){
+			return new StereoSound(convertToFloats(loadAudio(ais, format)));
+		} else {
+			throw new IOException("unsupported audio format (neither mono nor stereo)");
 		}
 	}
 		
@@ -169,17 +240,47 @@ public class JavaAudio implements Audio {
 	private byte[] loadAudio(InputStream is, AudioFormat fmt) throws IOException {
 				
 		try (AudioInputStream as = AudioSystem.getAudioInputStream(fmt, AudioSystem.getAudioInputStream(is))) {
-			bos.reset();
-			int n;
-			while ((n = as.read(readBuffer)) > 0) {
-				bos.write(readBuffer, 0, n);
-			}
-			bos.flush();
-			return bos.toByteArray();
+			return loadAudio(as);
 		}
 		catch (UnsupportedAudioFileException e) {
 			throw new IOException("unsupported audio format", e);
 		}
+	}
+	
+	/**
+	 * Stores the data of the specified audio stream into a byte array.
+	 * 
+	 * @param ais
+	 *            the audio stream from where to read audio data
+	 * @param fmt
+	 *            the target format
+	 * @return the newly created byte array
+	 * @throws IOException
+	 *             in case of an IO error
+	 */
+	private byte[] loadAudio(AudioInputStream ais, AudioFormat fmt) throws IOException  {
+		try(AudioInputStream ais2 = AudioSystem.getAudioInputStream(fmt, ais)) {
+			return loadAudio(ais2);
+		}
+	}
+	
+	/**
+	 * Stores the data of the specified audio stream into a byte array.
+	 * 
+	 * @param ais
+	 *            the audio stream from where to read audio data
+	 * @return the newly created byte array
+	 * @throws IOException
+	 *             in case of an IO error
+	 */
+	private byte[] loadAudio(AudioInputStream ais) throws IOException {
+		bos.reset();
+		int n;
+		while ((n = ais.read(readBuffer)) > 0) {
+			bos.write(readBuffer, 0, n);
+		}
+		bos.flush();
+		return bos.toByteArray();
 	}
 	
 	/**

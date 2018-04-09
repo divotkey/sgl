@@ -19,6 +19,9 @@ import javax.sound.sampled.SourceDataLine;
 
 public class MixProcessor implements Runnable {
 	
+	/** Default fade-out time in seconds. */
+	private static final double DEFAULT_FADE_OUT_TIME = 0.1;
+	
 	/** The list of mixes to be processed. */
 	private List<MonoMix> monoMixes = new ArrayList<>();
 	
@@ -40,6 +43,9 @@ public class MixProcessor implements Runnable {
 	
 	/** Master volume. */
 	private float volume = 1.0f;
+	
+	/** The number of samples used to fade out. */
+	private int numFadeOutSamples;
 		
 	
 	/**
@@ -58,6 +64,11 @@ public class MixProcessor implements Runnable {
 					+ "required, got" + format);
 		}
 				
+		System.out.println("framerate = " + format.getFrameRate());
+		System.out.println("samplerate = " + format.getSampleRate());
+		numFadeOutSamples = (int) (format.getSampleRate() * DEFAULT_FADE_OUT_TIME);
+		System.out.println("fade out samples = " + numFadeOutSamples);
+		
 		outBuffer = new byte[srcLine.getBufferSize()];
 		mixBuffer = new float[srcLine.getBufferSize() / format.getFrameSize() * format.getChannels()];
 		this.line = srcLine;
@@ -176,9 +187,12 @@ public class MixProcessor implements Runnable {
 		
 		for (int i = 0; i < mixBuffer.length && mix.hasData(); ) {
 			float dat = mix.getData();
+			assert dat <= 1.0f && dat >= -1.0f;
 			mixBuffer[i] = clamp(volume * (mixBuffer[i] + dat * gl * v));
+			assert mixBuffer[i] <= 1.0f && mixBuffer[i] >= -1.0f;
 			++i;
 			mixBuffer[i] = clamp(volume * (mixBuffer[i] + dat * gr * v));
+			assert mixBuffer[i] <= 1.0f && mixBuffer[i] >= -1.0f;
 			++i;
 			mix.nextPos();
 		}
@@ -258,7 +272,8 @@ public class MixProcessor implements Runnable {
 			 MonoMix mix = findMonoMix(id);
 			 if (mix != null) {
 					mix.loop(false);
-					mix.moveToEnd();
+					mix.fadeOut(numFadeOutSamples);
+//					mix.moveToEnd();
 			 }
 		}
 		
@@ -266,7 +281,8 @@ public class MixProcessor implements Runnable {
 			 StereoMix mix = findStereoMix(id);
 			 if (mix != null) {
 					mix.loop(false);
-					mix.moveToEnd();
+					mix.fadeOut(numFadeOutSamples);
+//					mix.moveToEnd();
 			 }
 		}
 	}

@@ -46,6 +46,18 @@ public abstract class AbstractMix<T> {
 	/** Floating position. */
 	protected float fpos;
 	
+	/** INdicates that this mix is not in used. */
+	private boolean free;
+		
+	/** Control variable determining fade-out state. */
+	private boolean fade;
+	
+	/** Numbers of samples left for fade-out. */
+	private int fadeCount;
+	
+	/** Amount to decrease volume for each sample during fade-out. */
+	private float dv;
+		
 	
 	/**
 	 * Returns the next unique identifier.
@@ -62,63 +74,90 @@ public abstract class AbstractMix<T> {
 	 * @return the unique identifier
 	 */
 	public int getId() {
+		assert !isFree();
 		return id;
 	}
 	
 	public float getLeftGain() {
+		assert !isFree();
 		return leftGain;
 	}
 	
 	public T leftGain(float g) {
+		assert !isFree();
 		leftGain = g;
 		return getThis();
 	}
 	
 	public T rightGain(float g) {
+		assert !isFree();
 		rightGain = g;
 		return getThis();
 	}
 	
 	public float getRightGain() {
+		assert !isFree();
 		return rightGain;
 	}
 	
 	public T volume(float v) {
+		assert !isFree();
 		volume = v;
 		return getThis();
 	}
 	
 	public T pitch(float p) {
+		assert !isFree();
 		pitch = p;
 		return getThis();
 	}
 	
 	public float getPitch() {
+		assert !isFree();
 		return pitch;
 	}
 	
 	public float getVolume() {
+		assert !isFree();
 		return volume;
 	}
 	
 	public boolean isLoop() {
+		assert !isFree();
 		return loop;
 	}
 	
 	public T loop(boolean value) {
+		assert !isFree();
 		loop = value;
 		return getThis();
 	}
 
 	public float[] getAudioData() {
+		assert !isFree();
 		return data;
 	}
 	
+	public void fadeOut(int n) {
+		assert !isFree();
+		fade = true;
+		fadeCount = n;
+		dv = volume / fadeCount;
+	}
+	
 	public void nextPos() {
+		assert !isFree();
 		fpos += pitch;
+		if (fade) {
+			volume -= dv;
+			if (--fadeCount <= 0) {
+				moveToEnd();
+			}
+		}
 	}
 		
 	public void rewind() {
+		assert !isFree();
 		fpos = 0.0f;
 	}
 		
@@ -130,13 +169,21 @@ public abstract class AbstractMix<T> {
 		fpos = 0.0f;
 		leftGain = rightGain = volume = pitch = 1.0f;
 		loop = false;
+		fade = false;
+		free = true;
 		id = INVALID_ID;
 	}
-
+	
+	public boolean isFree() {
+		return free;
+	}
+	
 	protected void init(float[] data) {
 		this.data = data;
 		this.id = nextId();
+		this.free = false;
 	}
 	
+	protected abstract void moveToEnd();
 	protected abstract T getThis();		
 }

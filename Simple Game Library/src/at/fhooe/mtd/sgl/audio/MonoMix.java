@@ -44,19 +44,24 @@ final class MonoMix extends AbstractMix<MonoMix> {
 	}
 	
 	public float getData() {
+		assert !isFree();
 		int idx = (int) fpos;
 		float p = fpos - idx;
 		
 		float d1 = data[idx];
 		float d2 = idx + 1 < data.length ? data[idx + 1] : 0.0f;
+		
 		return (1.0f - p) * d1 + p * d2;
 	}
 	
 	public boolean hasData() {
+		assert !isFree();
 		return fpos < data.length ;
 	}
 	
+	@Override
 	public void moveToEnd() {
+		assert !isFree();
 		fpos = data.length;
 	}
 

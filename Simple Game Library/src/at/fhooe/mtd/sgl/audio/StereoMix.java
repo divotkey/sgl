@@ -73,6 +73,7 @@ final class StereoMix extends AbstractMix<StereoMix> {
 		return fpos < data.length >> 1;
 	}
 	
+	@Override
 	public void moveToEnd() {
 		fpos = data.length >> 1;
 	}
