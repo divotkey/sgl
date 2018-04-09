@@ -64,9 +64,22 @@ public interface Sound {
 	 */
 	public double getVolume();
 	
-	
+	/**
+	 * Sets the pitch multiplier of this sound.
+	 * 
+	 * @param p
+	 *            the pitch multiplier
+	 * @return reference to this sound for method chaining
+	 * @throws IllegalArgumentException
+	 *             if the specified pitch is illegal less or equal zero
+	 */
 	public Sound setPitch(double p) throws IllegalArgumentException;
-	
+
+	/**
+	 * Returns the current pitch multiplier of this sound.
+	 * 
+	 * @return the current pitch
+	 */
 	public double getPitch();
 	
 	/**
