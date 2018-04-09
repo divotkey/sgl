@@ -366,9 +366,9 @@ public class JavaAudio implements Audio {
 
 		@Override
 		public Sound setPitch(double p) throws IllegalArgumentException {
-//			if (p < 0.5 || p > 2.0) {
-//				throw new IllegalArgumentException("pitch out of range, got " + p);
-//			}
+			if (p <= 0.0) {
+				throw new IllegalArgumentException("illegal pitch value, got " + p);
+			}
 			pitch = p;
 			return this;
 		}
@@ -439,8 +439,8 @@ public class JavaAudio implements Audio {
 		
 		@Override
 		public Sound setPitch(double p) throws IllegalArgumentException {
-			if (p < 0.5 || p > 2.0) {
-				throw new IllegalArgumentException("pitch out of range, got " + p);
+			if (p <= 0.0) {
+				throw new IllegalArgumentException("illegal pitch value, got " + p);
 			}
 			pitch = p;
 			return this;
