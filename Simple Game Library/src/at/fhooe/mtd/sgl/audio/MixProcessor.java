@@ -64,11 +64,7 @@ public class MixProcessor implements Runnable {
 					+ "required, got" + format);
 		}
 				
-		System.out.println("framerate = " + format.getFrameRate());
-		System.out.println("samplerate = " + format.getSampleRate());
 		numFadeOutSamples = (int) (format.getSampleRate() * DEFAULT_FADE_OUT_TIME);
-		System.out.println("fade out samples = " + numFadeOutSamples);
-		
 		outBuffer = new byte[srcLine.getBufferSize()];
 		mixBuffer = new float[srcLine.getBufferSize() / format.getFrameSize() * format.getChannels()];
 		this.line = srcLine;
