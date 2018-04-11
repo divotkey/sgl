@@ -69,6 +69,7 @@ final class StereoMix extends AbstractMix<StereoMix> {
 		return (1.0f - p) * d1 + p * d2;
 	}
 
+	@Override
 	public boolean hasData() {
 		return fpos < data.length >> 1;
 	}

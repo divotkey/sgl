@@ -40,6 +40,8 @@ final class MonoMix extends AbstractMix<MonoMix> {
 		}
 		
 		result.init(data);
+		result.loopStart = 0.0f;
+		result.loopEnd = data.length;
 		return result;
 	}
 	
@@ -54,6 +56,7 @@ final class MonoMix extends AbstractMix<MonoMix> {
 		return (1.0f - p) * d1 + p * d2;
 	}
 	
+	@Override
 	public boolean hasData() {
 		assert !isFree();
 		return fpos < data.length ;

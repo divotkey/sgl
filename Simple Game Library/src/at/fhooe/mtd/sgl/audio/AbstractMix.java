@@ -43,6 +43,12 @@ public abstract class AbstractMix<T> {
 	/** Whether this mix should be looped. */
 	private boolean loop;
 	
+	/** The start sample of the loop. */
+	protected float loopStart;
+
+	/** The end sample of the loop. */
+	protected float loopEnd;
+	
 	/** Floating position. */
 	protected float fpos;
 	
@@ -130,6 +136,7 @@ public abstract class AbstractMix<T> {
 	public T loop(boolean value) {
 		assert !isFree();
 		loop = value;
+		
 		return getThis();
 	}
 
@@ -153,9 +160,13 @@ public abstract class AbstractMix<T> {
 			if (--fadeCount <= 0) {
 				moveToEnd();
 			}
+		} else if (loop) {
+			if (fpos >= loopEnd) {
+				fpos = loopStart;
+			}
 		}
 	}
-		
+			
 	public void rewind() {
 		assert !isFree();
 		fpos = 0.0f;
@@ -168,6 +179,7 @@ public abstract class AbstractMix<T> {
 		data = null;
 		fpos = 0.0f;
 		leftGain = rightGain = volume = pitch = 1.0f;
+		loopStart = loopEnd = 0;
 		loop = false;
 		fade = false;
 		free = true;
@@ -184,6 +196,7 @@ public abstract class AbstractMix<T> {
 		this.free = false;
 	}
 	
+	public abstract boolean hasData();
 	protected abstract void moveToEnd();
-	protected abstract T getThis();		
+	protected abstract T getThis();
 }

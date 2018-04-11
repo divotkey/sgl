@@ -151,29 +151,14 @@ public class MixProcessor implements Runnable {
 		}		
 		
 		if (!mix.hasData()) {
-			if (mix.isLoop()) {
-				mix.rewind();
-			} else {
-				return true;
-			}
-		}
-		return false;
-		
-//		for (int j = 0; mix.pos < data.length && j < mixBuffer.length;) {
-//			mixBuffer[j] = clamp(volume * (mixBuffer[j] + data[mix.pos] * gl * v));
-//			++j; ++mix.pos;
-//			mixBuffer[j] = clamp(volume * (mixBuffer[j] + data[mix.pos] * gr * v));
-//			++j; ++mix.pos;
-//		}
-//		
-//		if (mix.pos >= data.length) {
+			return true;
 //			if (mix.isLoop()) {
-//				mix.pos = 0;
+//				mix.rewind();
 //			} else {
 //				return true;
 //			}
-//		}
-//		return false;
+		}
+		return false;
 	}
 
 	private boolean mix(MonoMix mix) {
@@ -194,30 +179,15 @@ public class MixProcessor implements Runnable {
 		}
 		
 		if (!mix.hasData()) {
-			if (mix.isLoop()) {
-				mix.rewind();
-			} else {
-				return true;
-			}
-		}
-		return false;
-		
-		
-//		for (int j = 0; mix.pos < data.length && j < mixBuffer.length; ++mix.pos) {
-//			mixBuffer[j] = clamp(volume * (mixBuffer[j] + data[mix.pos] * gl * v));
-//			mixBuffer[j] = clamp(volume * (mixBuffer[j] + data[mix.pos] * gr * v));
-//			++j;
-//		}
-//		
-//		if (mix.pos >= data.length) {
+			return true;
 //			if (mix.isLoop()) {
-//				mix.pos = 0;
+//				mix.rewind();
 //			} else {
 //				return true;
 //			}
-//		}
-//		
-//		return false;
+		}
+		
+		return false;		
 	}
 	
 	private float clamp(float x) {
@@ -268,8 +238,9 @@ public class MixProcessor implements Runnable {
 			 MonoMix mix = findMonoMix(id);
 			 if (mix != null) {
 					mix.loop(false);
+					// abruptly stopping the sound might cause clicks, fade-out instead
+					// mix.moveToEnd();
 					mix.fadeOut(numFadeOutSamples);
-//					mix.moveToEnd();
 			 }
 		}
 		
@@ -277,8 +248,9 @@ public class MixProcessor implements Runnable {
 			 StereoMix mix = findStereoMix(id);
 			 if (mix != null) {
 					mix.loop(false);
+					// abruptly stopping the sound might cause clicks, fade-out instead
+					// mix.moveToEnd();
 					mix.fadeOut(numFadeOutSamples);
-//					mix.moveToEnd();
 			 }
 		}
 	}
