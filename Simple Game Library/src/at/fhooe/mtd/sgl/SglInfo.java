@@ -23,8 +23,7 @@ public class SglInfo {
     public static final String VERSION = "1.6.1";
     
     /** The copyright holder of this version. */
-    public static final String COPYRIGHT_HOLDER 
-        = "Roman Divotkey, Univ. of Applied Sciences Upper Austria";
+	public static final String COPYRIGHT_HOLDER = "Roman Divotkey";
     
     /** The copyright year. */
     public static final String COPYRIGHT_YEAR = "2016 - 2018";
@@ -33,7 +32,6 @@ public class SglInfo {
     public static final String FULL_NAME = NAME + " (" + VERSION + ")";
     
     /** The complete copyright string. */
-    public static final String COPYRIGHT = "Copyright (c) " + COPYRIGHT_YEAR
-            + COPYRIGHT_HOLDER + "." + " All rights reserved.";
+	public static final String COPYRIGHT = "Copyright (c) " + COPYRIGHT_YEAR + " " + COPYRIGHT_HOLDER;
     
 }

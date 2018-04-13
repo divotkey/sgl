@@ -9,7 +9,7 @@
  * THIS CODE IS PROVIDED AS EDUCATIONAL MATERIAL AND NOT INTENDED TO ADDRESS
  * ALL REAL WORLD PROBLEMS AND ISSUES IN DETAIL.
  *******************************************************************************/
-package at.fhooe.mtd.igp.sgl.demo;
+package at.fhooe.mtd.igp.sgl.helloworld;
 
 import java.awt.Color;
 import java.awt.Font;
@@ -17,6 +17,7 @@ import java.awt.Graphics2D;
 import java.awt.event.KeyEvent;
 
 import at.fhooe.mtd.sgl.Sgl;
+import at.fhooe.mtd.sgl.SglInfo;
 import at.fhooe.mtd.sgl.app.ApplicationListener;
 import at.fhooe.mtd.sgl.app.Java2dApplication;
 import at.fhooe.mtd.sgl.app.Java2dApplicationConfig;
@@ -24,24 +25,19 @@ import at.fhooe.mtd.sgl.graphics.Alignment;
 import at.fhooe.mtd.sgl.graphics.GfxConfigurator;
 import at.fhooe.mtd.sgl.graphics.TextRenderer;
 
-public class SglDemo implements ApplicationListener {
+public class SglHelloWorld implements ApplicationListener {
 
-    private static final String APP_TITLE = "SGL Demo";
-    private static final String VERSION = "1.0";
+    private static final String APP_TITLE = "SGL Hello World";
+    private static final String VERSION = "1.0.0";
 
     public static void main(String[] args) {
         GfxConfigurator gfxc = new GfxConfigurator();
         gfxc.runDialog();
         
-        Java2dApplicationConfig config = new Java2dApplicationConfig();
-        config.displayMode = gfxc.getDisplayMode();
-        config.vsync = gfxc.isVSync();
-        config.fullScreen = gfxc.isFullScreen();
-        config.loopMode = gfxc.getLoopMode();
-        config.graphicsQuality = gfxc.getGraphicsQuality();
+        Java2dApplicationConfig config = Java2dApplicationConfig.create(gfxc);
         config.title = APP_TITLE + " - v" + VERSION;
                 
-        new Java2dApplication(config, new SglDemo());
+        new Java2dApplication(config, new SglHelloWorld());
     }
 
     private TextRenderer txtRenderer;
@@ -65,6 +61,8 @@ public class SglDemo implements ApplicationListener {
         Graphics2D g = Sgl.graphics.beginUpdate();
         txtRenderer.reset();
         txtRenderer.render(g, "Hello world");
+        txtRenderer.render(g, "SGL Version " + SglInfo.VERSION);
+        txtRenderer.render(g, SglInfo.COPYRIGHT);
         Sgl.graphics.endUpdate();
         
         if (Sgl.input.isKeyPressed(KeyEvent.VK_ESCAPE)) {

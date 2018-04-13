@@ -6,6 +6,8 @@ Date: 2018-04-??
 - Sound clips can now be pitched.
 - Sound clips are faded out when stopped to avoid audio clicks during playback.
 - Java2dApplicationConfig contains entry for size of audio buffer.
+- Updated copyright information. Fixed issue in copyright string.
+- Updated 'Hello, World!' test application.
 
 ## Version 1.6.0
 Date: 2018-03-27
