@@ -13,7 +13,7 @@ package at.fhooe.mtd.sgl.app;
 
 import at.fhooe.mtd.sgl.Sgl;
 import at.fhooe.mtd.sgl.app.loop.GameLoop;
-import at.fhooe.mtd.sgl.audio.JavaAudio;
+import at.fhooe.mtd.sgl.audio.JavaAudio2f;
 import at.fhooe.mtd.sgl.graphics.GraphicsAdapter;
 import at.fhooe.mtd.sgl.graphics.screen.Screen;
 import at.fhooe.mtd.sgl.input.Input;
@@ -28,7 +28,7 @@ public class Java2dApplication implements Application, Input {
     private GameLoop loop;
     private Keyboard keyboard;
     private Mouse mouse;
-    private JavaAudio audio;
+    private JavaAudio2f audio;
     
     public Java2dApplication(final Java2dApplicationConfig c, ApplicationListener l) {
         appListener = l;
@@ -68,7 +68,7 @@ public class Java2dApplication implements Application, Input {
                 
         // initialize audio
         if (c.enableAudio) {
-        	audio = new JavaAudio();
+        	audio = new JavaAudio2f();
         	audio.open(c.audioBufferSize);
         }
         

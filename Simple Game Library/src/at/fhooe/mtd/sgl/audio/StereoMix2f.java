@@ -78,7 +78,7 @@ public final class StereoMix2f implements Mix2f {
 		if (pool.isEmpty()) {
 			result = new StereoMix2f();
 		} else {
-			result = pool.get(pool.size() - 1);
+			result = pool.remove(pool.size() - 1);
 		}
 		
 		result.id = id;
@@ -124,6 +124,7 @@ public final class StereoMix2f implements Mix2f {
 	 */
 	private void reset() {
 		id = Audio.INVALID_HANDLE;
+		curState = playOnce;
 		data = null;
 	}
 	
@@ -393,7 +394,6 @@ public final class StereoMix2f implements Mix2f {
 
 		@Override
 		public void fadeOut(int numSamples) {
-			System.out.println("switching to fade-out loop");
 			curState = fadeOutLoop.numSamples(numSamples);
 		}
 		

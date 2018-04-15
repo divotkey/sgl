@@ -102,6 +102,7 @@ public class MixProcessor2f {
 	 */
 	public void addMix(Mix2f m) {
 		synchronized(mixes) {
+			assert findMix(m.getId()) == null;
 			mixes.add(m);
 		}
 	}
@@ -130,7 +131,7 @@ public class MixProcessor2f {
 	 */
 	public synchronized void engage() {
 		if (status != Status.TERMINATED) {
-			throw new IllegalStateException("cannot terminate, mixer not running");
+			throw new IllegalStateException("unable to terminate, mixer not started");
 		}
 		
 		status = Status.RUNNING;
@@ -240,7 +241,7 @@ public class MixProcessor2f {
 			Mix2f m = findMix(id);
 			if (m != null) {
 				// TODO add fade-out command with parameterized duration and use stop here
-				//m.stop();
+				// m.stop();
 				m.fadeOut(numFadeOutSamples);
 			}
 		}

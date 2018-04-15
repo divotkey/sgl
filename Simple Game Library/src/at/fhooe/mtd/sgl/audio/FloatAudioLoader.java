@@ -8,6 +8,10 @@ import javax.sound.sampled.AudioInputStream;
 import javax.sound.sampled.AudioSystem;
 import javax.sound.sampled.UnsupportedAudioFileException;
 
+/**
+ * Loads audio files from input streams and converts them into
+ * {@link FloatAudio} objects.
+ */
 public class FloatAudioLoader {
 		
 	/** Initial size of input float buffers. */
@@ -29,10 +33,26 @@ public class FloatAudioLoader {
 	private float sampleRate;
 	
 	
+	/**
+	 * Loads an audio file from the specified input stream.
+	 * 
+	 * <p>
+	 * After calling this method the individual channels of the loaded audio file
+	 * can be retrieved using the {@link #getChannel(int)} method. The number of
+	 * channels can be queried using {@link #numChannels()}.
+	 * </p>
+	 * 
+	 * @param is
+	 *            the input stream
+	 * @throws IOException
+	 *             in case of an IO error while reading the audio file
+	 * @throws UnsupportedAudioFileException
+	 *             if the audio format is not supported
+	 */
 	public void load(InputStream is) throws IOException, UnsupportedAudioFileException {
 		try(AudioInputStream ais = AudioSystem.getAudioInputStream(is)) {
 			//Uncomment for debug print
-			System.out.println(ais.getFormat());
+			//System.out.println(ais.getFormat());
 			
 			initialize(ais.getFormat());
 			
@@ -49,16 +69,30 @@ public class FloatAudioLoader {
 		}
 	}
 	
+	/**
+	 * Returns the number of audio channels loaded.
+	 * 
+	 * @return number of audio channels
+	 */
 	public int numChannels() {
 		return channels.length;
 	}
-	
+
+	/**
+	 * Returns the specified audio channel as float audio.
+	 * 
+	 * @param ch
+	 *            index of the channel to return
+	 * @return the float audio object containing the requested audio channel
+	 * @throws IndexOutOfBoundsException
+	 *             if the specified channel index is invalid
+	 * @see #numChannels()
+	 */
 	public FloatAudio getChannel(int ch) throws IndexOutOfBoundsException {
 		FloatAudio result = new FloatAudio(sampleRate, positions[ch]);
 		System.arraycopy(channels[ch], 0, result.getSamples(), 0, positions[ch]);
 		return result;
 	}
-	
 		
 	private void initialize(AudioFormat format) throws UnsupportedAudioFileException {
 		if (format.getEncoding() == AudioFormat.Encoding.PCM_SIGNED) {
