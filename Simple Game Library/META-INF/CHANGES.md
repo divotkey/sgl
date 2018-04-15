@@ -3,8 +3,10 @@
 ## Version 1.6.1
 Date: 2018-04-??
 
+- Rewrite of sound engine core.
 - Sound clips can now be pitched.
 - Sound clips are faded out when stopped to avoid audio clicks during playback.
+- Sound system can fade-out sound clips.
 - Java2dApplicationConfig contains entry for size of audio buffer.
 - Updated copyright information. Fixed issue in copyright string.
 - Updated 'Hello, World!' test application.
@@ -37,7 +39,6 @@ Date: *2017-06-24*
 Date: *2016-06-06*
 
 - Moved library information into META-INF folder to avoid name clashes when repacked into other jar archives.
-
 
 ## Version 1.4.0
 Date: *2016-05-09*

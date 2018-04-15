@@ -1,3 +1,14 @@
+/*******************************************************************************
+ * Copyright (c) 2016 - 2018 Roman Divotkey,
+ * Univ. of Applied Sciences Upper Austria. 
+ * All rights reserved.
+ *   
+ * This file is subject to the terms and conditions defined in file
+ * 'LICENSE', which is part of this source code package.
+ *    
+ * THIS CODE IS PROVIDED AS EDUCATIONAL MATERIAL AND NOT INTENDED TO ADDRESS
+ * ALL REAL WORLD PROBLEMS AND ISSUES IN DETAIL.
+ *******************************************************************************/
 package at.fhooe.mtd.sgl.audio;
 
 import java.util.ArrayList;
@@ -162,6 +173,7 @@ public final class MonoMix2f implements Mix2f {
 	private void reset() {
 		id = Audio.INVALID_HANDLE;
 		data = null;
+		switchState(end);
 	}
 	
 	/**
@@ -262,7 +274,7 @@ public final class MonoMix2f implements Mix2f {
 
 	@Override
 	public void stop() {
-		curState = end;
+		switchState(end);
 	}	
 	
 	@Override
@@ -359,8 +371,7 @@ public final class MonoMix2f implements Mix2f {
 		@Override
 		public void exit() {
 			// intentionally left empty
-		}
-		
+		}		
 		
 		@Override
 		public boolean hasData() {
@@ -424,8 +435,7 @@ public final class MonoMix2f implements Mix2f {
 		@Override
 		public void exit() {
 			// intentionally left empty
-		}
-		
+		}		
 		
 		/**
 		 * Sets the number of samples used to reach zero volume.
@@ -449,7 +459,7 @@ public final class MonoMix2f implements Mix2f {
 		public void nextData() {
 			pos += pitch;
 			--numSamples;
-			volume -= deltaVolume;
+			volume = Math.max(0.0f, volume - deltaVolume);
 						
 			if (pos >= endPos || numSamples <= 0) {
 				switchState(end);
@@ -526,7 +536,7 @@ public final class MonoMix2f implements Mix2f {
 			assert loopEnd <= endPos;
 			pos += pitch;
 			--numSamples;
-			volume -= deltaVolume;
+			volume = Math.max(0.0f, volume - deltaVolume);
 			
 			if (numSamples <= 0) {
 				// switch to end state
@@ -571,6 +581,16 @@ public final class MonoMix2f implements Mix2f {
 	private class EndState implements State {
 
 		@Override
+		public void enter() {
+			// intentionally left empty
+		}
+
+		@Override
+		public void exit() {
+			// intentionally left empty
+		}
+		
+		@Override
 		public boolean hasData() {
 			return false;
 		}
@@ -598,16 +618,6 @@ public final class MonoMix2f implements Mix2f {
 		@Override
 		public void fadeOut(int numSamples) {
 			// ignore
-		}
-
-		@Override
-		public void enter() {
-			// intentionally left empty
-		}
-
-		@Override
-		public void exit() {
-			// intentionally left empty
 		}
 		
 	}

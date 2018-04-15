@@ -247,7 +247,15 @@ public class JavaAudio2f implements Audio {
 			mixProc.stopMix(h);			
 		}
 	}
-
+	
+	@Override
+	public void fadeOut(int h, double duration) throws IllegalArgumentException {
+		if (duration <= 0) {
+			throw new IllegalArgumentException("duration must be greater zero");
+		}
+		mixProc.fadeOutMix(h, (int) (duration * format.getSampleRate()));
+	}
+	
 	@Override
 	public void setVolume(int h, double v) throws IllegalArgumentException {
 		if (v < 0.0 || v > 1.0) {
@@ -473,5 +481,6 @@ public class JavaAudio2f implements Audio {
 		}
 		
 	}
+
 			
 }

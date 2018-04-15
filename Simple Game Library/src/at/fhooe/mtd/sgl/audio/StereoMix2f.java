@@ -1,3 +1,14 @@
+/*******************************************************************************
+ * Copyright (c) 2016 - 2018 Roman Divotkey,
+ * Univ. of Applied Sciences Upper Austria. 
+ * All rights reserved.
+ *   
+ * This file is subject to the terms and conditions defined in file
+ * 'LICENSE', which is part of this source code package.
+ *    
+ * THIS CODE IS PROVIDED AS EDUCATIONAL MATERIAL AND NOT INTENDED TO ADDRESS
+ * ALL REAL WORLD PROBLEMS AND ISSUES IN DETAIL.
+ *******************************************************************************/
 package at.fhooe.mtd.sgl.audio;
 
 import java.util.ArrayList;
@@ -61,7 +72,7 @@ public final class StereoMix2f implements Mix2f {
 	private float loopEnd;
 	
 	/** The current state. */
-	private State curState = playOnce;
+	private State curState = end;
 	
 
 	/**
@@ -87,6 +98,7 @@ public final class StereoMix2f implements Mix2f {
 		result.volume = result.leftGain = result.rightGain = result.pitch = 1.0f;
 		result.panning = 0.0f;
 		result.endPos = result.loopEnd = (data.length >> 1) - 1;
+		result.switchState(result.playOnce);
 		return result;
 	}
 	
@@ -105,6 +117,8 @@ public final class StereoMix2f implements Mix2f {
 	 * @return the sample value for the left channel
 	 */
 	private float getLeftChannel(float sample) {
+		assert leftGain >= 0.0f : "right gain = " + rightGain;
+		assert volume >= 0.0f : "volume = " + volume;
 		return sample * volume * leftGain;
 	}
 	
@@ -116,6 +130,8 @@ public final class StereoMix2f implements Mix2f {
 	 * @return the sample value for the right channel
 	 */
 	private float getRightChannel(float sample) {
+		assert rightGain >= 0.0f : "right gain = " + rightGain;
+		assert volume >= 0.0f : "volume = " + volume;
 		return sample * volume * rightGain;
 	}
 	
@@ -124,8 +140,8 @@ public final class StereoMix2f implements Mix2f {
 	 */
 	private void reset() {
 		id = Audio.INVALID_HANDLE;
-		curState = playOnce;
 		data = null;
+		switchState(end);
 	}
 	
 	private void updatePanning() {
@@ -139,7 +155,17 @@ public final class StereoMix2f implements Mix2f {
 			rightGain = (float) (1.0 + panning / 1.0);
 		}
 	}
-			
+	
+	private void switchState(State s) {
+		if (curState == s)
+			return;
+		if (curState != null) {
+			curState.exit();
+		}
+		curState = s;
+		curState.enter();
+	}
+	
 	/////////////////////////////////////////////////
 	/////// Interface Mix2f
 	/////////////////////////////////////////////////
@@ -219,7 +245,7 @@ public final class StereoMix2f implements Mix2f {
 
 	@Override
 	public void stop() {
-		curState = end;
+		switchState(end);
 	}	
 	
 	@Override
@@ -238,6 +264,8 @@ public final class StereoMix2f implements Mix2f {
 	/////////////////////////////////////////////////
 	
 	private interface State {
+		public void enter();
+		public void exit();
 		public boolean hasData();
 		public void nextData();
 		public float getChannel1();
@@ -253,7 +281,6 @@ public final class StereoMix2f implements Mix2f {
 		
 		/** Current (interpolated) sample of channel 2. */
 		private float sample2;
-
 
 		/**
 		 * Updates the samples for left and right channel using linear interpolation.
@@ -333,6 +360,16 @@ public final class StereoMix2f implements Mix2f {
 	private class PlayOnceState extends LipState {
 		
 		@Override
+		public void enter() {
+			updateSamples();
+		}
+		
+		@Override
+		public void exit() {
+			// intentionally left empty
+		}
+		
+		@Override
 		public boolean hasData() {
 			return true;
 		}
@@ -342,8 +379,7 @@ public final class StereoMix2f implements Mix2f {
 			pos += pitch;
 			
 			if (pos >= endPos) {
-				// switch to end state
-				curState = end; 
+				switchState(end);
 			} else {
 				updateSamples();
 			}
@@ -353,18 +389,28 @@ public final class StereoMix2f implements Mix2f {
 		@Override
 		public void setLooping(boolean b) {
 			if (b) {
-				curState = loop;
+				switchState(loop);
 			}
 		}
 
 		@Override
 		public void fadeOut(int numSamples) {
-			curState = fadeOut.numSamples(numSamples);
+			switchState(fadeOut.numSamples(numSamples));
 		}
 		
 	}
 	
 	private class LoopState extends LipLoopState {
+		
+		@Override
+		public void enter() {
+			updateSamples();
+		}
+		
+		@Override
+		public void exit() {
+			// intentionally left empty
+		}
 		
 		@Override
 		public boolean hasData() {
@@ -388,13 +434,13 @@ public final class StereoMix2f implements Mix2f {
 		@Override
 		public void setLooping(boolean b) {
 			if (!b) {
-				curState = playOnce;
+				switchState(playOnce);
 			}
 		}
 
 		@Override
 		public void fadeOut(int numSamples) {
-			curState = fadeOutLoop.numSamples(numSamples);
+			switchState(fadeOutLoop.numSamples(numSamples));
 		}
 		
 	}
@@ -407,6 +453,16 @@ public final class StereoMix2f implements Mix2f {
 		
 		/** Determines how much to reduce the volume each sample. */
 		private float deltaVolume;
+		
+		@Override
+		public void enter() {
+			updateSamples();
+		}
+		
+		@Override
+		public void exit() {
+			// intentionally left empty
+		}
 		
 		/**
 		 * Sets the number of samples used to reach zero volume.
@@ -430,11 +486,10 @@ public final class StereoMix2f implements Mix2f {
 		public void nextData() {
 			pos += pitch;
 			--numSamples;
-			volume -= deltaVolume;
+			volume = Math.max(0.0f, volume - deltaVolume);
 			
-			if (pos >= endPos || numSamples < 0) {
-				// switch to end state
-				curState = end; 
+			if (pos >= endPos || numSamples <= 0) {
+				switchState(end);
 			} else {
 				updateSamples();
 			}
@@ -443,7 +498,7 @@ public final class StereoMix2f implements Mix2f {
 		@Override
 		public void setLooping(boolean b) {
 			if (b) {
-				curState = fadeOutLoop.numSamples(numSamples);
+				switchState(fadeOutLoop.numSamples(numSamples));
 			}
 		}
 
@@ -461,6 +516,17 @@ public final class StereoMix2f implements Mix2f {
 				
 		/** Determines how much to reduce the volume each sample. */
 		private float deltaVolume;
+		
+		@Override
+		public void enter() {
+			updateSamples();
+		}
+		
+		@Override
+		public void exit() {
+			// intentionally left empty
+		}
+		
 		
 		/**
 		 * Sets the number of samples used to reach zero volume.
@@ -485,11 +551,10 @@ public final class StereoMix2f implements Mix2f {
 			assert loopEnd <= endPos;
 			pos += pitch;
 			--numSamples;
-			volume -= deltaVolume;
+			volume = Math.max(0.0f, volume - deltaVolume);
 			
-			if (numSamples < 0) {
-				// switch to end state
-				curState = end; 
+			if (numSamples <= 0) {
+				switchState(end);
 				return;
 			}			
 			
@@ -505,7 +570,7 @@ public final class StereoMix2f implements Mix2f {
 		@Override
 		public void setLooping(boolean b) {
 			if (!b) {
-				curState = fadeOut.numSamples(numSamples);
+				switchState(fadeOut.numSamples(numSamples));
 			}
 		}
 
@@ -519,6 +584,16 @@ public final class StereoMix2f implements Mix2f {
 	
 	private class EndState implements State {
 
+		@Override
+		public void enter() {
+			// intentionally left empty
+		}
+
+		@Override
+		public void exit() {
+			// intentionally left empty
+		}
+		
 		@Override
 		public boolean hasData() {
 			return false;

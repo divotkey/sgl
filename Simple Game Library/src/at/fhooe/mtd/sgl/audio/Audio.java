@@ -61,6 +61,19 @@ public interface Audio {
 	public void stopSound(int h);
 	
 	/**
+	 * Carries out a smooth fade out of the specified sound. If the specified handle
+	 * is invalid, this method has no effect.
+	 * 
+	 * @param h
+	 *            the handle of the sound
+	 * @param duration
+	 *            the duration of the fade-out effect
+	 * @throws IllegalArgumentException
+	 *             in case the specified duration is less or equal zero
+	 */
+	public void fadeOut(int h, double duration) throws IllegalArgumentException;
+	
+	/**
 	 * Sets the volume of the sound with the specified handle. If the specified
 	 * handle is invalid, this method has no effect.
 	 * 

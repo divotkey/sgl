@@ -1,3 +1,14 @@
+/*******************************************************************************
+ * Copyright (c) 2016 - 2018 Roman Divotkey,
+ * Univ. of Applied Sciences Upper Austria. 
+ * All rights reserved.
+ *   
+ * This file is subject to the terms and conditions defined in file
+ * 'LICENSE', which is part of this source code package.
+ *    
+ * THIS CODE IS PROVIDED AS EDUCATIONAL MATERIAL AND NOT INTENDED TO ADDRESS
+ * ALL REAL WORLD PROBLEMS AND ISSUES IN DETAIL.
+ *******************************************************************************/
 package at.fhooe.mtd.sgl.audio;
 
 import java.util.ArrayList;
@@ -240,9 +251,26 @@ public class MixProcessor2f {
 		synchronized (mixes) {
 			Mix2f m = findMix(id);
 			if (m != null) {
-				// TODO add fade-out command with parameterized duration and use stop here
-				// m.stop();
 				m.fadeOut(numFadeOutSamples);
+			}
+		}
+	}
+	
+	/**
+	 * Carries out a smooth fade out of the mix object with the specified
+	 * identifier. If the no mix object with the specified ID does exist, this
+	 * method has no effect.
+	 * 
+	 * @param id
+	 *            the identifier of the mix object
+	 * @param numSamples
+	 *            the number of samples used to fade out the mix object
+	 */
+	public void fadeOutMix(int id, int numSamples) {
+		synchronized (mixes) {
+			Mix2f m = findMix(id);
+			if (m != null) {
+				m.fadeOut(numSamples);
 			}
 		}
 	}
