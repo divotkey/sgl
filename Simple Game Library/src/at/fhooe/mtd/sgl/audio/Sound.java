@@ -83,6 +83,25 @@ public interface Sound {
 	public double getPitch();
 	
 	/**
+	 * Specifies the region within the sound clip to be looped.
+	 * 
+	 * <p>
+	 * The start and end point of the region is specified in seconds. As example, a
+	 * loop region of 1.0 to 3.0 will loop the sound clip staring from the first
+	 * second to the third second.
+	 * </p>
+	 * 
+	 * @param t1
+	 *            the start time of the region
+	 * @param t2
+	 *            the end time of the region
+	 * @return reference to this sound for method chaining
+	 * @throws IllegalArgumentException
+	 *             in case the specified region is invalid
+	 */
+	public Sound setLoopRegion(double t1, double t2) throws IllegalArgumentException;
+	
+	/**
 	 * Specifies if this sound should be looped.
 	 * 
 	 * @param value
@@ -90,4 +109,20 @@ public interface Sound {
 	 * @return reference to this sound for method chaining
 	 */
 	public Sound setLoop(boolean value);
+	
+	/**
+	 * Returns whether this sound clip is looping.
+	 * 
+	 * @return {@code true} if looping is enabled, {@code} false otherwise
+	 */
+	public boolean isLooping();
+	
+	/**
+	 * Returns the duration of this sound clip. The duration is calculated assuming
+	 * a pitch multiplier of 1.0.
+	 * 
+	 * @return the duration in seconds
+	 */
+	public double getDuration();
+
 }

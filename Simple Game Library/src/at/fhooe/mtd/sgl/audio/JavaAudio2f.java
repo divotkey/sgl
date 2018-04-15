@@ -26,9 +26,10 @@ import javax.sound.sampled.UnsupportedAudioFileException;
 
 /**
  * This implementation of the {@link Audio} interface is using Java's low level
- * audio API.
+ * audio API and offers 2 audio channels with single precision floating point
+ * values.
  */
-public class JavaAudio implements Audio {
+public class JavaAudio2f implements Audio {
 
 	/** Used to convert short values to floats. */
 	private static final float SHORT_TO_FLOAT = 1.0f / Short.MAX_VALUE;
@@ -49,8 +50,11 @@ public class JavaAudio implements Audio {
 			format.getSampleSizeInBits(), 1, format.getFrameSize() / 2, format.getFrameRate(), format.isBigEndian());
 	
 
+	/** Used to load and audio data int float audio objects. */
+	private FloatAudioLoader fal = new FloatAudioLoader();
+	
 	/** Used to mix the sounds clips. */
-	private MixProcessor mixProc;
+	private MixProcessor2f mixProc;
 	
 	/** Used for buffered reading of audio files. */
 	private byte[] readBuffer = new byte[1024];
@@ -58,13 +62,16 @@ public class JavaAudio implements Audio {
 	/** Used to read audio files into byte array. */
 	private ByteArrayOutputStream bos = new ByteArrayOutputStream();
 		
+	/** The last id used as sound handle. */
+	private int lastId = Audio.INVALID_HANDLE;
+	
+	
 	/**
 	 * Creates a new instance.
 	 */
-	public JavaAudio() {
+	public JavaAudio2f() {
 		// intentionally left empty
 	}
-	
 	
 	/**
 	 * Returns whether this audio system has already been initialized.
@@ -106,8 +113,8 @@ public class JavaAudio implements Audio {
 			SourceDataLine line = (SourceDataLine) AudioSystem.getLine(info);
 			line.open(format, bufferSize * format.getFrameSize());
 			line.start();
-			mixProc = new MixProcessor(line);
-			new Thread(mixProc).start();
+			mixProc = new MixProcessor2f(line);
+			mixProc.engage();
 		} catch (LineUnavailableException e) {
 			throw new RuntimeException("unable to open audio output line", e);
 		}
@@ -123,7 +130,6 @@ public class JavaAudio implements Audio {
 			mixProc = null;
 		}
 	}
-	
 	
 	/**
 	 * Returns the one-channel audio format this system is using.
@@ -143,50 +149,15 @@ public class JavaAudio implements Audio {
 		return format;
 	}
 	
-	private int playSound(MonoSound snd, float volume, float leftGain, float rightGain, boolean loop, float pitch) {
-		MonoMix m;
-		mixProc.addMix(m = MonoMix.obtain(snd.data)
-				.volume(volume)
-				.leftGain(leftGain)
-				.rightGain(rightGain)
-				.loop(loop)
-				.pitch(pitch)
-				);
-		return m.getId();
+	/**
+	 * Returns the next unique identifier to be used as sound handle.
+	 * 
+	 * @return the identifier
+	 */
+	private int nextId() {
+		return ++lastId;
 	}
-
-	private int playSound(StereoSound snd, float volume, float leftGain, float rightGain, boolean loop, float pitch) {
-		StereoMix m;
-		mixProc.addMix(m = StereoMix
-				.obtain(snd.data)
-				.volume(volume)
-				.leftGain(leftGain)
-				.rightGain(rightGain)
-				.loop(loop)
-				.pitch(pitch));
-		return m.getId();
-	}
-			
-	@Override
-	public Sound createSound(InputStream is) throws IOException {
-		if (!is.markSupported()) {
-			// load into memory to bypass the limitation that
-			// Java audio cannot handle such streams
-			is = toMemoryStream(is);
-		}
-		
-		try {
-			boolean stereo = AudioSystem.getAudioFileFormat(is).getFormat().getChannels() >= 2;
-			if (stereo) {
-				return new StereoSound(convertToFloats(loadAudio(is, format)));
-			} else {
-				return new MonoSound(convertToFloats(loadAudio(is, formatMono)));
-			}
-		} catch (UnsupportedAudioFileException e) {
-			throw new IOException("unsupported audio format", e);
-		}
-	}
-	
+				
 	/**
 	 * Creates a new sound instance from the specified audio input stream stream.
 	 * 
@@ -200,9 +171,10 @@ public class JavaAudio implements Audio {
 		int numChannels = ais.getFormat().getChannels();
 		
 		if (numChannels == 1) {
-			return new MonoSound(convertToFloats(loadAudio(ais, formatMono)));
+			return new MonoSound2f(convertToFloats(loadAudio(ais, formatMono)));
 		} else if (numChannels == 2){
-			return new StereoSound(convertToFloats(loadAudio(ais, format)));
+			throw new RuntimeException("not implemented");
+			//return new StereoSound(convertToFloats(loadAudio(ais, format)));
 		} else {
 			throw new IOException("unsupported audio format (neither mono nor stereo)");
 		}
@@ -305,184 +277,102 @@ public class JavaAudio implements Audio {
 			try { is.close(); } catch (IOException e) { }
 		}
 	}
-
+	
 	private short toShort(byte hi, byte lo) {
 		return (short) (hi << 8 | lo & 0xff);
 	}
-	
-	private class MonoSound implements Sound {
-		
-		private float[] data;
-		private double panning = 0.0;
-		private double volume = 1.0;
-		private boolean loop = false;
-		private double pitch = 1.0;
 
-		public MonoSound(float[] data) {
-			this.data = data;
-		}
-
-		@Override
-		public int play() {
-			double p = (1.0 + panning) / 2.0;
-			double lg = Math.cos(p * Math.PI * 0.5); 
-			double rg = Math.sin(p * Math.PI * 0.5); 
-			return playSound(this, (float) volume, (float) lg, (float) rg, loop, (float) pitch);
-		}
-
-		@Override
-		public Sound setPanning(double p) throws IllegalArgumentException {
-			if (p < -1.0 || p > 1.0) {
-				throw new IllegalArgumentException("panning value must be in the range of [-1, 1], got " + p);
-			}
-			panning = p;
-			return this;
-		}
-
-		@Override
-		public double getPanning() {
-			return panning;
-		}
-
-		@Override
-		public Sound setVolume(double v) throws IllegalArgumentException {
-			if (v < 0 || v > 1.0) {
-				throw new IllegalArgumentException("volume must be within the range [0, 1], got " + v);
-			}
-			volume = v;
-			return this;
-		}
-
-		@Override
-		public double getVolume() {
-			return volume;
-		}
-
-		@Override
-		public Sound setLoop(boolean value) {
-			loop = true;
-			return this;
-		}
-
-		@Override
-		public Sound setPitch(double p) throws IllegalArgumentException {
-			if (p <= 0.0) {
-				throw new IllegalArgumentException("illegal pitch value, got " + p);
-			}
-			pitch = p;
-			return this;
-		}
-
-		@Override
-		public double getPitch() {
-			return pitch;
-		}
-
-		@Override
-		public boolean isLooping() {
-			return loop;
-		}
-
-		@Override
-		public double getDuration() {
-			return data.length / formatMono.getSampleRate();
+	/**
+	 * Creates a new one-channel sound clip from the specified audio data.
+	 * 
+	 * @param data
+	 *            the audio data
+	 * @return the newly created sound
+	 */
+	public Sound createSound(FloatAudio data) {
+		if (data.getSampleRate() == formatMono.getSampleRate()) {
+			return new MonoSound2f(data.getSamples());
 		}
 		
-		@Override
-		public Sound setLoopRegion(double t1, double t2) throws IllegalArgumentException {
-			throw new RuntimeException("not implemented");
+		// convert sample rate
+		FloatAudio resampled = new FloatAudio(formatMono.getSampleRate(), data);
+		if (!resampled.isValid()) {
+			resampled.normalize();
 		}
-
+		return new MonoSound2f(resampled.getSamples());
 	}
 	
-	private class StereoSound implements Sound {
-		
-		private float[] data;
-		private double panning = 0.0;
-		private double volume = 1.0;
-		private boolean loop = false;
-		private double pitch = 1.0;
-
-		public StereoSound(float[] data) {
-			this.data = data;
+	public Sound createSound(FloatAudio ch1Data, FloatAudio ch2Data) {
+		if (ch1Data.getSampleRate() != format.getSampleRate()) {
+			ch1Data = new FloatAudio(format.getSampleRate(), ch1Data);
+			if (!ch1Data.isValid())
+				ch1Data.normalize();
 		}
+		
+		if (ch2Data.getSampleRate() != format.getSampleRate()) {
+			ch2Data = new FloatAudio(format.getSampleRate(), ch2Data);
+			if (!ch2Data.isValid())
+				ch2Data.normalize();
+		}
+		
+		// interleave the two channels to one
+		float data[] = new float[2 * Math.max(ch1Data.getNumberOfSamples(), ch2Data.getNumberOfSamples())];
+		for (int i = 0; i < ch1Data.getNumberOfSamples(); ++i) {
+			data[i << 1] = ch1Data.getSamples()[i];
+		}
+		for (int i = 0; i < ch2Data.getNumberOfSamples(); ++i) {
+			data[1 + (i << 1)] = ch2Data.getSamples()[i];
+		}
+		
+		return new StereoSound2f(data);		
+	}
+	
+	
+	/////////////////////////////////////////////////
+	/////// Interface Audio
+	/////////////////////////////////////////////////
 
-		@Override
-		public int play() {
-			if (panning == 0) {
-				return playSound(this, (float) volume, 1.0f, 1.0f, loop, (float) pitch);
-			} else if (panning > 0) {
-				return playSound(this,(float) volume, (float) (1.0 - panning / 1.0), 1.0f, loop, (float) pitch);
+//	@Override
+	public Sound createSound(InputStream is) throws IOException {
+		try {
+			fal.load(is);
+			switch (fal.numChannels()) {
+			case 1:
+				return createSound(fal.getChannel(0));
+			case 2:
+				return createSound(fal.getChannel(0), fal.getChannel(1));
+			default:
+				throw new IOException("unsupported audio format, invalid number of channels " + fal.numChannels());
+			}
+		} catch (UnsupportedAudioFileException e) {
+			throw new IOException("unsupported audio format", e);
+		}
+	}
+	
+//	@Override
+	public Sound createSound2(InputStream is) throws IOException {
+		if (!is.markSupported()) {
+			// load into memory to bypass the limitation that
+			// Java audio cannot handle such streams
+			is = toMemoryStream(is);
+		}
+		
+		try {
+			AudioFormat f = AudioSystem.getAudioFileFormat(is).getFormat();
+			System.out.println(f);
+			int numChannels = f.getChannels();
+			if (numChannels == 1) {
+				return new MonoSound2f(convertToFloats(loadAudio(is, formatMono)));
+			} else if (numChannels == 2){
+				return new StereoSound2f(convertToFloats(loadAudio(is, format)));
 			} else {
-				return playSound(this, (float) volume, 1.0f, (float) (1.0 + panning / 1.0), loop, (float) pitch);				
+				throw new IOException("unsupported audio format (neither mono nor stereo)");
 			}
+		} catch (UnsupportedAudioFileException e) {
+			throw new IOException("unsupported audio format", e);
 		}
-
-		@Override
-		public Sound setPanning(double p) throws IllegalArgumentException {
-			if (p < -1.0 || p > 1.0) {
-				throw new IllegalArgumentException("panning value must be in the range of [-1, 1], got " + p);
-			}
-			panning = p;
-			return this;
-		}
-
-		@Override
-		public double getPanning() {
-			return panning;
-		}
-
-		@Override
-		public Sound setVolume(double v) throws IllegalArgumentException {
-			if (volume < 0 || volume > 1.0) {
-				throw new IllegalArgumentException("volume must be within the range [0, 1], got " + v);
-			}
-			volume = v;
-			return this;
-		}
-
-		@Override
-		public double getVolume() {
-			return volume;
-		}
-
-		@Override
-		public Sound setLoop(boolean value) {
-			loop = value;
-			return this;
-		}
-		
-		@Override
-		public Sound setPitch(double p) throws IllegalArgumentException {
-			if (p <= 0.0) {
-				throw new IllegalArgumentException("illegal pitch value, got " + p);
-			}
-			pitch = p;
-			return this;
-		}
-
-		@Override
-		public double getPitch() {
-			return pitch;
-		}
-
-		@Override
-		public boolean isLooping() {
-			return loop;
-		}
-
-		@Override
-		public double getDuration() {
-			return data.length / format.getSampleRate();
-		}
-
-		@Override
-		public Sound setLoopRegion(double t1, double t2) throws IllegalArgumentException {
-			throw new RuntimeException("not implemented");
-		}
-		
 	}
-
+	
 	@Override
 	public void setVolume(double v) throws IllegalArgumentException {
 		if (v < 0.0 || v > 1.0) {
@@ -526,13 +416,209 @@ public class JavaAudio implements Audio {
 	}
 
 	@Override
+	public void setLooping(int h, boolean b) {
+		mixProc.setLooping(h, b);
+	}	
+	
+	@Override
 	public void stopAll() {
 		mixProc.stopAll();
-	}
-
-	@Override
-	public void setLooping(int h, boolean b) {
-		throw new RuntimeException("not implemented");
-	}
+	}	
+	
+	/////////////////////////////////////////////////
+	/////// Private Inner Classes
+	/////////////////////////////////////////////////
+	
+	private abstract class Sound2f<T extends Sound> implements Sound {
 		
+		private float[] data;
+		private double panning = 0.0;
+		private double volume = 1.0;
+		private boolean loop = false;
+		private double pitch = 1.0;
+		private double loopStart;
+		private double loopEnd;
+		
+		public Sound2f(float[] data) {
+			this.data = data;
+			setLoopRegion(0, getDuration());
+		}
+		
+		/**
+		 * Returns the sample data of this sound.
+		 * 
+		 * @return the sample data as signed float array
+		 */
+		protected final float[] getData() {
+			return data;
+		}
+		
+		/**
+		 * Returns the start of the loop region.
+		 * 
+		 * @return start of loop region as sample position
+		 */
+		protected final double getLoopStart() {
+			return loopStart;
+		}
+		
+		/**
+		 * Returns the end of the loop region.
+		 * 
+		 * @return end of loop region as sample position
+		 */
+		protected final double getLoopEnd() {
+			return loopEnd;
+		}
+		
+		/**
+		 * Reference to the concrete 'this' type used for method chaining.
+		 * 
+		 * @return the this reference
+		 */
+		protected abstract T getThis();
+		
+		@Override
+		public final T setPanning(double p) throws IllegalArgumentException {
+			if (p < -1.0 || p > 1.0) {
+				throw new IllegalArgumentException("panning value must be in the range of [-1, 1], got " + p);
+			}
+			panning = p;
+			return getThis();
+		}
+
+		@Override
+		public final double getPanning() {
+			return panning;
+		}
+
+		@Override
+		public final T setVolume(double v) throws IllegalArgumentException {
+			if (v < 0 || v > 1.0) {
+				throw new IllegalArgumentException("volume must be within the range [0, 1], got " + v);
+			}
+			volume = v;
+			return getThis();
+		}
+
+		@Override
+		public final double getVolume() {
+			return volume;
+		}
+		
+		@Override
+		public final T setPitch(double p) throws IllegalArgumentException {
+			if (p <= 0.0) {
+				throw new IllegalArgumentException("illegal pitch value, got " + p);
+			}
+			pitch = p;
+			return getThis();
+		}
+
+		@Override
+		public final double getPitch() {
+			return pitch;
+		}
+
+		@Override
+		public final T setLoop(boolean value) {
+			loop = value;
+			return getThis();
+		}
+		
+		@Override
+		public final boolean isLooping() {
+			return loop;
+		}
+		
+		@Override
+		public Sound setLoopRegion(double t1, double t2) throws IllegalArgumentException {
+			if (t1 >= t2 || t1 > getDuration() || t2 > getDuration()) {
+				throw new IllegalArgumentException("invalid loop region " + t1 + " to " + t2);
+			}
+			
+			loopStart = t1 * formatMono.getSampleRate();
+			loopEnd = Math.min(data.length - 1, t2 * formatMono.getSampleRate() - 1);
+			return this;
+		}
+		
+	}
+	
+	private class MonoSound2f extends Sound2f<MonoSound2f> {
+		
+		/**
+		 * Creates a new instance. The specified sample data must be one-channel singed
+		 * floating point values.
+		 * 
+		 * @param data
+		 *            the sample data
+		 */
+		public MonoSound2f(float[] data) {
+			super(data);
+		}
+		
+		@Override
+		public int play() {
+			MonoMix2f m = MonoMix2f.obtain(nextId(), getData());
+			m.setVolume((float) getVolume());
+			m.setPanning((float) getPanning());
+			m.setLoopStart((float) getLoopStart());
+			m.setLoopEnd((float) getLoopEnd());
+			m.setLooping(isLooping());
+			m.setPitch((float) getPitch());
+			mixProc.addMix(m);
+			return m.getId();
+		}
+
+		@Override
+		protected MonoSound2f getThis() {
+			return this;
+		}
+		
+		@Override
+		public double getDuration() {
+			return getData().length / formatMono.getSampleRate();
+		}
+		
+	}
+	
+	private class StereoSound2f extends Sound2f<StereoSound2f> {
+		
+		/**
+		 * Creates a new instance. The specified sample data must be two-channel singed
+		 * floating point values.
+		 * 
+		 * @param data
+		 *            the sample data
+		 */
+		public StereoSound2f(float[] data) {
+			super(data);
+			assert data.length % 2 == 0;
+		}
+		
+		@Override
+		public int play() {
+			StereoMix2f m = StereoMix2f.obtain(nextId(), getData());
+			m.setVolume((float) getVolume());
+			m.setPanning((float) getPanning());
+			m.setLoopStart((float) getLoopStart());
+			m.setLoopEnd((float) getLoopEnd());
+			m.setLooping(isLooping());
+			m.setPitch((float) getPitch());
+			mixProc.addMix(m);
+			return m.getId();
+		}
+
+		@Override
+		protected StereoSound2f getThis() {
+			return this;
+		}
+		
+		@Override
+		public double getDuration() {
+			return getData().length / format.getSampleRate() / 2;
+		}
+		
+	}
+			
 }

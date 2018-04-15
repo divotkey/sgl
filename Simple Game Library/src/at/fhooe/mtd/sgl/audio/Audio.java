@@ -23,7 +23,7 @@ public interface Audio {
 	public static final int INVALID_HANDLE = 0;
 
 	/**
-	 * Creates a new sound instance from the specified audio stream.
+	 * Creates a new sound clip from the specified audio stream.
 	 * 
 	 * @param is
 	 *            input stream of the specified audio file to load
@@ -82,6 +82,16 @@ public interface Audio {
 	 */
 	public double getVolume(int h);
 	
+	/**
+	 * Specifies whether the specified sound should be looped.
+	 * 
+	 * @param h
+	 *            the handle of the sound
+	 * @param b
+	 *            {@code true} if the sound should be looped
+	 */
+	public void setLooping(int h, boolean b);
+		
 	/**
 	 * Stops all currently played sounds.
 	 */
