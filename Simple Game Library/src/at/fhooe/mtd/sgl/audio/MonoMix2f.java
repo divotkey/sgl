@@ -61,7 +61,7 @@ public final class MonoMix2f implements Mix2f {
 	private float loopEnd;
 	
 	/** The current state. */
-	private State curState = playOnce;
+	private State curState = end;
 	
 
 	/**
@@ -76,7 +76,7 @@ public final class MonoMix2f implements Mix2f {
 		if (pool.isEmpty()) {
 			result = new MonoMix2f();
 		} else {
-			result = pool.get(pool.size() - 1);
+			result = pool.remove(pool.size() - 1);
 		}
 		
 		result.id = id;
@@ -85,6 +85,7 @@ public final class MonoMix2f implements Mix2f {
 		result.volume = result.leftGain = result.rightGain = result.pitch = 1.0f;
 		result.panning = 0.0f;
 		result.endPos = result.loopEnd = data.length - 1;
+		result.switchState(result.playOnce);
 		return result;
 	}
 	
@@ -137,6 +138,8 @@ public final class MonoMix2f implements Mix2f {
 	 * @return the sample value for the left channel
 	 */
 	private float getLeftChannel(float sample) {
+		assert leftGain >= 0.0f : "left gain = " + leftGain;
+		assert volume >= 0.0f : "volume = " + volume;
 		return sample * volume * leftGain;
 	}
 	
@@ -148,6 +151,8 @@ public final class MonoMix2f implements Mix2f {
 	 * @return the sample value for the right channel
 	 */
 	private float getRightChannel(float sample) {
+		assert rightGain >= 0.0f : "right gain = " + leftGain;
+		assert volume >= 0.0f : "volume = " + volume;
 		return sample * volume * rightGain;
 	}
 	
@@ -159,12 +164,25 @@ public final class MonoMix2f implements Mix2f {
 		data = null;
 	}
 	
+	/**
+	 * Updates left and right gain according to current panning.
+	 */
 	private void updatePanning() {
 		double p = (1.0 + panning) / 2.0;
 		leftGain = (float) Math.cos(p * Math.PI * 0.5); 
 		rightGain = (float) Math.sin(p * Math.PI * 0.5); 
 	}
 			
+	private void switchState(State s) {
+		if (curState == s)
+			return;
+		if (curState != null) {
+			curState.exit();
+		}
+		curState = s;
+		curState.enter();
+	}
+	
 	/////////////////////////////////////////////////
 	/////// Interface Mix2f
 	/////////////////////////////////////////////////
@@ -263,6 +281,8 @@ public final class MonoMix2f implements Mix2f {
 	/////////////////////////////////////////////////
 	
 	private interface State {
+		public void enter();
+		public void exit();
 		public boolean hasData();
 		public void nextData();
 		public float getChannel1();
@@ -277,6 +297,16 @@ public final class MonoMix2f implements Mix2f {
 		private float sample;
 		
 		@Override
+		public void enter() {
+			sample = getSample();
+		}
+		
+		@Override
+		public void exit() {
+			// intentionally left empty
+		}
+		
+		@Override
 		public boolean hasData() {
 			return true;
 		}
@@ -286,8 +316,7 @@ public final class MonoMix2f implements Mix2f {
 			pos += pitch;
 			
 			if (pos > endPos) {
-				// switch to end state
-				curState = end; 
+				switchState(end);
 			} else {
 				sample = getSample();
 			}
@@ -306,13 +335,13 @@ public final class MonoMix2f implements Mix2f {
 		@Override
 		public void setLooping(boolean b) {
 			if (b) {
-				curState = loop;
+				switchState(loop);
 			}
 		}
 
 		@Override
 		public void fadeOut(int numSamples) {
-			curState = fadeOut.numSamples(numSamples);
+			switchState(fadeOut.numSamples(numSamples));
 		}
 		
 	}
@@ -321,6 +350,17 @@ public final class MonoMix2f implements Mix2f {
 
 		/** Current (interpolated) sample. */
 		private float sample;
+		
+		@Override
+		public void enter() {
+			sample = getLoopSample();
+		}
+		
+		@Override
+		public void exit() {
+			// intentionally left empty
+		}
+		
 		
 		@Override
 		public boolean hasData() {
@@ -354,14 +394,13 @@ public final class MonoMix2f implements Mix2f {
 		@Override
 		public void setLooping(boolean b) {
 			if (!b) {
-				curState = playOnce;
+				switchState(playOnce);
 			}
 		}
 
 		@Override
 		public void fadeOut(int numSamples) {
-			System.out.println("switching to fade-out loop");
-			curState = fadeOutLoop.numSamples(numSamples);
+			switchState(fadeOutLoop.numSamples(numSamples));
 		}
 		
 	}
@@ -377,6 +416,20 @@ public final class MonoMix2f implements Mix2f {
 		/** Determines how much to reduce the volume each sample. */
 		private float deltaVolume;
 		
+		private float startVolume;
+		private int cntSamples;
+				
+		@Override
+		public void enter() {
+			sample = getSample();
+		}
+		
+		@Override
+		public void exit() {
+			// intentionally left empty
+		}
+		
+		
 		/**
 		 * Sets the number of samples used to reach zero volume.
 		 * 
@@ -385,8 +438,10 @@ public final class MonoMix2f implements Mix2f {
 		 * @return reference to this state for method chaining
 		 */
 		public FadeOutState numSamples(int numSamples) {
-			this.numSamples = numSamples;
-			deltaVolume = volume / this.numSamples;
+			System.out.println("fade out: " + getId()+ " : samples: " + numSamples);
+			this.cntSamples = this.numSamples = numSamples;
+//			deltaVolume = volume / this.numSamples;
+			startVolume = volume;
 			return this;
 		}
 		
@@ -398,14 +453,16 @@ public final class MonoMix2f implements Mix2f {
 		@Override
 		public void nextData() {
 			pos += pitch;
-			--numSamples;
-			volume -= deltaVolume;
+			--cntSamples;
+			volume = startVolume * ((float) Math.max(0, cntSamples) / numSamples);
 			
-			if (pos >= endPos || numSamples < 0) {
-				// switch to end state
-				curState = end; 
+//			if (cntSamples % 1000 == 0 || cntSamples <= 10)
+//				System.out.println(String.format("s=%d, v=%.3f", cntSamples, volume));
+			
+			if (pos >= endPos || cntSamples < 0) {
+				switchState(end);
 			} else {
-				sample = getSample();
+				sample = getSample() * volume;
 			}
 		}
 
@@ -422,7 +479,7 @@ public final class MonoMix2f implements Mix2f {
 		@Override
 		public void setLooping(boolean b) {
 			if (b) {
-				curState = fadeOutLoop.numSamples(numSamples);
+				switchState(fadeOutLoop.numSamples(numSamples));
 			}
 		}
 
@@ -443,6 +500,16 @@ public final class MonoMix2f implements Mix2f {
 		
 		/** Determines how much to reduce the volume each sample. */
 		private float deltaVolume;
+		
+		@Override
+		public void enter() {
+			sample = getLoopSample();			
+		}
+		
+		@Override
+		public void exit() {
+			// intentionally left empty
+		}
 		
 		/**
 		 * Sets the number of samples used to reach zero volume.
@@ -471,7 +538,7 @@ public final class MonoMix2f implements Mix2f {
 			
 			if (numSamples < 0) {
 				// switch to end state
-				curState = end; 
+				switchState(end);
 				return;
 			}			
 			
@@ -497,7 +564,7 @@ public final class MonoMix2f implements Mix2f {
 		@Override
 		public void setLooping(boolean b) {
 			if (!b) {
-				curState = fadeOut.numSamples(numSamples);
+				switchState(fadeOut.numSamples(numSamples));
 			}
 		}
 
@@ -539,6 +606,16 @@ public final class MonoMix2f implements Mix2f {
 		@Override
 		public void fadeOut(int numSamples) {
 			// ignore
+		}
+
+		@Override
+		public void enter() {
+			// intentionally left empty
+		}
+
+		@Override
+		public void exit() {
+			// intentionally left empty
 		}
 		
 	}
