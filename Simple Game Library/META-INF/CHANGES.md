@@ -19,7 +19,7 @@ Date: 2018-03-27
 - The `Game` class postpones state changes when triggered while updating until the update cycle is finished.
 - SGL now supports simple audio playback. Have a look at the new audio package.
 - SGL graphics configuration now supports multiple screen environments.
-- Added 3x3 matrix utlity class.
+- Added 3x3 matrix utility class.
 
 ## Version 1.5.2
 Date: *2017-06-24*
@@ -38,7 +38,7 @@ Date: *2017-06-24*
 ## Version 1.4.1
 Date: *2016-06-06*
 
-- Moved library information into META-INF folder to avoid name clashes when repacked into other jar archives.
+- Moved library information into META-INF folder to avoid name clashes when re-packed into other jar archives.
 
 ## Version 1.4.0
 Date: *2016-05-09*
