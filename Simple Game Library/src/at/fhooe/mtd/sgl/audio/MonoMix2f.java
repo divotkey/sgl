@@ -415,10 +415,7 @@ public final class MonoMix2f implements Mix2f {
 		
 		/** Determines how much to reduce the volume each sample. */
 		private float deltaVolume;
-		
-		private float startVolume;
-		private int cntSamples;
-				
+						
 		@Override
 		public void enter() {
 			sample = getSample();
@@ -438,10 +435,8 @@ public final class MonoMix2f implements Mix2f {
 		 * @return reference to this state for method chaining
 		 */
 		public FadeOutState numSamples(int numSamples) {
-			System.out.println("fade out: " + getId()+ " : samples: " + numSamples);
-			this.cntSamples = this.numSamples = numSamples;
-//			deltaVolume = volume / this.numSamples;
-			startVolume = volume;
+			this.numSamples = numSamples;
+			deltaVolume = volume / this.numSamples;
 			return this;
 		}
 		
@@ -453,13 +448,10 @@ public final class MonoMix2f implements Mix2f {
 		@Override
 		public void nextData() {
 			pos += pitch;
-			--cntSamples;
-			volume = startVolume * ((float) Math.max(0, cntSamples) / numSamples);
-			
-//			if (cntSamples % 1000 == 0 || cntSamples <= 10)
-//				System.out.println(String.format("s=%d, v=%.3f", cntSamples, volume));
-			
-			if (pos >= endPos || cntSamples < 0) {
+			--numSamples;
+			volume -= deltaVolume;
+						
+			if (pos >= endPos || numSamples <= 0) {
 				switchState(end);
 			} else {
 				sample = getSample() * volume;
@@ -536,7 +528,7 @@ public final class MonoMix2f implements Mix2f {
 			--numSamples;
 			volume -= deltaVolume;
 			
-			if (numSamples < 0) {
+			if (numSamples <= 0) {
 				// switch to end state
 				switchState(end);
 				return;
