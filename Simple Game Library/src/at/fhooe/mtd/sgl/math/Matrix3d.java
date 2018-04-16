@@ -16,6 +16,9 @@ package at.fhooe.mtd.sgl.math;
  */
 public class Matrix3d {
 
+	/** Used to avoid repetitive memory allocation.*/
+	private static final Matrix3d tmp = new Matrix3d();
+	
 	/** The elements first row. */
     public	double	m00, m01, m02;
     
@@ -129,6 +132,39 @@ public class Matrix3d {
     }
     
 	/**
+	 * Multiplies this matrix with a translate matrix with the specified
+	 * translation.
+	 * 
+	 * <p>
+	 * <strong>Note:</strong> This method is not thread-safe.
+	 * </p>
+	 * 
+	 * @param tx
+	 *            the distance to translate in the x-axis direction
+	 * @param ty
+	 *            the distance to translate in the y-axis direction
+	 * @return a reference to this matrix for method chaining
+	 */
+    public Matrix3d translate(double tx, double ty) {
+    	return mul(tmp.setToTranslate(tx, ty));
+    }
+    
+	/**
+	 * Multiplies this matrix with a translate matrix with the specified
+	 * translation.
+	 * <p>
+	 * <strong>Note:</strong> This method is not thread-safe.
+	 * </p>
+	 * 
+	 * @param v
+	 *            the translation vector
+	 * @return a reference to this matrix for method chaining
+	 */
+    public Matrix3d translate(Vector2d v) {
+    	return mul(tmp.setToTranslate(v));
+    }    
+    
+	/**
 	 * Sets this matrix to a scale matrix with the specified scale factors.
 	 * 
 	 * @param sx
@@ -156,6 +192,40 @@ public class Matrix3d {
     }
     
 	/**
+	 * Multiplies this matrix with a scale matrix with the specified scaling
+	 * factors.
+	 * 
+	 * <p>
+	 * <strong>Note:</strong> This method is not thread-safe.
+	 * </p>
+	 * 
+	 * @param sx
+	 *            the distance to translate in the x-axis direction
+	 * @param sy
+	 *            the distance to translate in the y-axis direction
+	 * @return a reference to this matrix for method chaining
+	 */
+    public Matrix3d scale(double sx, double sy) {
+    	return mul(tmp.setToScale(sx, sy));
+    }    
+    
+	/**
+	 * Multiplies this matrix with a scale matrix with the specified scaling
+	 * factors.
+	 * 
+	 * <p>
+	 * <strong>Note:</strong> This method is not thread-safe.
+	 * </p>
+	 * 
+	 * @param v
+	 *            the vector containing the scale factors
+	 * @return a reference to this matrix for method chaining
+	 */
+    public Matrix3d scale(Vector2d v) {
+    	return mul(tmp.setToScale(v));
+    }    
+    
+	/**
 	 * Sets this matrix to a rotation matrix rotating by the specified angle.
 	 * 
 	 * @param angle
@@ -169,6 +239,20 @@ public class Matrix3d {
     	m02 =    0; m12 =   0; m22 = 1;
     	
     	return this;
+    }
+    
+	/**
+	 * Multiplies this matrix with a rotation matrix rotating about the specified angle.
+	 * <p>
+	 * <strong>Note:</strong> This method is not thread-safe.
+	 * </p>
+	 * 
+	 * @param angle
+	 *            the angle in radians
+	 * @return a reference to this matrix for method chaining
+	 */
+    public Matrix3d rotate(double angle) {
+    	return mul(tmp.setToRotate(angle));
     }
     
 	/**
