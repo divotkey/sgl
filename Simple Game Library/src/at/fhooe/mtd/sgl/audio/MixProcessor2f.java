@@ -218,6 +218,48 @@ public class MixProcessor2f {
 	}
 
 	/**
+	 * Sets the pitch of the mix object with the specified identifier.
+	 * <p>
+	 * If no mix object with the specified identifier could be found, this method
+	 * has no effect.
+	 * </p>
+	 * 
+	 * @param id
+	 *            the identifier of the mix object
+	 * @param p
+	 *            the new pitch
+	 */
+	public void setPitch(int id, float p) {
+		synchronized (mixes) {
+			Mix2f m = findMix(id);
+			if (m != null) {
+				m.setPitch(p);
+			}
+		}
+	}
+	
+	/**
+	 * Sets the panning of the mix object with the specified identifier.
+	 * <p>
+	 * If no mix object with the specified identifier could be found, this method
+	 * has no effect.
+	 * </p>
+	 * 
+	 * @param id
+	 *            the identifier of the mix object
+	 * @param p
+	 *            the new panning value
+	 */
+	public void setPanning(int id, float p) {
+		synchronized (mixes) {
+			Mix2f m = findMix(id);
+			if (m != null) {
+				m.setPanning(p);
+			}
+		}
+	}	
+	
+	/**
 	 * Specifies whether the mix object with the specified identifier should be
 	 * looped.
 	 * <p>

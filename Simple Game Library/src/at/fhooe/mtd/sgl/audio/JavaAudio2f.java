@@ -275,6 +275,24 @@ public class JavaAudio2f implements Audio {
 		} 
 		return mixProc.getVolume(h);
 	}
+	
+	@Override
+	public void setPitch(int h, double p) throws IllegalArgumentException {
+		if (p <= 0.0) {
+			throw new IllegalArgumentException("illegal pitch value, got " + p);
+		}
+		
+		mixProc.setPitch(h, (float) p);
+	}
+
+	@Override
+	public void setPanning(int h, double p) throws IllegalArgumentException {
+		if (p < -1.0 || p > 1.0) {
+			throw new IllegalArgumentException("panning value must be in the range of [-1, 1], got " + p);
+		}
+		
+		mixProc.setPanning(h, (float) p);
+	}
 
 	@Override
 	public void setLooping(int h, boolean b) {
@@ -481,6 +499,5 @@ public class JavaAudio2f implements Audio {
 		}
 		
 	}
-
 			
 }

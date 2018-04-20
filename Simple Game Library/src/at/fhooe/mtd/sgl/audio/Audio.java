@@ -106,6 +106,32 @@ public interface Audio {
 	public void setLooping(int h, boolean b);
 		
 	/**
+	 * Sets the pitch multiplier of the specified sound.
+	 * 
+	 * @param h
+	 *            the handle of the sound
+	 * @param p
+	 *            the pitch multiplier
+	 * @throws IllegalArgumentException
+	 *             if the specified pitch is illegal less or equal zero
+	 */
+	public void setPitch(int h, double p) throws IllegalArgumentException;
+	
+	/**
+	 * Sets the panning for the specified sound. The panning is specified within the
+	 * range of [-1, 1] whereas -1 is full left and 1 is full right. Zero is center
+	 * position.
+	 * 
+	 * @param h
+	 *            the handle of the sound
+	 * @param p
+	 *            the panning in the range [-1, 1]
+	 * @throws IllegalArgumentException
+	 *             if the specified pitch is illegal less or equal zero
+	 */
+	public void setPanning(int h, double p) throws IllegalArgumentException;
+	
+	/**
 	 * Stops all currently played sounds.
 	 */
 	public void stopAll();
