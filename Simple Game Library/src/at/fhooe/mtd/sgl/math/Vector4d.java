@@ -432,6 +432,13 @@ public class Vector4d {
 		return this;
 	}
 	
+	/**
+	 * Sets this vector to zero length.
+	 */
+	public Vector4d setZero() {
+		x = y = z = w =0;
+		return this;
+	}	
 	
     @Override
     public String toString() {

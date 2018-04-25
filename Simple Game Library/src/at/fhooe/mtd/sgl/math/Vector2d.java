@@ -609,9 +609,12 @@ public final class Vector2d {
 
 	/**
 	 * Sets this vector to zero length.
+	 * 
+	 * @return reference to this vector for method chaining
 	 */
-	public void setZero() {
+	public Vector2d setZero() {
 		x = y = 0;
+		return this;
 	}
 
     @Override
