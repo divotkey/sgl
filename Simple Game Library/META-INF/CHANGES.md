@@ -1,7 +1,7 @@
 # Version History
 
 ## Version 1.6.1
-Date: 2018-04-??
+Date: 2018-05-09
 
 - Rewrite of sound engine core.
 - Sound clips can now be pitched.
