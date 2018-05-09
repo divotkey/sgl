@@ -621,5 +621,16 @@ public final class Vector2d {
     public String toString() {
         return String.format("<%f, %f>", x, y);
     }
+
+	/**
+	 * Fips the direction of this vector. This operation is equivalent to scaling
+	 * this factor by -1.
+	 * 
+	 * @return reference to this vector for method chaining
+	 */
+	public Vector2d flip() {
+		x = -x; y = -y;
+		return this;
+	}
 	
 }
